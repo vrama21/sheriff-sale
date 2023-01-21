@@ -1,17 +1,15 @@
 import React from 'react';
-
 import { useAppContext } from 'contexts';
 import { ListingTable, LoadingSpinner, Paginate } from 'components';
 import { Listing } from '@prisma/client';
-
-import { listingViewStyles } from './ListingView.styles';
+import { useStyles } from './ListingView.styles';
 
 interface ListingViewProps {
   listings: Listing[];
 }
 
 const ListingView: React.FC<ListingViewProps> = ({ listings }: ListingViewProps) => {
-  const classes = listingViewStyles();
+  const { classes } = useStyles();
   const { appContext } = useAppContext();
   const { currentPage } = appContext;
 

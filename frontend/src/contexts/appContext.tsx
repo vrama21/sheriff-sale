@@ -15,7 +15,7 @@ const appInitialState: AppContextRoot = {
   appContext: {
     currentPage: 0,
   },
-  setAppContext: () => undefined,
+  setAppContext: () => {},
 };
 
 const AppContext = createContext({ ...appInitialState });

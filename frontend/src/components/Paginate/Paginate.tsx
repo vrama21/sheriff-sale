@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import ReactPaginate from 'react-paginate';
 import { useAppContext } from 'contexts';
-import { paginateStyles } from './Paginate.style';
+import { useStyles } from './Paginate.style';
 
 interface PaginateProps {
   pageCount: number;
@@ -15,7 +15,7 @@ const Paginate: React.FC<PaginateProps> = ({ pageCount }: PaginateProps) => {
     setAppContext({ currentPage: selectedItem.selected + 1 });
   };
 
-  const classes = paginateStyles();
+  const { classes } = useStyles();
 
   if (currentPage === 0) {
     return null;

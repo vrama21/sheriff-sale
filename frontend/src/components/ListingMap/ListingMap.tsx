@@ -1,7 +1,6 @@
 import React from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
-
-import { listingMapStyles } from './ListingMap.styles';
+import { useStyles } from './ListingMap.styles';
 
 interface ListingMapProps {
   latitude: number;
@@ -9,7 +8,7 @@ interface ListingMapProps {
 }
 
 const ListingMap: React.FC<ListingMapProps> = ({ latitude, longitude }) => {
-  const classes = listingMapStyles();
+  const { classes } = useStyles();
 
   const containerStyle = {
     height: 350,

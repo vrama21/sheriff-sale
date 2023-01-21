@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const listingViewStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles()((theme) => ({
   listingViewContainer: {
     paddingBottom: '4rem',
     margin: '0 6rem',

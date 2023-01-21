@@ -1,16 +1,16 @@
 import Link from 'next/link';
-import { viewListingButtonStyles } from './ViewListingButton.styles';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { useStyles } from './ViewListingButton.styles';
+import { ArrowForward } from '@mui/icons-material';
 import { ButtonSubmit } from 'components';
 
 const ViewListingButton: React.FC<{ listingId: number }> = ({ listingId }: { listingId: number }) => {
-  const classes = viewListingButtonStyles();
+  const { classes } = useStyles();
 
   return (
     <>
       <Link href={`listing/${listingId}`}>
         <ButtonSubmit className={classes.viewListingButtonRoot} value="View Listing">
-          <ArrowForwardIcon />
+          <ArrowForward />
         </ButtonSubmit>
       </Link>
     </>

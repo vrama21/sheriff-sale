@@ -1,21 +1,22 @@
 import React from 'react';
-import { FormControl, MenuItem } from '@material-ui/core';
-
-import { ButtonSubmit, FilterLabel, Select } from '..';
-import { Filter } from '../../types';
-import { searchFiltersStyles } from './SearchFilters.style';
+import { FormControl, MenuItem } from '@mui/material';
+import { ButtonSubmit, FilterLabel, Select } from 'components';
+import { Filter } from 'types';
+import { useStyles } from './SearchFilters.style';
+import { SelectInputProps } from '@mui/material/Select/SelectInput';
 
 export interface SearchFiltersProps {
   counties: string[];
   citiesByCounty: { [index: string]: { cities: string[] } };
   filters: Filter;
-  onFilterChange: (
-    event: React.ChangeEvent<{
-      name?: string;
-      value: unknown;
-    }>,
-    child: React.ReactNode,
-  ) => void;
+  // onFilterChange: (
+  //   event: React.ChangeEvent<{
+  //     name?: string;
+  //     value: unknown;
+  //   }>,
+  //   child: React.ReactNode,
+  // ) => void;
+  onFilterChange: SelectInputProps['onChange'];
   onFilterReset: (event: React.FormEvent<Element>) => void;
   onFilterSubmit: (event: React.FormEvent<Element>) => void;
   saleDates: string[];
@@ -30,7 +31,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   onFilterSubmit,
   saleDates,
 }: SearchFiltersProps) => {
-  const classes = searchFiltersStyles();
+  const { classes } = useStyles();
 
   const selectedCounty = filters.county;
   const selectedCity = filters.city;

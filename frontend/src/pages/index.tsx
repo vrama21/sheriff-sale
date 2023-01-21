@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
 import { SearchFilters } from 'components';
-import { Paper } from '@material-ui/core';
-import { homePageStyles } from './index.style';
+import { Paper } from '@mui/material';
+import { useStyles } from './index.style';
 
 const HomePage: React.FC = () => {
-  const classes = homePageStyles();
+  const { classes } = useStyles();
+  
   const initialFilterState = {
     county: '',
     city: '',
     saleDate: '',
   };
-
   const [filters, setFilters] = useState(initialFilterState);
 
   const { data: cityByCountyMapping } = trpc.useQuery(['constants.getCitiesByCountyMapping']);
@@ -35,16 +35,16 @@ const HomePage: React.FC = () => {
     if (name) {
       setFilters({ ...filters, [name]: value });
     }
+
+    return null;
   };
 
   const onFilterSubmit = () => {
-    if (filters == initialFilterState) {
+    if (filters === initialFilterState) {
       return;
     }
 
     refetch();
-
-    console.log(listings);
   };
 
   return (

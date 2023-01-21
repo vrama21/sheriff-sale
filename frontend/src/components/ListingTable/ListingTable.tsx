@@ -1,33 +1,28 @@
 import React, { useMemo } from 'react';
 import { Column, useTable } from 'react-table';
-import { Table, TableBody, TableCell, TableHead, TableRow, useMediaQuery } from '@material-ui/core';
-
+import { Table, TableBody, TableHead, TableRow, TableCell, useMediaQuery } from '@mui/material';
 import { Listing } from '@prisma/client';
-import { formatToCurrency } from 'helpers/formatToCurrency';
-
-import ViewListingButton from '../ViewListingButton/ViewListingButton';
-import { listingTableStyles } from './ListingTable.styles';
+import { formatToCurrency } from 'helpers';
+import { ViewListingButton } from 'components';
+import { useStyles } from './ListingTable.styles';
 
 interface ListingTableProps {
   listings: Listing[];
 }
 
 const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTableProps) => {
-  const classes = listingTableStyles();
+  const { classes } = useStyles();
   const mobileView = useMediaQuery('(min-width: 0px)', { noSsr: true });
 
-  const columnHeaders: Column<Listing>[] = mobileView
+  const columnHeaders:  Column<Listing>[] = mobileView
     ? [
         {
           Header: 'Address',
           accessor: 'address',
         },
         {
-          Header: 'Upset Amount or Judgment',
-          accessor: 'upsetOrJudgment',
-        },
-        {
-          accessor: 'linkToListing',
+          Header: 'Upset ',
+          accessor: 'upsetAmount',
         },
       ]
     : [
@@ -48,14 +43,14 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
           accessor: 'attorney',
         },
         {
-          Header: 'Upset Amount or Judgment',
-          accessor: 'upsetOrJudgment',
+          Header: 'Upset Amount',
+          accessor: 'upsetAmount',
           Cell(cellProps) {
-            const rowData = cellProps.row.original as Listing;
+            const rowData = cellProps.row.original;
 
-            const value = (rowData.judgment || rowData.upsetAmount) as number;
+            const value = rowData.judgment || rowData.upsetAmount;
 
-            return <span>{formatToCurrency(value)}</span>;
+            return <span>{value ? formatToCurrency(value) : '-'}</span>;
           },
         },
         {
@@ -70,11 +65,11 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
   const data = useMemo(
     () =>
       listings.map((listing) => ({
-        address: listing.address || listing.raw_address,
+        address: listing.address,
         attorney: listing.attorney,
         county: listing.county,
         defendant: listing.defendant,
-        saleDate: listing.sale_date,
+        saleDate: listing.saleDate,
         id: listing.id,
       })),
     [listings],

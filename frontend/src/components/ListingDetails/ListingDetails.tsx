@@ -1,10 +1,8 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
-
+import { Grid } from '@mui/material';
 import { formatToCurrency } from 'helpers';
-
-import ListingMap from '../ListingMap/ListingMap';
-import { listingStyles } from './ListingDetails.style';
+import { ListingMap } from 'components';
+import { useClasses } from './ListingDetails.style';
 import { Listing } from '@prisma/client';
 
 interface ListingProps {
@@ -12,8 +10,9 @@ interface ListingProps {
 }
 
 const ListingDetails: React.FC<ListingProps> = ({ listing }) => {
-  const classes = listingStyles();
-  const formattedAddress = listing.city && listing.street && `${listing.street}, ${listing.city}, ${listing.state} ${listing.zip_code}`;
+  const { classes } = useClasses();
+  const formattedAddress =
+    listing.city && listing.street && `${listing.street}, ${listing.city}, ${listing.state} ${listing.zipcode}`;
 
   return (
     <div className={classes.root}>
@@ -21,16 +20,18 @@ const ListingDetails: React.FC<ListingProps> = ({ listing }) => {
 
       <Grid container className={classes.listingContainer}>
         <Grid item xs={5}>
-          {listing.latitude && listing.longitude && <ListingMap latitude={parseFloat(listing.latitude)} longitude={parseFloat(listing.longitude)} />}
+          {listing.latitude && listing.longitude && (
+            <ListingMap latitude={parseFloat(listing.latitude)} longitude={parseFloat(listing.longitude)} />
+          )}
         </Grid>
         <Grid item xs={3}>
           <div>
             <span className={classes.listingLabel}>Court Case: </span>
-            <span className={classes.listingValue}>{listing.court_case}</span>
+            <span className={classes.listingValue}>{listing.courtCase}</span>
           </div>
           <div>
             <span className={classes.listingLabel}>Sale Date: </span>
-            <span className={classes.listingValue}>{listing.sale_date}</span>
+            <span className={classes.listingValue}>{listing.saleDate}</span>
           </div>
           {listing.judgment && (
             <div>
@@ -38,10 +39,10 @@ const ListingDetails: React.FC<ListingProps> = ({ listing }) => {
               <span className={classes.listingValue}>{formatToCurrency(listing.judgment)}</span>
             </div>
           )}
-          {listing.upset_amount && (
+          {listing.upsetAmount && (
             <div>
               <span className={classes.listingLabel}>Upset Amount: </span>
-              <span className={classes.listingValue}>{formatToCurrency(listing.upset_amount)}</span>
+              <span className={classes.listingValue}>{formatToCurrency(listing.upsetAmount)}</span>
             </div>
           )}
         </Grid>
@@ -50,10 +51,10 @@ const ListingDetails: React.FC<ListingProps> = ({ listing }) => {
             <span className={classes.listingLabel}>Attorney: </span>
             <span className={classes.listingValue}>{listing.attorney}</span>
           </div>
-          {listing.attorney_phone && (
+          {listing.attorneyPhone && (
             <div>
               <span className={classes.listingLabel}>Attorney Phone: </span>
-              <span className={classes.listingValue}>{listing.attorney_phone}</span>
+              <span className={classes.listingValue}>{listing.attorneyPhone}</span>
             </div>
           )}
           <div>

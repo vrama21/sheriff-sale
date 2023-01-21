@@ -1,20 +1,20 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from 'tss-react/mui';
 
-export const buttonSubmitStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles()((theme) => ({
   root: {
     margin: '0 0.5rem',
   },
   reset: {
     backgroundColor: theme.palette.warning.dark,
 
-    '&:hover': {
+    ['&:hover']: {
       backgroundColor: theme.palette.warning.main,
     },
   },
   submit: {
     backgroundColor: theme.palette.success.dark,
 
-    '&:hover': {
+    ['&:hover']: {
       backgroundColor: theme.palette.success.main,
     },
   },

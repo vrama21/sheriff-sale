@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const listingStyles = makeStyles((theme) => ({
+export const useClasses = makeStyles()((theme) => ({
   root: {
     margin: '2rem auto',
     position: 'relative',

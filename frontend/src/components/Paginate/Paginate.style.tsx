@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from 'tss-react/mui';
 
-export const paginateStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles()((theme) => ({
   activeLinkStyle: {
     color: theme.palette.primary.main,
     borderBottom: '1px solid',
@@ -24,7 +24,7 @@ export const paginateStyles = makeStyles((theme) => ({
   linkStyle: {
     fontWeight: 'bold',
     outline: 'none',
-    '&:hover': {
+    ['&:hover']: {
       color: theme.palette.primary.main,
       cursor: 'pointer',
     },

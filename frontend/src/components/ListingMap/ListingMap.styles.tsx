@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from 'tss-react/mui';
 
-export const listingMapStyles = makeStyles(() => ({
+export const useStyles = makeStyles()(() => ({
   mapContainer: {
     marginRight: '1rem',
   },

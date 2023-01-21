@@ -1,31 +1,21 @@
-import { Select as MUISelect, MenuProps as MenuP } from '@material-ui/core';
+import { Select as MUISelect, MenuProps as MenuP } from '@mui/material';
+import { SelectInputProps } from '@mui/material/Select/SelectInput';
 import React from 'react';
-import { selectStyles } from './Select.styles';
-
-const MenuProps: Partial<MenuP> = {
-  anchorOrigin: {
-    vertical: 'bottom',
-    horizontal: 'left',
-  },
-  transformOrigin: {
-    vertical: 'top',
-    horizontal: 'left',
-  },
-  getContentAnchorEl: null,
-};
+import { useStyles } from './Select.styles';
 
 interface SelectProps {
   className?: string;
   id?: string;
   name: string;
-  onChange: (event: React.ChangeEvent<{ name?: string; value: unknown }>, child: React.ReactNode) => void;
+  // onChange: (event: React.ChangeEvent<{ name?: string; value: unknown }>, child: React.ReactNode) => void;
+  onChange: SelectInputProps['onChange'];
   options: JSX.Element[];
   value: string;
   variant?: SelectProps;
 }
 
 const Select: React.FC<SelectProps> = ({ className, id, name, onChange, options, value }: SelectProps) => {
-  const classes = selectStyles();
+  const { classes } = useStyles();
 
   return (
     <>
@@ -34,7 +24,16 @@ const Select: React.FC<SelectProps> = ({ className, id, name, onChange, options,
         className={className || classes.selectRoot}
         onChange={onChange}
         id={id}
-        MenuProps={MenuProps}
+        MenuProps={{
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left',
+          },
+          transformOrigin: {
+            vertical: 'top',
+            horizontal: 'left',
+          },
+        }}
         name={name}
         value={value}
         variant="outlined"

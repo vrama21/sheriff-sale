@@ -1,6 +1,6 @@
 import React from 'react';
-import { InputLabel } from '@material-ui/core';
-import { filterLabelStyles } from './FilterLabel.styles';
+import { InputLabel } from '@mui/material';
+import { useStyles } from './FilterLabel.styles';
 
 interface FilterLabelProps {
   id?: string;
@@ -8,7 +8,7 @@ interface FilterLabelProps {
 }
 
 const FilterLabel: React.FC<FilterLabelProps> = ({ id, value }) => {
-  const classes = filterLabelStyles();
+  const { classes } = useStyles();
 
   return (
     <>

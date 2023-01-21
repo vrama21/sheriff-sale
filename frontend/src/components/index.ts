@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 import Paginate from './Paginate/Paginate';
 import SearchFilters from './SearchFilters/SearchFilters';
 import Select from './Select/Select';
-// import ViewListingButton from './ViewListingButton/ViewListingButton';
+import ViewListingButton from './ViewListingButton/ViewListingButton';
 
 export {
   ButtonSubmit,
@@ -21,5 +21,5 @@ export {
   Paginate,
   SearchFilters,
   Select,
-  // ViewListingButton,
+  ViewListingButton,
 };

@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from 'tss-react/mui';
 
-export const listingTableStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles()((theme) => ({
   tableContainer: {
     border: `solid 3px ${theme.palette.primary.main}`,
     margin: '0 auto',
@@ -14,11 +14,11 @@ export const listingTableStyles = makeStyles((theme) => ({
     minWidth: '70px',
     textAlign: 'center',
 
-    '&:last-child(2)': {
+    ['&:last-child(2)']: {
       width: '300px',
     },
 
-    '&:last-child': {
+    ['&:last-child']: {
       width: '150px',
     },
 
@@ -33,11 +33,11 @@ export const listingTableStyles = makeStyles((theme) => ({
     padding: '10px',
     textAlign: 'center',
 
-    '&:nth-child(odd)': {
+    ['&:nth-child(odd)']: {
       background: theme.palette.grey[700],
     },
 
-    '&:nth-child(even)': {
+    ['&:nth-child(even)']: {
       background: theme.palette.grey[500],
     },
   },
@@ -48,7 +48,7 @@ export const listingTableStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: 'black',
 
-    '& a': {
+    ['& a']: {
       color: theme.palette.primary.main,
     },
 

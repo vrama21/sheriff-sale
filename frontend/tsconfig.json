@@ -17,6 +17,6 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": "src"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/types/mui.d.ts"],
   "exclude": ["node_modules"]
 }

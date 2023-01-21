@@ -1,12 +1,11 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-
-export const searchFiltersStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles()((theme) => ({
   filterContainer: {
     margin: '1rem',
   },
   filterSelect: {
-    backgroundColor: theme.palette.grey[700],
+    backgroundColor: theme.palette.primary.light,
     margin: '0 0.5rem',
     width: 225,
   },

@@ -5,12 +5,17 @@ import type { AppType } from 'next/dist/shared/lib/utils';
 import superjson from 'superjson';
 import { LoadScript } from '@react-google-maps/api';
 import '../styles/globals.css';
-import { globalStyles } from './_app.style';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { useStyles } from './_app.style';
+import { ThemeProvider } from '@mui/material';
 import theme from '../theme/theme';
+import { createEmotionSsrAdvancedApproach } from 'tss-react/next';
+
+const { augmentDocumentWithEmotionCache, withAppEmotionCache } = createEmotionSsrAdvancedApproach({ key: 'css' });
+
+export { augmentDocumentWithEmotionCache };
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const classes = globalStyles();
+  const { classes } = useStyles();
 
   return (
     <ThemeProvider theme={theme}>
@@ -53,5 +58,5 @@ export default withTRPC<AppRouter>({
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: false,
-})(MyApp);
+  ssr: true,
+})(withAppEmotionCache(MyApp));
