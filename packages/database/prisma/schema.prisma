@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -46,7 +46,7 @@ model StatusHistory {
   id        Int      @id @default(autoincrement())
   listingId Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  updatedAt DateTime @updatedAt
   date      String
   status    String
 

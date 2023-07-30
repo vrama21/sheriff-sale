@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: main
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      ENV: ${{ vars.ENV }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Build
+      run: |
+        npm ci
+        npm run lint
+        npm run build
+        npm run test
+    - name: Database
+      run: |
+        npm run generate
+        npm run db:migrate:deploy
+        npm run db:push
