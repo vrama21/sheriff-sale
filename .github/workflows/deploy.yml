@@ -30,8 +30,4 @@ jobs:
         npm ci
         npm run lint
         npm run build
-    - name: Database
-      run: |
-        npm run generate
-        npm run db:migrate:deploy
-        npm run db:push
+        npm run test
