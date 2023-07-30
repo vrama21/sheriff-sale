@@ -13,6 +13,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: dev
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Build
+        run: |
+          npm i
+          npm run build
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -21,22 +33,17 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       ENV: ${{ vars.ENV }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-    - name: Build
-      run: |
-        npm i
-        npm run build
-    - name: Deploy AWS Stack
-      run: |
-        aws configure set aws_default_region $AWS_DEFAULT_REGION
-        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-        
-        cd backend
-        npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
-        npx cdk deploy --require-approval never
-        cd ..
-      
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Deploy AWS Stack
+        run: |
+          aws configure set aws_default_region $AWS_DEFAULT_REGION
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+
+          cd backend
+          npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
+          npx cdk deploy --require-approval never
+          cd ..
