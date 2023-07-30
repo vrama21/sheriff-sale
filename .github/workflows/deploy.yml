@@ -35,6 +35,8 @@ jobs:
         aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
         aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
         
+        cd backend
         npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
         npx cdk deploy --require-approval never
+        cd ..
       
