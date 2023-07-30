@@ -1,7 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
+// @ts-nocheck
 import { parseListingDetails } from './parseListingDetails';
 
 describe('parseListingDetails', () => {

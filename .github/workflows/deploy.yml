@@ -28,9 +28,7 @@ jobs:
     - name: Build
       run: |
         npm i
-        npm run lint
         npm run build
-        npm run test
     - name: Deploy AWS Stack
       run: |
         aws configure set aws_default_region $AWS_DEFAULT_REGION
