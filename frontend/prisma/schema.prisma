@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Listing {
+  id            Int      @id @default(autoincrement())
+  propertyId    String
+  sheriffId     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  address       String
+  attorney      String?
+  attorneyPhone String?
+  city          String?
+  county        String
+  courtCase     String?
+  deed          String?
+  deedAddress   String?
+  defendant     String?
+  description   String?
+  judgment      String?
+  latitude      String?
+  longitude     String?
+  mapsUrl       String?
+  parcel        String?
+  plaintiff     String
+  priors        String?
+  saleDate      String
+  secondaryUnit String?
+  state         String
+  street        String?
+  unit          String?
+  upsetAmount   String?
+  zipcode       String?
+
+  statusHistory StatusHistory[]
+}
+
+model StatusHistory {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  date      String
+  status    String
+
+  listing Listing @relation(fields: [listingId], references: [id])
+}
