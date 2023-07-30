@@ -30,25 +30,25 @@ export class SheriffSaleHandler extends NodejsFunction {
 
     super(scope, id, {
       ...props,
-      bundling: {
-        commandHooks: {
-          beforeBundling(_inputDir: string, _outputDir: string) {
-            return [];
-          },
-          beforeInstall(inputDir: string, outputDir: string) {
-            return [`cp -R ${inputDir}/prisma ${outputDir}/`];
-          },
-          afterBundling(_inputDir: string, outputDir: string) {
-            return [
-              `cd ${outputDir}`,
-              `npx prisma generate`,
-              `rm -rf node_modules/@prisma/engines`,
-              `rm -rf node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
-            ];
-          },
-        },
-        nodeModules: ['@prisma/client', 'prisma'],
-      },
+      // bundling: {
+      //   commandHooks: {
+      //     beforeBundling(_inputDir: string, _outputDir: string) {
+      //       return [];
+      //     },
+      //     beforeInstall(inputDir: string, outputDir: string) {
+      //       return [`cp -R ${inputDir}/prisma ${outputDir}/`];
+      //     },
+      //     afterBundling(_inputDir: string, outputDir: string) {
+      //       return [
+      //         `cd ${outputDir}`,
+      //         `npx prisma generate`,
+      //         `rm -rf node_modules/@prisma/engines`,
+      //         `rm -rf node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
+      //       ];
+      //     },
+      //   },
+      //   nodeModules: ['@prisma/client', 'prisma'],
+      // },
       entry: path.join(rootDir, entry),
       environment: {
         ...defaultEnvironment,
