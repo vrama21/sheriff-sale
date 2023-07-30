@@ -32,9 +32,7 @@ export class SheriffSaleStack extends Stack {
         retentionPeriod: Duration.days(14),
       }),
       entry: 'src/handlers/newJerseySheriffSaleScraperHandler.ts',
-      environment: {
-        NJ_SHERIFF_SALE_BUCKET_NAME: newJerseySheriffSaleBucket.bucketName,
-      },
+
       functionName: `new-jersey-sheriff-sale-scraper-${ENV}`,
       handler: 'handler',
       memorySize: 512,

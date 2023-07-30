@@ -14,7 +14,7 @@ export interface SheriffSaleHandlerProps extends NodejsFunctionProps {
 
 export class SheriffSaleHandler extends NodejsFunction {
   constructor(scope: Construct, id: string, props: SheriffSaleHandlerProps) {
-    const { ENV, DATABASE_URL } = process.env;
+    const { DATABASE_URL, ENV } = process.env;
 
     if (!DATABASE_URL) throw new Error('DATABASE_URL not set');
     if (!ENV) throw new Error('ENV not set');
