@@ -1,4 +1,4 @@
-import { StatusHistory } from '@prisma/client';
+import { StatusHistory } from 'database';
 import { BaseModel } from './baseModel';
 
 export interface StatusHistoryPropertiesToOmit extends BaseModel {

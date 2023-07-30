@@ -1,4 +1,4 @@
-import { Listing, StatusHistory } from '@prisma/client';
+import { Listing, StatusHistory } from 'database';
 import { BaseModel } from './baseModel';
 
 export interface ListingPropertiesToOmit extends BaseModel {
