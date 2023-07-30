@@ -60,6 +60,5 @@ jobs:
         run: |
           cd backend
           npm ci
-          npm run build
           npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
           npx cdk deploy --require-approval never
