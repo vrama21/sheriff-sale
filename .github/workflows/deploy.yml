@@ -21,10 +21,10 @@ jobs:
       - name: Build
         run: |
           npm i 
-          cd packages/config && npm ci && cd ../../
-          cd packages/database && npm ci && cd ../../
-          cd backend && npm ci && cd ../
-          cd frontend && npm ci && cd ../
+          cd packages/config && npm i && cd ../../
+          cd packages/database && npm i && cd ../../
+          cd backend && npm i && cd ../
+          cd frontend && npm i && cd ../
           npm run build
   deploy:
     needs: build
