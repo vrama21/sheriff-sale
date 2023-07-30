@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../contexts';
 import { ListingTable, Paginate } from '../../components';
-import { Listing } from '@prisma/client';
+import { Listing } from 'database';
 import { useStyles } from './ListingView.styles';
 
 interface ListingViewProps {
