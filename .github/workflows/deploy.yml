@@ -20,7 +20,7 @@ jobs:
           node-version: '16'
       - name: Build
         run: |
-          npm i
+          npm i && cd packages/database && npm i && cd ../../frontend && npm i && cd ../backend && npm i
           npm run build
   deploy:
     runs-on: ubuntu-latest
