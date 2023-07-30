@@ -1,10 +1,7 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
 import { newJerseySheriffSaleCountyParser } from '../controllers';
-import { NJ_COUNTIES } from '@types';
+import { NJ_COUNTIES } from '../types';
 
-export async function handler(_event: APIGatewayProxyEvent): Promise<string> {
-  let shouldThrowError = false;
-
+export async function handler(): Promise<string> {
   await Promise.all(
     NJ_COUNTIES.map(async (county) => {
       try {
@@ -12,14 +9,10 @@ export async function handler(_event: APIGatewayProxyEvent): Promise<string> {
       } catch (error) {
         console.error(error);
 
-        shouldThrowError = true;
+        throw new Error('New Jersey Sheriff Sale Scraper failed.');
       }
     }),
   );
-
-  if (shouldThrowError) {
-    throw new Error('New Jersey Sheriff Sale Scraper failed.');
-  }
 
   return 'New Jersey Sheriff Sale Scraper ran successfully.';
 }

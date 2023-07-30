@@ -8,19 +8,18 @@ export type SaveHtmlToS3Args = {
 };
 
 export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3Args) => {
-  const { NJ_SHERIFF_SALE_BUCKET_NAME } = process.env;
-
-  if (!NJ_SHERIFF_SALE_BUCKET_NAME) {
-    throw new Error('NJ_SHERIFF_SALE_BUCKET_NAME is not defined');
-  }
+  const { ENV } = process.env;
+  if (!ENV) throw new Error('ENV is not defined');
 
   const todaysDate = DateTime.utc().toISODate();
+  
+  const bucketName = `nj-sheriff-sale-${ENV}`;
   const s3FileName = `${keyPrefix}/${todaysDate}/${keySuffix}`;
 
   console.log(`Checking if ${s3FileName} already exists ...`);
   try {
     await getS3({
-      bucketName: NJ_SHERIFF_SALE_BUCKET_NAME,
+      bucketName,
       key: s3FileName,
     });
     console.log(`${s3FileName} already exists. Skipping save to s3.`);
@@ -31,7 +30,7 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
 
     await saveS3({
       data: html,
-      bucketName: NJ_SHERIFF_SALE_BUCKET_NAME,
+      bucketName,
       key: s3FileName,
     });
   }

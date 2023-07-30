@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { parseListingDetails } from './parseListingDetails';
 
 describe('parseListingDetails', () => {

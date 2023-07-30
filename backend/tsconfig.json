@@ -1,9 +1,8 @@
 {
-  "extends": "tsconfig/node16.json",
-  "include": ["next-env.d.ts", "**/*.ts"],
-  "exclude": ["node_modules", "cdk.out", "scripts", "build"],
   "compilerOptions": {
-    "lib": ["ES2021", "DOM"],
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020", "DOM"],
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
@@ -19,13 +18,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
+    "esModuleInterop": true,
     "outDir": "build",
     "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types"],
-    "baseUrl": ".",
-    "paths": {
-      "@types": ["src/types"],
-    }
-  }
-
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "cdk.out", "build", "scripts"]
 }

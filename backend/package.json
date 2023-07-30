@@ -1,7 +1,7 @@
 {
-  "name": "sheriff-sale",
+  "name": "sheriff-sale-backend",
   "version": "0.1.0",
-  "license": "MIT",
+  "private": true,
   "bin": {
     "sheriff-sale": "bin/sheriff-sale.js"
   },
@@ -12,9 +12,6 @@
     "cdk": "cdk",
     "lint": "eslint --ext .ts ./src",
     "lint:fix": "eslint --fix --ext .ts ./src",
-    "postgres:start": "docker-compose up -d",
-    "migrate:up": "prisma migrate dev --create-only",
-    "prisma:generate": "prisma generate",
     "start:newJerseyScraper": "ts-node src/handlers/local/newJerseySheriffSaleScraperHandler.local.ts"
   },
   "devDependencies": {

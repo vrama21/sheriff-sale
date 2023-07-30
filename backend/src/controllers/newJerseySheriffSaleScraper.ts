@@ -1,6 +1,6 @@
+import { ListingParse, NJCounty } from '../types';
+import { prisma } from 'database';
 import { newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
-import { ListingParse, NJCounty } from '@types';
-import { prisma } from 'src/services/db';
 
 export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promise<void> => {
   console.log(`Parsing ${county} County...`);

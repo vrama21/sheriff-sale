@@ -1,6 +1,6 @@
 import { createRouter } from './context';
 import { z } from 'zod';
-import { prisma } from '../db/client';
+import { prisma } from 'database';
 
 export const listingRouter = createRouter().query('getListings', {
   input: z.object({
