@@ -20,12 +20,25 @@ jobs:
           node-version: '16'
       - name: Build
         run: |
-          npm i 
-          cd packages/config && npm i && cd ../../
-          cd packages/database && npm i && cd ../../
-          cd backend && npm i && cd ../
-          cd frontend && npm i && cd ../
+          npm ci 
+          cd packages/config
+          npm ci
+          cd ../../
+          cd packages/database
+          npm ci
+          cd ../../
+          cd backend
+          npm ci
+          cd ../
+          cd frontend
+          npm ci
+          cd ../
           npm run build
+      - name: Database Migration
+        run: |
+          npm run generate
+          npm run db:migrate:deploy
+          npm run db:push
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -51,14 +64,8 @@ jobs:
           aws configure set aws_default_region $AWS_DEFAULT_REGION
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-      - name: Install Database Package
-        run: |
-          cd packages/database
-          npm ci
-          cd ../../
       - name: Deploy AWS Stack
         run: |
           cd backend
-          npm ci
           npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
           npx cdk deploy --require-approval never
