@@ -9,7 +9,7 @@ datasource db {
 }
 
 model Listing {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(uuid())
   propertyId    String
   sheriffId     String
   createdAt     DateTime @default(now())
@@ -43,8 +43,8 @@ model Listing {
 }
 
 model StatusHistory {
-  id        Int      @id @default(autoincrement())
-  listingId Int
+  id        String   @id @default(uuid())
+  listingId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   date      String
