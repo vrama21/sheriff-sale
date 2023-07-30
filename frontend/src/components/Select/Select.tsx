@@ -20,6 +20,7 @@ const Select: React.FC<SelectProps> = ({ className, id, name, onChange, options,
   return (
     <>
       <MUISelect
+        // eslint-disable-next-line react/no-children-prop
         children={options}
         className={className || classes.selectRoot}
         onChange={onChange}

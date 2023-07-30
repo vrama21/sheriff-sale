@@ -1,9 +1,10 @@
+/* eslint-disable react/jsx-key */
 import React, { useMemo } from 'react';
 import { Column, useTable } from 'react-table';
 import { Table, TableBody, TableHead, TableRow, TableCell, useMediaQuery } from '@mui/material';
 import { Listing } from '@prisma/client';
-import { formatToCurrency } from 'helpers';
-import { ViewListingButton } from 'components';
+import { formatToCurrency } from '../../helpers';
+import { ViewListingButton } from '../../components';
 import { useStyles } from './ListingTable.styles';
 
 interface ListingTableProps {
@@ -14,7 +15,7 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
   const { classes } = useStyles();
   const mobileView = useMediaQuery('(min-width: 0px)', { noSsr: true });
 
-  const columnHeaders:  Column<Listing>[] = mobileView
+  const columnHeaders: Column<Listing>[] = mobileView
     ? [
         {
           Header: 'Address',
@@ -77,13 +78,14 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
 
   const columns = useMemo(() => columnHeaders, [mobileView]);
 
+  // @ts-ignore
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
   const tableHeaders = headerGroups.map((headerGroup) => {
     return (
       <TableRow {...headerGroup.getHeaderGroupProps()}>
-        {headerGroup.headers.map((column) => (
-          <TableCell className={classes.tableHeader} {...column.getHeaderProps()}>
+        {headerGroup.headers.map((column, i) => (
+          <TableCell key={`column-${i}`} className={classes.tableHeader} {...column.getHeaderProps()}>
             {column.render('Header')}
           </TableCell>
         ))}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormControl, MenuItem } from '@mui/material';
-import { ButtonSubmit, FilterLabel, Select } from 'components';
-import { Filter } from 'types';
+import { ButtonSubmit, FilterLabel, Select } from '../../components';
+import { Filter } from '../../types';
 import { useStyles } from './SearchFilters.style';
 import { SelectInputProps } from '@mui/material/Select/SelectInput';
 

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["NEXT_GOOGLE_MAPS_API_KEY", "NODE_ENV", "PORT", "VERCEL_URL"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "db:migrate:deploy": {},
+    "db:push": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "generate": {
+      "dependsOn": ["^generate"]
+    },
+    "lint": {}
+  }
+}

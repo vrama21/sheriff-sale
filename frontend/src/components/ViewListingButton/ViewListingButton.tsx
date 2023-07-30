@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useStyles } from './ViewListingButton.styles';
 import { ArrowForward } from '@mui/icons-material';
-import { ButtonSubmit } from 'components';
+import { ButtonSubmit } from '../../components';
 
 const ViewListingButton: React.FC<{ listingId: number }> = ({ listingId }: { listingId: number }) => {
   const { classes } = useStyles();

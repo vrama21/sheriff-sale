@@ -1,4 +1,3 @@
-// src/pages/_app.tsx
 import { withTRPC } from '@trpc/next';
 import type { AppRouter } from '../server/router';
 import type { AppType } from 'next/dist/shared/lib/utils';

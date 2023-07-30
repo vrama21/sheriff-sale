@@ -1,13 +1,12 @@
 {
-  "name": "sheriff-sale",
+  "name": "sheriff-sale-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -15,7 +14,6 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.5",
-    "@prisma/client": "^4.0.0",
     "@react-google-maps/api": "^2.17.1",
     "@trpc/client": "^9.25.3",
     "@trpc/next": "^9.25.3",
@@ -37,12 +35,14 @@
     "@types/react-dom": "^18.0.10",
     "@types/react-table": "^7.7.14",
     "autoprefixer": "^10.4.7",
+    "config": "*",
+    "database": "*",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
-    "prisma": "^4.0.0",
     "tailwindcss": "^3.1.4",
+    "tsconfig": "*",
     "typescript": "4.7.4"
   }
 }

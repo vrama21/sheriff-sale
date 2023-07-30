@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "packages/*"
+  ],
+  "prisma": {
+    "schema": "packages/database/prisma/schema.prisma"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "db:migrate:deploy": "turbo run db:migrate:deploy",
+    "db:push": "turbo run db:push",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate": "turbo run generate",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "dotenv-cli": "^7.2.1",
+    "esbuild": "^0.16.5",
+    "prettier": "^2.5.1",
+    "tsx": "^3.7.1",
+    "turbo": "^1.9.3"
+  },
+  "packageManager": "npm@8.11.0"
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
-import { useAppContext } from 'contexts';
+import { useAppContext } from '../../contexts';
 import { useStyles } from './Paginate.style';
 
 interface PaginateProps {

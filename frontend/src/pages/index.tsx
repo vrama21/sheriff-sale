@@ -1,12 +1,25 @@
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
-import { SearchFilters } from 'components';
+import { SearchFilters } from '../components';
 import { Paper } from '@mui/material';
-import { useStyles } from './index.style';
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()((theme) => ({
+  root: {
+    textAlign: 'center',
+  },
+  header: {
+    background: theme.palette.common.black,
+    paddingBottom: '2rem',
+  },
+  title: {
+    padding: '0.5rem 0',
+  },
+}));
 
 const HomePage: React.FC = () => {
   const { classes } = useStyles();
-  
+
   const initialFilterState = {
     county: '',
     city: '',
@@ -16,6 +29,7 @@ const HomePage: React.FC = () => {
 
   const { data: cityByCountyMapping } = trpc.useQuery(['constants.getCitiesByCountyMapping']);
   const { data: listings, refetch } = trpc.useQuery(
+    // @ts-ignore
     ['listing.getListings', { county: filters.county, city: filters.city }],
     {
       enabled: false,
@@ -59,6 +73,7 @@ const HomePage: React.FC = () => {
               counties={counties}
               citiesByCounty={cityByCountyMapping}
               filters={filters}
+              // @ts-ignore
               onFilterChange={onFilterChange}
               onFilterReset={onFilterReset}
               onFilterSubmit={onFilterSubmit}

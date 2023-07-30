@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { formatToCurrency } from 'helpers';
-import { ListingMap } from 'components';
+import { formatToCurrency } from '../../helpers';
+import { ListingMap } from '../../components';
 import { useClasses } from './ListingDetails.style';
 import { Listing } from '@prisma/client';
 

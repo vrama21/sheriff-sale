@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppContext } from 'contexts';
-import { ListingTable, LoadingSpinner, Paginate } from 'components';
+import { useAppContext } from '../../contexts';
+import { ListingTable, Paginate } from '../../components';
 import { Listing } from '@prisma/client';
 import { useStyles } from './ListingView.styles';
 
@@ -27,7 +27,7 @@ const ListingView: React.FC<ListingViewProps> = ({ listings }: ListingViewProps)
           <ListingTable listings={viewableListings} />
         </div>
       )}
-      {!listings && <LoadingSpinner />}
+      {/* {!listings && <LoadingSpinner />} */}
       {viewableListings?.length === 0 && <span>There are no results with the selected filters.</span>}
     </div>
   );
