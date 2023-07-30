@@ -69,5 +69,6 @@ jobs:
       - name: Deploy AWS Stack
         run: |
           cd backend
+          npm ci
           npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
           npx cdk deploy --require-approval never
