@@ -21,14 +21,14 @@ jobs:
       - name: Build
         run: |
           npm i 
-          cd packages/config && npm i && cd ../../
-          cd packages/database && npm i && cd ../../
-          cd frontend && npm i && cd ../
-          cd backend && npm i && cd ../
+          cd packages/config && npm ci && cd ../../
+          cd packages/database && npm ci && cd ../../
+          cd backend && npm ci && cd ../
+          cd frontend && npm ci && cd ../
           npm run build
   deploy:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
     environment: dev
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
