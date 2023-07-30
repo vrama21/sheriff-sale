@@ -20,18 +20,18 @@ jobs:
           node-version: '16'
       - name: Build
         run: |
-          npm ci 
+          npm i 
           cd packages/config
-          npm ci
+          npm i
           cd ../../
           cd packages/database
-          npm ci
+          npm i
           cd ../../
           cd backend
-          npm ci
+          npm i
           cd ../
           cd frontend
-          npm ci
+          npm i
           cd ../
           npm run build
       - name: Database Migration
