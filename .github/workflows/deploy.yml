@@ -44,7 +44,7 @@ jobs:
           npm run build
       - name: Database Migration
         run: |
-          npm run generate
+          npm run db:generate
           npm run db:migrate:deploy
           npm run db:push
   deploy:
@@ -67,6 +67,7 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
       - name: Deploy AWS Stack
         run: |
+          npm ci
           cd backend
           npm ci
           npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
