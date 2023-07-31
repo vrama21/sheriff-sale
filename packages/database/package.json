@@ -18,8 +18,8 @@
     "dev": "tsup --watch",
     "format": "prisma format",
     "lint": "eslint \"src/**/*.ts\"",
-    "prebuild": "npm run generate",
-    "predev": "npm run generate",
+    "prebuild": "npm run db:generate",
+    "predev": "npm run db:generate",
     "studio": "prisma studio"
   },
   "dependencies": {
