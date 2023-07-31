@@ -28,19 +28,10 @@ jobs:
           node-version: '16'
       - name: Build & Deploy
         run: |
-          npm i 
-          cd packages/config
-          npm i
-          cd ../../
-          cd packages/database
-          npm i
-          cd ../../
-          cd backend
-          npm i
-          cd ../
-          cd frontend
-          npm i
-          cd ../
+          npm i -w=@sheriff-sale/config
+          npm i -w=@sheriff-sale/database
+          npm i -w=@sheriff-sale/backend
+          npm i -w=@sheriff-sale/frontend
           npm run build
       - name: Database Migration
         run: |

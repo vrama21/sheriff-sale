@@ -25,7 +25,7 @@
     "paths": {
       "database": ["../packages/database/src"],
     },
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types"]
   },
-  "exclude": ["node_modules", "cdk.out",]
+  "exclude": ["node_modules", "cdk.out", "dist"]
 }
