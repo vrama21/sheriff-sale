@@ -9,12 +9,18 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  ENV: ${{ vars.ENV }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     environment: dev
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -45,13 +51,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: dev
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      ENV: ${{ vars.ENV }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
