@@ -49,6 +49,9 @@ export class SheriffSaleHandler extends NodejsFunction {
       //   },
       //   nodeModules: ['@prisma/client', 'prisma'],
       // },
+      bundling: {
+        nodeModules: ['database'],
+      },
       entry: path.join(rootDir, entry),
       environment: {
         ...defaultEnvironment,
