@@ -7,6 +7,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
   ],
+  external: ['database'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2019,
