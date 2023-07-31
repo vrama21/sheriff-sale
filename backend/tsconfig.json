@@ -21,6 +21,10 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "database": ["../packages/database/src"],
+    },
     "typeRoots": ["./node_modules/@types"],
   },
   "exclude": ["node_modules", "cdk.out",]
