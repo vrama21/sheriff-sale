@@ -1,9 +1,11 @@
+const eslintPreset = require('config/eslint-preset');
+
 module.exports = {
+  ...eslintPreset,
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-    'config/eslint-preset'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {

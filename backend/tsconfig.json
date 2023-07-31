@@ -21,7 +21,7 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "../node_modules/@types"],
+    "typeRoots": ["./node_modules/@types"],
   },
   "exclude": ["node_modules", "cdk.out",]
 }

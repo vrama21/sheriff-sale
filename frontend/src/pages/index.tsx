@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
-import { SearchFilters } from '../components';
+import { ListingView, SearchFilters } from '../components';
 import { Paper } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
@@ -82,7 +82,7 @@ const HomePage: React.FC = () => {
           )}
         </div>
       </div>
-      {/* <ListingView listings={listings || []} /> */}
+      <ListingView listings={listings || []} />
     </Paper>
   );
 };
