@@ -15,9 +15,7 @@ export class SheriffSaleStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const { AWS_ACCOUNT_ID, ENV } = process.env;
-
-    if (!AWS_ACCOUNT_ID) throw new Error('AWS_ACCOUNT_ID not set');
+    const { ENV } = process.env;
     if (!ENV) throw new Error('ENV not set');
 
     const newJerseySheriffSaleBucket = new s3.Bucket(this, 'NewJerseySheriffSaleBucket', {
