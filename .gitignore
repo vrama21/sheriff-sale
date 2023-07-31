@@ -13,8 +13,9 @@ coverage
 out/
 
 # builds
-build
-dist
+**/build
+**/dist
+backend/cdk.out
 
 # misc
 .DS_Store

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "dotenv -e ../.env.local next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -19,6 +19,7 @@
     "@trpc/next": "^9.25.3",
     "@trpc/react": "^9.25.3",
     "@trpc/server": "^9.25.3",
+    "database": "*",
     "next": "^13.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,7 +37,7 @@
     "@types/react-table": "^7.7.14",
     "autoprefixer": "^10.4.7",
     "config": "*",
-    "database": "*",
+    "dotenv-cli": "^7.2.1",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
