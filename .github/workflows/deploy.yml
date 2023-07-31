@@ -46,15 +46,6 @@ jobs:
         run: |
           npm run db:migrate:deploy
           npm run db:push
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16'
       - name: Install AWS CLI
         run: |
           sudo apt-get -q install -y python3-pip
@@ -66,8 +57,5 @@ jobs:
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
       - name: Deploy AWS Stack
         run: |
-          npm ci
-          cd backend
-          npm ci
           npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/${AWS_DEFAULT_REGION}
           npx cdk deploy --require-approval never
