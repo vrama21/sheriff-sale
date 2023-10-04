@@ -7,6 +7,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**", "cdk.out/**"]
     },
+    "deploy": {},
     "db:generate": {
       "dependsOn": ["^db:generate"]
     },
