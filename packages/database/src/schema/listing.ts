@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { statusHistory } from './statusHistory';
 
-export const listing = pgTable('listing', {
+export const listing = pgTable('Listing', {
   id: serial('id').primaryKey(),
   address: varchar('address', { length: 256 }),
   attorney: varchar('attorney', { length: 256 }),
