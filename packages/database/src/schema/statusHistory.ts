@@ -1,8 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { listing } from './listing';
+import { listings } from './listing';
 
-export const statusHistory = pgTable('StatusHistory', {
+export const statusHistories = pgTable('StatusHistory', {
   id: serial('id').primaryKey(),
   listingId: integer('listingId'),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
@@ -11,11 +11,11 @@ export const statusHistory = pgTable('StatusHistory', {
   status: varchar('status', { length: 256 }),
 });
 
-export const statusHistoryRelations = relations(statusHistory, ({ one }) => ({
-  listing: one(listing, {
-    fields: [statusHistory.listingId],
-    references: [listing.id],
+export const statusHistoryRelations = relations(statusHistories, ({ one }) => ({
+  listing: one(listings, {
+    fields: [statusHistories.listingId],
+    references: [listings.id],
   }),
 }));
 
-export type StatusHistory = typeof statusHistory.$inferSelect;
+export type StatusHistory = typeof statusHistories.$inferSelect;
