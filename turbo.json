@@ -1,7 +1,19 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["AWS_ACCOUNT_ID", "DATABASE_URL", "ENV", "NEXT_GOOGLE_MAPS_API_KEY", "NODE_ENV", "PORT", "VERCEL_URL"],
+  "globalEnv": [
+    "AWS_ACCOUNT_ID",
+    "DATABASE_URL",
+    "ENV",
+    "NEXT_GOOGLE_MAPS_API_KEY",
+    "NODE_ENV",
+    "PORT",
+    "POSTGRES_HOST",
+    "POSTGRES_DB",
+    "POSTGRES_USER",
+    "POSTGRES_PASSWORD",
+    "VERCEL_URL"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
