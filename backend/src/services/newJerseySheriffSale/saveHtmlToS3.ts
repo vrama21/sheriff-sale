@@ -12,8 +12,8 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
   if (!ENV) throw new Error('ENV is not defined');
 
   const todaysDate = DateTime.utc().toISODate();
-  
-  const bucketName = `nj-sheriff-sale-${ENV}`;
+
+  const bucketName = `nj-scraper-files-${ENV}`;
   const s3FileName = `${keyPrefix}/${todaysDate}/${keySuffix}`;
 
   console.log(`Checking if ${s3FileName} already exists ...`);

@@ -19,3 +19,4 @@ export const statusHistoryRelations = relations(statusHistories, ({ one }) => ({
 }));
 
 export type StatusHistory = typeof statusHistories.$inferSelect;
+export type StatusHistoryInsert = typeof statusHistories.$inferInsert;

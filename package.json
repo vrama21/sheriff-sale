@@ -5,14 +5,11 @@
     "frontend",
     "packages/*"
   ],
-  "prisma": {
-    "schema": "packages/database/prisma/schema.prisma"
-  },
   "scripts": {
     "build": "turbo run build",
     "deploy": "turbo run deploy",
     "db:generate": "turbo run db:generate",
-    "db:migrate:deploy": "turbo run db:migrate:deploy",
+    "db:migrate": "turbo run db:migrate",
     "db:push": "turbo run db:push",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
