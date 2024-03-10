@@ -4,7 +4,7 @@ import { listings } from './listing';
 
 export const statusHistories = pgTable('StatusHistory', {
   id: serial('id').primaryKey(),
-  listingId: integer('listingId'),
+  listingId: serial('listingId'),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
   date: varchar('date', { length: 12 }),

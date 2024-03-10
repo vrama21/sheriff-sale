@@ -35,7 +35,8 @@ export const listings = pgTable('Listing', {
 });
 
 export const listingRelations = relations(listings, ({ many }) => ({
-  statusHistories: many(statusHistories),
+  statusHistory: many(statusHistories),
 }));
 
 export type Listing = typeof listings.$inferSelect;
+export type ListingInsert = typeof listings.$inferInsert;
