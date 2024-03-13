@@ -1,6 +1,6 @@
 import { HTMLElement, parse } from 'node-html-parser';
 
-export const parseCountyProperyIds = async (countyListingHtml: string): Promise<string[]> => {
+export const parseCountyProperyIds = async (countyListingHtml: string): Promise<number[]> => {
   const root = parse(countyListingHtml);
 
   const listingsTableDiv = root.querySelectorAll('table').slice(-1)[0];
@@ -13,8 +13,12 @@ export const parseCountyProperyIds = async (countyListingHtml: string): Promise<
 
     const propertyId = listingHref.match(/\d+/g)?.slice(0)[0];
 
-    return propertyId as string;
+    if (propertyId) {
+      return Number(propertyId);
+    }
+
+    return undefined;
   });
 
-  return propertyIds;
+  return propertyIds.filter((propertyId) => propertyId) as number[];
 };

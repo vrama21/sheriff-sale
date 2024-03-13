@@ -6,7 +6,6 @@ export const cleanAddress = (address: string) => {
   console.log(`Parsing address: ${address} ...`);
 
   const parsedAddress = parseLocation(address);
-  console.log({ parsedAddress });
 
   const streetRegex = new RegExp(`.+(?<={${ADDRESS_SUFFIX.join('|')}})`);
   const cityRegex = new RegExp(`.+(${ADDRESS_SUFFIX.join('|')})(.+)(NJ)`);
@@ -27,10 +26,10 @@ export const cleanAddress = (address: string) => {
     const matches = streetMatch[0].match(regex);
 
     matches?.forEach((match) => street?.replace(match, startCase(match.toLowerCase())));
-    console.log({ matches });
   }
 
   return {
+    address: address.trim(),
     city: cityMatch ? startCase(cityMatch[2].trim().toLowerCase()) : '',
     street: streetMatch ? startCase(streetMatch[0].trim().toLowerCase()) : '',
     zipcode: zipcodeMatch ? startCase(zipcodeMatch[0].trim().toLowerCase()) : '',

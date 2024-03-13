@@ -18,7 +18,7 @@ const acceptedKeys = [
   'upsetAmount',
 ] as const;
 
-type PropertyKey = typeof acceptedKeys[number];
+type PropertyKey = (typeof acceptedKeys)[number];
 
 export const cleanPropertyKey = (key: string): PropertyKey => {
   let cleanKey = key.replace(/#?:?/g, '').trim();

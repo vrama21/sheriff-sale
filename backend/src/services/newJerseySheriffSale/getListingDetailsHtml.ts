@@ -3,7 +3,7 @@ import { saveHtmlToS3 } from './saveHtmlToS3';
 import { NewJerseySheriffSaleHttpClient } from './newJerseySheriffSaleHttpClient';
 
 export type GetListingDetailsHtmlArgs = {
-  propertyId: string;
+  propertyId: number;
 };
 
 export const getListingDetailsHtml = async ({ propertyId }: GetListingDetailsHtmlArgs): Promise<string> => {
@@ -12,7 +12,7 @@ export const getListingDetailsHtml = async ({ propertyId }: GetListingDetailsHtm
   console.log(`Getting html for propertyId ${propertyId}...`);
   const response = await njSheriffSaleClient.get<string>('/Sales/SaleDetails', {
     params: {
-      PropertyId: propertyId,
+      PropertyId: propertyId.toString(),
     },
   });
 
