@@ -1,0 +1,1 @@
+ALTER TABLE "StatusHistory" ALTER COLUMN "listingId" DROP NOT NULL;
