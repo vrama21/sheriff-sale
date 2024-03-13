@@ -35,35 +35,52 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
 
   console.log(`Parsed ${mappedListings.length} listings in ${county} County`);
 
-  await Promise.allSettled(
+  const promiseResults = await Promise.allSettled(
     mappedListings.map(async ({ listing: parsedListing, statusHistory: parsedStatusHistories }) => {
-      console.log(`Upserting Listing propertyId ${parsedListing.propertyId} and address ${parsedListing.address} ...`);
-      const [newListing] = await db
-        .insert(listings)
-        .values({ ...parsedListing })
-        .onConflictDoNothing()
-        .returning();
-      console.log(`Upserted Listing ${newListing}`);
+      const listingInDB = await db.query.listings.findFirst({
+        where: (listings, { eq }) => eq(listings.propertyId, parsedListing.propertyId as number),
+      });
 
-      console.log(`Found ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
-      await Promise.all(
-        parsedStatusHistories.map(async (parsedStatusHistory) => {
-          console.log(`Upserting Status History for listing ${newListing.id} ...`);
-          const [newStatusHistory] = await db
-            .insert(statusHistories)
-            .values({
-              ...parsedStatusHistory,
-              listingId: newListing.id,
-            })
-            .onConflictDoNothing()
-            .returning();
-          console.log(`Upserted Status History ${newStatusHistory.id} for listing ${newListing.id}`);
-        }),
-      );
+      if (!listingInDB) {
+        console.log(
+          `Inserting Listing propertyId ${parsedListing.propertyId} and address ${parsedListing.address} ...`,
+        );
+        const [newListing] = await db
+          .insert(listings)
+          .values({ ...parsedListing })
+          .returning();
+        console.log(`Inserted Listing ${newListing.id}`);
+
+        console.log(`Found ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
+        await Promise.all(
+          parsedStatusHistories.map(async (parsedStatusHistory) => {
+            console.log(`Inserting Status History for listing ${newListing.id} ...`);
+            const [newStatusHistory] = await db
+              .insert(statusHistories)
+              .values({
+                ...parsedStatusHistory,
+                listingId: newListing.id,
+              })
+              .onConflictDoNothing()
+              .returning();
+            console.log(`Inserted Status History ${newStatusHistory.id} for listing ${newListing.id}`);
+          }),
+        );
+      }
     }),
   );
 
-  console.log(`Parsed ${mappedListings.length} new listings for ${county} County successfully!`);
+  promiseResults.forEach((result) => {
+    if (result.status === 'rejected') {
+      console.error(result.reason);
+    }
+  });
+
+  console.log(
+    `Parsed ${
+      promiseResults.filter((result) => result.status === 'fulfilled').length
+    } new listings for ${county} County successfully!`,
+  );
 };
 
 void newJerseySheriffSaleCountyParser('Atlantic').then(() => {

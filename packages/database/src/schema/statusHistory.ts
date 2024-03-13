@@ -8,8 +8,8 @@ export const statusHistories = pgTable('StatusHistory', {
     .primaryKey()
     .$defaultFn(() => randomUUID()),
   listingId: text('listingId'),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+  createdAt: timestamp('createdAt').defaultNow(),
+  updatedAt: timestamp('updatedAt').defaultNow(),
   date: varchar('date', { length: 12 }),
   status: varchar('status', { length: 256 }),
 });

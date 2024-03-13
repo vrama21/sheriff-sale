@@ -13,7 +13,7 @@ export const listings = pgTable('Listing', {
   city: varchar('city', { length: 256 }),
   county: varchar('county', { length: 256 }),
   courtCase: varchar('courtCase', { length: 256 }),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  createdAt: timestamp('createdAt').defaultNow(),
   deed: varchar('deed', { length: 256 }),
   deedAddress: varchar('deedAddress', { length: 256 }),
   defendant: varchar('defendant', { length: 256 }),
@@ -32,7 +32,7 @@ export const listings = pgTable('Listing', {
   state: varchar('state', { length: 256 }),
   street: varchar('street', { length: 256 }),
   unit: varchar('unit', { length: 256 }),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').defaultNow(),
   upsetAmount: varchar('upsetAmount', { length: 256 }),
   zipcode: varchar('zipcode', { length: 256 }),
 });
