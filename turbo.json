@@ -23,7 +23,8 @@
     "db:generate": {
       "dependsOn": ["^db:generate"]
     },
-    "db:migrate:deploy": {},
+    "db:migrate": {},
+    "db:pull": {},
     "db:push": {},
     "dev": {
       "cache": false,

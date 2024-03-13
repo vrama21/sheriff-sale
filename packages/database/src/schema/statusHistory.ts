@@ -1,10 +1,13 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { listings } from './listing';
+import { randomUUID } from 'crypto';
 
 export const statusHistories = pgTable('StatusHistory', {
-  id: serial('id').primaryKey(),
-  listingId: serial('listingId'),
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
+  listingId: text('listingId'),
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
   date: varchar('date', { length: 12 }),

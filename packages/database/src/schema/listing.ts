@@ -1,9 +1,12 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { statusHistories } from './statusHistory';
+import { randomUUID } from 'crypto';
 
 export const listings = pgTable('Listing', {
-  id: serial('id').primaryKey(),
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   address: varchar('address', { length: 256 }),
   attorney: varchar('attorney', { length: 256 }),
   attorneyPhone: varchar('attorneyPhone', { length: 256 }),

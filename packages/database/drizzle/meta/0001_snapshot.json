@@ -1,5 +1,5 @@
 {
-  "id": "12942c91-9017-4e43-a8cf-edb70bf76695",
+  "id": "367ff0d0-7b13-40db-92f8-36bae5a4e685",
   "prevId": "56c8e394-e130-4555-8b3c-ead55fa1c5f8",
   "version": "5",
   "dialect": "pg",
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -196,15 +196,15 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
         "listingId": {
           "name": "listingId",
-          "type": "serial",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "Listing" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" text PRIMARY KEY NOT NULL,
 	"address" varchar(256),
 	"attorney" varchar(256),
 	"attorneyPhone" varchar(256),
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS "Listing" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "StatusHistory" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"listingId" integer,
+	"id" text PRIMARY KEY NOT NULL,
+	"listingId" text NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	"date" varchar(12),

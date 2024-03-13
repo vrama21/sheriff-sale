@@ -10,6 +10,7 @@
     "deploy": "turbo run deploy",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
+    "db:pull": "turbo run db:pull",
     "db:push": "turbo run db:push",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
