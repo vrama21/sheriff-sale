@@ -22,9 +22,7 @@
     "outDir": "dist",
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "paths": {
-      "database": ["../packages/database/src"],
-    },
+    "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types"]
   },
   "exclude": ["node_modules", "cdk.out", "dist"]

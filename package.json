@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "sheriff-sale",
   "workspaces": [
     "backend",
     "frontend",
@@ -7,6 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "install": "turbo run install",
     "deploy": "turbo run deploy",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
@@ -23,7 +25,11 @@
     "esbuild": "^0.16.5",
     "prettier": "^2.5.1",
     "tsx": "^3.7.1",
-    "turbo": "^1.9.3"
+    "turbo": "^2.0.5"
   },
-  "packageManager": "npm@8.11.0"
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "packageManager": "npm@10.5.2"
 }

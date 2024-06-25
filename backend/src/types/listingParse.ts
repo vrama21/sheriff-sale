@@ -1,4 +1,4 @@
-import { Listing, StatusHistory } from 'database';
+import { Listing, StatusHistory } from '@sheriff-sale/database';
 import { BaseModel } from './baseModel';
 
 export interface ListingPropertiesToOmit extends BaseModel {

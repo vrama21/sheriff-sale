@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-config();
+config({ path: __dirname + '/../../.env' });
 
 import { Construct } from 'constructs';
 import { Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
