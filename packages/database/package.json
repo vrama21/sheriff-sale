@@ -26,8 +26,8 @@
     "postgres": "^3.4.3"
   },
   "devDependencies": {
-    "@sheriff-sale/config": "*",
-    "@sheriff-sale/tsconfig": "*",
+    "@sheriff-sale/config": "file:./packages/config",
+    "@sheriff-sale/tsconfig": "file:./packages/tsconfig",
     "dotenv": "^16.4.1",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.12.0",

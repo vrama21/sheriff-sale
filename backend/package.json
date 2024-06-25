@@ -7,7 +7,6 @@
   },
   "scripts": {
     "build": "tsc && cdk synth",
-    "install": "npm ci",
     "deploy": "npm run build && npm run cdk deploy",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf cdk.out",
     "watch": "tsc -w",

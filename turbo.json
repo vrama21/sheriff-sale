@@ -30,12 +30,6 @@
         "cdk.out/**"
       ]
     },
-    "install": {
-      "dependsOn": [
-        "build",
-        "^install"
-      ]
-    },
     "deploy": {
       "cache": false,
       "dependsOn": [
