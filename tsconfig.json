@@ -1,0 +1,3 @@
+{
+  "extends":"@sheriff-sale/tsconfig/base.json"
+}
