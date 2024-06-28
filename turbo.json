@@ -1,8 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": [
+    "**/.env"
+  ],
   "globalEnv": [
     "AWS_ACCOUNT_ID",
+    "CDK_DEFAULT_ACCOUNT",
+    "CDK_DEFAULT_REGION",
     "DATABASE_URL",
     "ENV",
     "NEXT_GOOGLE_MAPS_API_KEY",
@@ -14,14 +18,31 @@
     "POSTGRES_PASSWORD",
     "VERCEL_URL"
   ],
-  "pipeline": {
+  "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "cdk.out/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "cdk.out/**"
+      ]
     },
-    "deploy": {},
+    "deploy": {
+      "cache": false,
+      "dependsOn": [
+        "build",
+        "db:generate",
+        "db:migrate",
+        "^deploy"
+      ]
+    },
     "db:generate": {
-      "dependsOn": ["^db:generate"]
+      "dependsOn": [
+        "^db:generate"
+      ]
     },
     "db:migrate": {},
     "db:pull": {},
@@ -31,7 +52,15 @@
       "cache": false,
       "persistent": true
     },
-    "lint": {},
-    "test": {}
+    "lint": {
+      "dependsOn": [
+        "^lint"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^test"
+      ]
+    }
   }
 }

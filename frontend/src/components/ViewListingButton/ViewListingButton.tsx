@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useStyles } from './ViewListingButton.styles';
-import { ArrowForward } from '@mui/icons-material';
+// import { ArrowForward } from '@mui/icons-material';
 import { ButtonSubmit } from '../../components';
 
 const ViewListingButton = ({ listingId }: { listingId: string }) => {
@@ -10,7 +10,7 @@ const ViewListingButton = ({ listingId }: { listingId: string }) => {
     <>
       <Link href={`listing/${listingId}`}>
         <ButtonSubmit className={classes.viewListingButtonRoot} value="View Listing">
-          <ArrowForward />
+          {/* <ArrowForward /> */}
         </ButtonSubmit>
       </Link>
     </>

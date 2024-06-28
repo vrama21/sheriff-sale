@@ -18,9 +18,6 @@ export class SheriffSaleHandler extends NodejsFunction {
 
     super(scope, id, {
       ...props,
-      bundling: {
-        nodeModules: ['database'],
-      },
       environment: {
         ...defaultEnvironment,
         ...props.environment,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../contexts';
 import { ListingTable, Paginate } from '../../components';
-import { Listing } from 'database';
+import { Listing } from '@sheriff-sale/database';
 import { useStyles } from './ListingView.styles';
 
 interface ListingViewProps {

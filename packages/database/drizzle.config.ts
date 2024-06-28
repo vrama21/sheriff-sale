@@ -1,7 +1,7 @@
 import type { Config } from 'drizzle-kit';
 import { config } from 'dotenv';
 
-config({ path: __dirname + '/../../.env.local' });
+config({ path: __dirname + '/../../.env' });
 
 const { POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD } = process.env;
 

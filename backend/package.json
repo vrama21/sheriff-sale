@@ -17,8 +17,8 @@
     "start:newJerseyScraper": "ts-node src/handlers/local/newJerseySheriffSaleScraperHandler.local.ts"
   },
   "devDependencies": {
-    "@sheriff-sale/config": "*",
-    "@sheriff-sale/tsconfig": "*",
+    "@sheriff-sale/config": "file:../packages/config",
+    "@sheriff-sale/tsconfig": "file:../packages/tsconfig",
     "@types/aws-lambda": "8.10.109",
     "@types/he": "1.1.2",
     "@types/jest": "29.2.5",
@@ -43,9 +43,9 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.379.1",
-    "@sheriff-sale/database": "*",
+    "@sheriff-sale/database": "file:../packages/database",
     "aws-cdk-lib": "2.139.0",
-    "axios": "1.4.0",
+    "axios": "1.7.2",
     "axios-cookiejar-support": "2.0.3",
     "constructs": "10.3.0",
     "he": "1.2.0",

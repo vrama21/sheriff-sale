@@ -1,5 +1,5 @@
 import { ListingParse, NJCounty } from '../types';
-import { db, listings, statusHistories } from 'database';
+import { db, listings, statusHistories } from '@sheriff-sale/database';
 import { newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
 
 export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promise<void> => {
