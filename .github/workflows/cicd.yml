@@ -16,6 +16,10 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   ENV: ${{ vars.ENV }}
+  POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
 jobs:
   build:
@@ -26,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
-      - name: Build & Deploy
+      - name: Build
         run: |
           npm install
           npm run build
