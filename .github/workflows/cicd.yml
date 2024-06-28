@@ -30,7 +30,7 @@ jobs:
           node-version: '20'
       - name: Build
         run: |
-          npm install
+          npm ci
           npm run build
       - name: Database Migration
         run: |
@@ -39,8 +39,8 @@ jobs:
       - name: Deploy Backend
         run: |
           sudo apt-get -q install -y python3-pip
-          pip3 install awscli
-          aws configure set aws_default_region $AWS_DEFAULT_REGION
+          pip3 install awscliv2
+          aws configure set aws_default_region us-east-2
           aws configure set aws_access_key $AWS_ACCESS_KEY
           aws configure set aws_secret_access_key $AWS_SECRET_KEY
           npm run deploy
