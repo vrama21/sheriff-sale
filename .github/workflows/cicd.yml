@@ -38,7 +38,6 @@ jobs:
         run: |
           npm run db:generate
           npm run db:migrate
-          npm run db:push
       - name: Deploy Backend
         run: |
           sudo apt-get -q install -y python3-pip
