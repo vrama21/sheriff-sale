@@ -38,6 +38,8 @@ jobs:
         run: |
           sudo apt-get -q install -y python3-pip
           pip3 install awscliv2
+          echo $AWS_ACCESS_KEY
+          echo $AWS_SECRET_KEY
           aws configure set aws_default_region $AWS_DEFAULT_REGION
           aws configure set aws_access_key $AWS_ACCESS_KEY
           aws configure set aws_secret_access_key $AWS_SECRET_KEY
