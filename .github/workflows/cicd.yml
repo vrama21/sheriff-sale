@@ -34,22 +34,11 @@ jobs:
         run: |
           npm run db:generate
           npm run db:migrate
-      - name: CDK Bootstrap
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'bootstrap'
-          # cdk_stack: 'SheriffSaleStack'
-          working_dir: './backend'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'
       - name: CDK Deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
           cdk_subcommand: 'deploy'
           cdk_args: '--require-approval never'
-          # cdk_stack: 'SheriffSaleStack'
           actions_comment: false
           working_dir: './backend'
         env:
