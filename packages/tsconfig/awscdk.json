@@ -27,11 +27,8 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "target": "ES2022",
-    "typeRoots": [
-      "../../node_modules/@types"
-    ]
   },
-  "display": "CDK",
+  "display": "AWS CDK",
   "extends": "./node20.json",
   "exclude": [
     "node_modules",
