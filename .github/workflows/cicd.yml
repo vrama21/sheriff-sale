@@ -30,6 +30,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
       - name: Build
         run: |
           npm install
@@ -38,11 +42,12 @@ jobs:
         run: |
           npm run db:generate
           npm run db:migrate
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: "us-east-2"
       - name: Deploy Backend
         run: |
-          sudo apt-get -q install -y python3-pip
-          pip3 install awscli
-          aws configure set aws_default_region $AWS_DEFAULT_REGION
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           npm run deploy
