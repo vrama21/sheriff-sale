@@ -12,7 +12,6 @@
     "inlineSources": true,
     "lib": [
       "ES2022",
-      "ES2023"
     ],
     "module": "CommonJS",
     "noFallthroughCasesInSwitch": false,
