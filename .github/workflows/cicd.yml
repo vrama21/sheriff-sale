@@ -10,8 +10,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   ENV: ${{ vars.ENV }}
   POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
@@ -40,7 +38,11 @@ jobs:
         run: |
           sudo apt-get -q install -y python3-pip
           pip3 install awscliv2
-          aws configure set aws_default_region us-east-2
+          aws configure set aws_default_region $AWS_DEFAULT_REGION
           aws configure set aws_access_key $AWS_ACCESS_KEY
           aws configure set aws_secret_access_key $AWS_SECRET_KEY
           npm run deploy
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
