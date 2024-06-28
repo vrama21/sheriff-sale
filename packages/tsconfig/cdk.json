@@ -1,6 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "baseUrl": ".",
   "compilerOptions": {
     "alwaysStrict": true,
     "declaration": true,
@@ -12,6 +11,7 @@
     "inlineSources": true,
     "lib": [
       "ES2022",
+      "DOM"
     ],
     "module": "CommonJS",
     "noFallthroughCasesInSwitch": false,
@@ -28,7 +28,7 @@
     "strictPropertyInitialization": false,
     "target": "ES2022",
     "typeRoots": [
-      "./node_modules/@types"
+      "../../node_modules/@types"
     ]
   },
   "display": "CDK",

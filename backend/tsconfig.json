@@ -1,6 +1,3 @@
 {
-  "extends": "@sheriff-sale/tsconfig/cdk.json",
-  "compilerOptions": {
-    "lib": ["ES2020", "DOM"],
-  },
+  "extends": "@sheriff-sale/tsconfig/cdk.json"
 }
