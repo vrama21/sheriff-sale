@@ -20,6 +20,7 @@
     "test": "turbo run test"
   },
   "devDependencies": {
+    "@sheriff-sale/config": "file:./packages/config",
     "@types/node": "^20.4.5",
     "esbuild": "^0.16.5",
     "prettier": "^2.5.1",

@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { Column, useTable } from 'react-table';
 import { Table, TableBody, TableHead, TableRow, TableCell, useMediaQuery } from '@mui/material';
-import { Listing } from 'database';
+import { Listing } from '@sheriff-sale/database';
 import { formatToCurrency } from '../../helpers';
 import { ViewListingButton } from '../../components';
 import { useStyles } from './ListingTable.styles';

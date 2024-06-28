@@ -27,9 +27,10 @@ const HomePage: React.FC = () => {
   };
   const [filters, setFilters] = useState(initialFilterState);
 
+  // @ts-ignore
   const { data: cityByCountyMapping } = trpc.useQuery(['constants.getCitiesByCountyMapping']);
+  // @ts-ignore
   const { data: listings, refetch } = trpc.useQuery(
-    // @ts-ignore
     ['listing.getListings', { county: filters.county, city: filters.city }],
     {
       enabled: false,

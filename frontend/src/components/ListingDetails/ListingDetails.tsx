@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { formatToCurrency } from '../../helpers';
 import { ListingMap } from '../../components';
 import { useClasses } from './ListingDetails.style';
-import { Listing } from 'database';
+import { Listing } from '@sheriff-sale/database';
 
 interface ListingProps {
   listing: Listing;
