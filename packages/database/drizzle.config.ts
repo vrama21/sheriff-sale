@@ -1,4 +1,4 @@
-import type { Config } from 'drizzle-kit';
+import {defineConfig} from 'drizzle-kit'
 import { config } from 'dotenv';
 
 config({ path: __dirname + '/../../.env' });
@@ -10,14 +10,14 @@ if (!POSTGRES_DB) throw new Error('POSTGRES_DB not set');
 if (!POSTGRES_USER) throw new Error('POSTGRES_USER not set');
 if (!POSTGRES_PASSWORD) throw new Error('POSTGRES_PASSWORD not set');
 
-export default {
+export default defineConfig({
   schema: './src/schema/index.ts',
   out: './drizzle',
-  driver: 'pg',
+  dialect: 'postgresql',
   dbCredentials: {
     host: POSTGRES_HOST,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
     database: POSTGRES_DB,
   },
-} satisfies Config;
+});
