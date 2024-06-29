@@ -20,12 +20,13 @@
     "test": "turbo run test"
   },
   "devDependencies": {
-    "@sheriff-sale/config": "file:./packages/config",
-    "@types/node": "^20.4.5",
-    "esbuild": "^0.16.5",
-    "prettier": "^2.5.1",
-    "tsx": "^3.7.1",
-    "turbo": "^2.0.5"
+    "@types/node": "20.14.9",
+    "dotenv": "16.4.5",
+    "esbuild": "0.21.5",
+    "prettier": "3.3.2",
+    "tsx": "4.15.7",
+    "turbo": "2.0.5",
+    "typescript": "5.5.2"
   },
   "engines": {
     "node": ">=20.0.0"
