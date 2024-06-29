@@ -26,8 +26,8 @@
     "postgres": "3.4.4"
   },
   "devDependencies": {
-    "@sheriff-sale/config": "file:./packages/config",
-    "@sheriff-sale/tsconfig": "file:./packages/tsconfig",
+    "@sheriff-sale/config": "*",
+    "@sheriff-sale/tsconfig": "*",
     "dotenv": "16.4.5",
     "drizzle-kit": "0.22.1",
     "pg": "8.12.0",
