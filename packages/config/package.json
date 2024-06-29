@@ -1,10 +1,10 @@
 {
   "name": "@sheriff-sale/config",
   "version": "1.0.0",
-  "main": "eslint-preset.js",
   "license": "MIT",
   "files": [
-    "eslint-preset.js"
+    "eslint-preset.js",
+    "prettier-config.js"
   ],
   "dependencies": {
     "eslint-config-next": "14.2.4",
