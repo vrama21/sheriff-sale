@@ -1,11 +1,11 @@
 import { startCase } from 'lodash';
 import { ADDRESS_SUFFIX } from '../constants';
-import { parseLocation } from 'parse-address';
+// import { parseLocation } from 'parse-address';
 
 export const cleanAddress = (address: string) => {
   console.log(`Parsing address: ${address} ...`);
 
-  const parsedAddress = parseLocation(address);
+  // const parsedAddress = parseLocation(address);
 
   const streetRegex = new RegExp(`.+(?<={${ADDRESS_SUFFIX.join('|')}})`);
   const cityRegex = new RegExp(`.+(${ADDRESS_SUFFIX.join('|')})(.+)(NJ)`);
