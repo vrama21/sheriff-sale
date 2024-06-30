@@ -1,7 +1,6 @@
 module.exports = {
-  passWithNoTests: true,
   roots: ['<rootDir>/src'],
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   testMatch: ['**/*.test.ts'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'
