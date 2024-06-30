@@ -30,24 +30,24 @@ jobs:
         run: |
           npm run db:generate
           npm run db:migrate
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifacts
-          path: ./backend
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: build-artifacts
+      #     path: ./backend
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Only runs on the main branch
+    # if: github.ref == 'refs/heads/main' # Only runs on the main branch
     environment: dev
     steps:
       - uses: actions/checkout@v3
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifacts
-          path: ./backend
+      # - name: Download build artifacts
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: build-artifacts
+      #     path: ./backend
       - name: CDK Deploy
         uses: youyo/aws-cdk-github-actions@v2
         with:
