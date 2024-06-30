@@ -28,6 +28,8 @@
   "devDependencies": {
     "@sheriff-sale/config": "*",
     "@sheriff-sale/tsconfig": "*",
+    "@typescript-eslint/eslint-plugin": "7.14.1",
+    "@typescript-eslint/parser": "7.14.1",
     "dotenv": "16.4.5",
     "drizzle-kit": "0.22.1",
     "pg": "8.12.0",

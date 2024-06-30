@@ -1,7 +1,5 @@
-const eslintPreset = require('@sheriff-sale/config');
-
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
-  ...eslintPreset,
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
@@ -9,10 +7,12 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2023,
-    project: './tsconfig.json',
+    ecmaVersion: 2019,
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+  },
   root: true,
 };

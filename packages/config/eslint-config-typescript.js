@@ -1,5 +1,8 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
+  env: {
+    node: true,
+  },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',

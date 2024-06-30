@@ -1,15 +1,18 @@
 {
   "name": "@sheriff-sale/config",
-  "version": "1.0.0",
-  "license": "MIT",
+  "version": "0.0.0",
+  "private": true,
   "files": [
-    "eslint-preset.js",
+    "eslint-config-next.js",
+    "eslint-config-typescript.js",
     "prettier-config.js"
   ],
-  "dependencies": {
+  "devDependencies": {
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-turbo": "2.0.5",
-    "eslint-plugin-react": "7.34.3"
+    "eslint-plugin-react": "7.34.3",
+    "@typescript-eslint/eslint-plugin": "7.14.1",
+    "@typescript-eslint/parser": "7.14.1"
   }
 }
