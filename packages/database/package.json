@@ -35,5 +35,8 @@
     "pg": "8.12.0",
     "rimraf": "5.0.7",
     "tsup": "8.1.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.18.0"
   }
 }
