@@ -13,7 +13,7 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
 
   const todaysDate = DateTime.utc().toISODate();
 
-  const bucketName = `nj-scraper-files-${ENV}`;
+  const bucketName = `nj-sheriff-sale-${ENV}`;
   const s3FileName = `${keyPrefix}/${todaysDate}/${keySuffix}`;
 
   console.log(`Checking if ${s3FileName} already exists ...`);
@@ -26,12 +26,19 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
 
     return;
   } catch (error) {
-    console.log(`Saving ${s3FileName} to s3 ...`);
+    if (error instanceof Error && error.name === 'NoSuchKey') {
+      console.log(`Saving ${s3FileName} to bucket ${bucketName} ...`);
 
-    await saveS3({
-      data: html,
-      bucketName,
-      key: s3FileName,
-    });
+      await saveS3({
+        data: html,
+        bucketName,
+        key: s3FileName,
+        sse: true,
+      });
+    } else {
+      console.error(`Error checking if ${s3FileName} exists: ${error}`);
+
+      throw error;
+    }
   }
 };

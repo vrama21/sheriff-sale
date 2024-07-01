@@ -4,11 +4,13 @@ import { newJerseySheriffSaleCountyParser } from '../../controllers';
 async function local() {
   config();
 
-  await newJerseySheriffSaleCountyParser('Atlantic').catch((error: Error) => {
+  try {
+    await newJerseySheriffSaleCountyParser('Atlantic');
+  } catch (error) {
     console.error(error);
 
     throw error;
-  });
+  }
 }
 
-void local();
+void local().then(() => process.exit(0));

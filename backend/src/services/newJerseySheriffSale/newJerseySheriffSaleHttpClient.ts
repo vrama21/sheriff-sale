@@ -29,9 +29,12 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
           const cookies = req.headers['set-cookie'];
 
           if (cookies) {
-            const aspSessionId = cookies[0].split(';')[0].split('=')[1];
+            const aspSessionsIdCookie = cookies.find((cookie) => cookie.includes('ASP.NET_SessionId'));
+            const aspSessionId = aspSessionsIdCookie?.split(';')[0].split('=')[1];
 
-            this.aspSessionId = aspSessionId;
+            if (aspSessionId) {
+              this.aspSessionId = aspSessionId;
+            }
           }
         }
 
