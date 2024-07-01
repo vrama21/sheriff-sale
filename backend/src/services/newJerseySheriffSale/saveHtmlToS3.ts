@@ -26,18 +26,12 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
 
     return;
   } catch (error) {
-    if (error instanceof Error && error.name === 'NoSuchKey') {
-      console.log(`Saving ${s3FileName} to bucket ${bucketName} ...`);
+    console.log(`Saving ${s3FileName} to bucket ${bucketName} ...`);
 
-      await saveS3({
-        data: html,
-        bucketName,
-        key: s3FileName,
-      });
-    } else {
-      console.error(`Error checking if ${s3FileName} exists: ${error}`);
-
-      throw error;
-    }
+    await saveS3({
+      bucketName,
+      data: html,
+      key: s3FileName,
+    });
   }
 };

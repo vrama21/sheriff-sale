@@ -39,8 +39,8 @@ export class SheriffSaleStack extends Stack {
           NewJerseySheriffSaleScraperPolicy: new iam.PolicyDocument({
             statements: [
               new iam.PolicyStatement({
-                effect: iam.Effect.ALLOW,
                 actions: ['s3:GetObject', 's3:PutObject', 's3:PutObjectAcl'],
+                effect: iam.Effect.ALLOW,
                 resources: [newJerseySheriffSaleBucket.arnForObjects('*')],
               }),
             ],
@@ -51,8 +51,6 @@ export class SheriffSaleStack extends Stack {
       }),
       timeout: Duration.minutes(15),
     });
-
-    newJerseySheriffSaleBucket.grantWrite(newJerseySheriffSaleScraper);
 
     new events.Rule(this, 'NewJerseySheriffSaleScraperRule', {
       description: 'New Jersey Sheriff Sale Scraper cron rule to run at 12:00AM UTC every day',

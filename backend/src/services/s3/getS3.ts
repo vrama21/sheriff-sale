@@ -16,7 +16,7 @@ export const getS3 = async ({ bucketName, key }: GetConfig) => {
   const params: GetObjectCommandInput = {
     Bucket: bucketName,
     Key: key,
-  }
+  };
 
   return s3.getObject(params);
 };
