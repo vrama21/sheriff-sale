@@ -82,7 +82,3 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
     } new listings for ${county} County successfully!`,
   );
 };
-
-void newJerseySheriffSaleCountyParser('Atlantic').then(() => {
-  process.exit(0);
-});
