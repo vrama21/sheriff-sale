@@ -33,7 +33,6 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
         data: html,
         bucketName,
         key: s3FileName,
-        sse: true,
       });
     } else {
       console.error(`Error checking if ${s3FileName} exists: ${error}`);
