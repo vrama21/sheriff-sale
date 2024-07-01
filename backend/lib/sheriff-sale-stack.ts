@@ -52,6 +52,8 @@ export class SheriffSaleStack extends Stack {
       timeout: Duration.minutes(15),
     });
 
+    newJerseySheriffSaleBucket.grantWrite(newJerseySheriffSaleScraper);
+
     new events.Rule(this, 'NewJerseySheriffSaleScraperRule', {
       description: 'New Jersey Sheriff Sale Scraper cron rule to run at 12:00AM UTC every day',
       ruleName: `new-jersey-sheriff-sale-scraper-rule-${ENV}`,

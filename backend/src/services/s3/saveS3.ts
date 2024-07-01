@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3, PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 
 interface SaveConfig {
   data: string;
@@ -14,16 +14,14 @@ interface SaveConfig {
  * Saves data into S3
  */
 export const saveS3 = ({ data, bucketName, key, sse = false }: SaveConfig) => {
-  const s3 = new S3Client({ region: 'us-east-2' });
-  const params = new PutObjectCommand({
+  const s3 = new S3({ region: 'us-east-2' });
+
+  const params: PutObjectCommandInput = {
     Body: data,
     Bucket: bucketName,
     Key: key,
-  });
+    ServerSideEncryption: sse ? 'AES256' : undefined,
+  };
 
-  if (sse) {
-    params.input.ServerSideEncryption = 'AES256';
-  }
-
-  return s3.send(params);
+  return s3.putObject(params);
 };
