@@ -66,7 +66,7 @@ jobs:
   deploy-frontend:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Only runs on the main branch
+    # if: github.ref == 'refs/heads/main' # Only runs on the main branch
     environment: dev
     steps:
       - uses: actions/checkout@v4
