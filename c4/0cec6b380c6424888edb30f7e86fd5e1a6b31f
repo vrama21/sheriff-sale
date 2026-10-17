@@ -1,0 +1,140 @@
+backend/src/modules/sheriffSale/replay/replay.ts
+  s_f28d8142584cb3::t_ad5e19b5a62c17 1-6,193
+backend/src/modules/sheriffSale/scrape/getCountyListingsHtml.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1-2
+backend/src/modules/sheriffSale/scrape/getListingDetailsHtml.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1,3,5-6,9-54
+openspec/changes/isolate-sheriff-sale-module/.openspec.yaml
+  ai_agent 1-2
+openspec/changes/isolate-sheriff-sale-module/design.md
+  ai_agent 1-147
+backend/src/modules/sheriffSale/scrape/getListingDetailsHtml.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 5
+backend/src/shared/address/parseAddress.test.ts
+  s_f28d8142584cb3::t_78b0da2696b30c 1,3,5,28,32,44,53
+  s_f28d8142584cb3::t_9050c2ce03adf9 9,36,57
+backend/src/modules/sheriffSale/parse/parseLegacyListingDetails.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1,4,34,37,63
+backend/src/modules/sheriffSale/handler.ts
+  s_f28d8142584cb3::t_8a9f6c657c11a4 2-3
+backend/src/modules/sheriffSale/parse/parseStatusHistory.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 2
+openspec/changes/isolate-sheriff-sale-module/specs/listing-validation/spec.md
+  ai_agent 1-15
+backend/src/modules/sheriffSale/scrape/saveHtmlToS3.ts
+  s_f28d8142584cb3::t_0064054e3178d2 2
+openspec/changes/isolate-sheriff-sale-module/specs/listing-address-backfill/spec.md
+  ai_agent 1-37
+backend/README.md
+  s_f28d8142584cb3::t_97b0ce4ac61c47 7-11
+openspec/changes/isolate-sheriff-sale-module/specs/archive-replay/spec.md
+  ai_agent 1-10
+backend/src/modules/sheriffSale/parse/parseListingSnapshot.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 2
+backend/src/modules/sheriffSale/ingest/buildListingSnapshot.test.ts
+  s_f28d8142584cb3::t_b8ad8447b32119 3,96
+  s_f28d8142584cb3::t_9c585e73cee06f 1-2,80-95
+backend/src/shared/address/parseAddress.ts
+  s_f28d8142584cb3::t_78b0da2696b30c 1,49-59,64,80
+backend/src/modules/sheriffSale/handler.test.ts
+  s_f28d8142584cb3::t_8a9f6c657c11a4 2-4,7
+backend/src/modules/sheriffSale/parse/parseListingDetails.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 2
+backend/jest.config.js
+  s_f28d8142584cb3::t_699d2b4a9d108a 2
+openspec/changes/isolate-sheriff-sale-module/specs/backend-module-layout/spec.md
+  ai_agent 1-66
+backend/src/modules/sheriffSale/pipeline.ts
+  s_f28d8142584cb3::t_8a9f6c657c11a4 1-11,43,46,81,83
+backend/src/modules/sheriffSale/ingest/buildListingSnapshot.ts
+  s_f28d8142584cb3::t_b8ad8447b32119 1-2,9-10,14-15,45,68,83
+openspec/changes/isolate-sheriff-sale-module/specs/scraper-infrastructure/spec.md
+  ai_agent 1-16
+openspec/changes/isolate-sheriff-sale-module/tasks.md
+  s_f28d8142584cb3::t_ff9b2e69f42736 16-20
+  s_f28d8142584cb3::t_a908d054fb04c6 32-33
+  s_f28d8142584cb3::t_3f3da7e73a622c 9-12
+  s_f28d8142584cb3::t_de642156d32808 50-54
+  s_f28d8142584cb3::t_b631505026a633 24-28
+  s_f28d8142584cb3::t_f14235eebe0cfe 1-8,13-15,21-23,29-31,34-36,41-43,47-49
+  s_f28d8142584cb3::t_d9af678875a9c8 44-46
+  s_f28d8142584cb3::t_699d2b4a9d108a 37-40
+backend/src/modules/sheriffSale/parse/listingSchema.ts
+  s_f28d8142584cb3::t_0064054e3178d2 62
+backend/src/modules/sheriffSale/handler.local.ts
+  s_f28d8142584cb3::t_8a9f6c657c11a4 2
+backend/src/modules/sheriffSale/parse/parseCountyPropertyIds.ts
+  s_f28d8142584cb3::t_5da2a964af4769 3
+backend/src/modules/sheriffSale/parse/parseListingDetails.ts
+  s_f28d8142584cb3::t_0064054e3178d2 32
+backend/src/shared/address/index.ts
+  s_f28d8142584cb3::t_f14235eebe0cfe 2
+backend/src/modules/sheriffSale/replay/args.test.ts
+  s_f28d8142584cb3::t_ad5e19b5a62c17 1
+backend/src/modules/sheriffSale/parse/parseListingSnapshot.ts
+  s_f28d8142584cb3::t_2285bdead416fc 2,13-17
+  s_f28d8142584cb3::t_0064054e3178d2 18
+backend/src/modules/sheriffSale/parse/parseCountyPropertyIds.test.ts
+  s_f28d8142584cb3::t_5da2a964af4769 1,4,6
+  s_f28d8142584cb3::t_0064054e3178d2 2
+backend/src/modules/sheriffSale/index.ts
+  s_f28d8142584cb3::t_9c585e73cee06f 1
+backend/src/modules/sheriffSale/pipeline.test.ts
+  s_f28d8142584cb3::t_8a9f6c657c11a4 1-9,13-28,46-48,56,74,88,96,104,124-125,154,167-168,179-180,189,198,210,220,235,239,248-249,264,269,275,277,281,289,304-305,316-317,325-326,343-344,363-364
+backend/src/modules/sheriffSale/scrape/saveHtmlToS3.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1,4
+backend/src/modules/sheriffSale/replay/plan.ts
+  s_f28d8142584cb3::t_ad5e19b5a62c17 1-2
+backend/src/modules/sheriffSale/parse/listingSchema.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 2,6,60,64
+infra/storage.tf
+  s_f28d8142584cb3::t_e5b6b1f27519a2 2
+backend/src/modules/sheriffSale/scrape/njSheriffSaleCountyIdMap.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1
+backend/package.json
+  s_f28d8142584cb3::t_699d2b4a9d108a 7,11-14
+openspec/changes/isolate-sheriff-sale-module/specs/infra-delivery/spec.md
+  ai_agent 1-12
+backend/src/modules/sheriffSale/__fixtures__/stubClientAdapter.ts
+  s_f28d8142584cb3::t_0064054e3178d2 4
+backend/src/modules/sheriffSale/scrape/njSheriffSaleCountyIdMap.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1
+backend/src/modules/sheriffSale/scrape/newJerseySheriffSaleHttpClient.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1
+openspec/changes/isolate-sheriff-sale-module/proposal.md
+  ai_agent 1,3,5-8,10,12,14-23,25,27,29,31,33-37,39,41-46
+backend/src/modules/sheriffSale/parse/detailValueText.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1-24
+backend/src/modules/sheriffSale/scrape/newJerseySheriffSaleHttpClient.test.ts
+  s_f28d8142584cb3::t_0064054e3178d2 5
+backend/src/modules/sheriffSale/replay/replay.test.ts
+  s_f28d8142584cb3::t_ad5e19b5a62c17 1-3
+backend/src/modules/sheriffSale/replay/args.ts
+  s_f28d8142584cb3::t_ad5e19b5a62c17 2
+backend/src/modules/sheriffSale/parse/cleanPropertyKey.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1-24
+backend/src/modules/sheriffSale/parse/parseLegacyListingDetails.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1-3,6-8,10-11,13,15-16,19,21-22,24-26,28-29,31-32,35-36,38
+backend/src/modules/sheriffSale/replay/index.ts
+  s_f28d8142584cb3::t_ad5e19b5a62c17 13-14,31,42
+backend/src/modules/sheriffSale/scrape/countySlug.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1
+backend/src/modules/sheriffSale/parse/parseStatusHistory.ts
+  s_f28d8142584cb3::t_0064054e3178d2 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c40cec6b380c6424888edb30f7e86fd5e1a6b31f",
+  "prompts": {},
+  "sessions": {
+    "s_f28d8142584cb3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b27485e6-d2f9-4554-92b1-36910734673f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
