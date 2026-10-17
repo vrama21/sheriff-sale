@@ -8,7 +8,6 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "deploy": "turbo run deploy",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
     "db:pull": "turbo run db:pull",

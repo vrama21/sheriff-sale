@@ -55,24 +55,24 @@
 ## 7. Hand over to CI
 
 - [x] 7.1 Create the `prod` GitHub environment and set variable `ENV=prod`
-- [ ] 7.2 Set the `prod` secrets `DATABASE_URL` (done) and `VERCEL_TOKEN` (user), and the variables `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` (done, from `frontend/.vercel/project.json`); no AWS keys (see 7.8)
+- [x] 7.2 Set the `prod` secrets `DATABASE_URL` (done) and `VERCEL_TOKEN` (user), and the variables `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` (done, from `frontend/.vercel/project.json`); no AWS keys (see 7.8)
 - [x] 7.3 Upload `backend/dist` as an artifact from the `build` job
 - [x] 7.4 Add a `deploy-backend` job (main only, `needs: migrate`) that downloads the bundle, installs OpenTofu from `mise.toml` with `jdx/mise-action`, and runs `tofu init` + `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets
 - [x] 7.5 Switch `migrate`, `deploy-backend`, and `deploy-frontend` to `environment: prod`
-- [ ] 7.6 Merge and confirm the first `main` run's `migrate` and `deploy-backend` succeed (apply shows no changes)
-- [ ] 7.7 Delete the `dev` GitHub environment
+- [x] 7.6 Merge and confirm the first `main` run's `migrate` and `deploy-backend` succeed (apply shows no changes)
+- [x] 7.7 Delete the `dev` GitHub environment
 - [x] 7.8 Add `infra/github-actions.tf` (GitHub OIDC provider, `sheriff-sale-github-actions` role trusting only `repo:vrama21/sheriff-sale:environment:prod`, scoped `tofu-apply` policy) and apply it locally
 - [x] 7.9 Switch `deploy-backend` to OIDC (`id-token: write`, `aws-actions/configure-aws-credentials@v6`) and drop the AWS key env vars
 - [x] 7.10 Verify from a temporary `cicd-oidc-check` branch that CI assumes the role and a full `tofu plan` refreshes with no access errors; delete the branch
-- [ ] 7.11 After 7.6 passes: deactivate, then delete, both `cicd-pipeline-deployer` access keys and the user; delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets
+- [x] 7.11 After 7.6 passes: deactivate, then delete, both `cicd-pipeline-deployer` access keys and the user; delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets
 
 ## 8. Remove CDK and dev leftovers
 
-- [ ] 8.1 Delete `backend/bin/`, `backend/lib/`, `backend/cdk.json`, and `packages/tsconfig/awscdk.json` (point `backend/tsconfig.json` at a non-CDK base such as `node20.json` or a new `node24` preset)
-- [ ] 8.2 Remove `aws-cdk`, `aws-cdk-lib`, `constructs`, and unused `source-map-support` from `backend/package.json`, the `deploy`/`cdk` scripts, and `cdk.out` from `backend` `clean`; update the lockfile
-- [ ] 8.3 Remove `cdk.out/**` outputs and `CDK_DEFAULT_*` env from `turbo.json`, and `backend/cdk.out` from `.gitignore`
-- [ ] 8.4 Rewrite `backend/README.md` and update the root `README.md` (backend description, `npm run deploy` row) to describe the OpenTofu flow
-- [ ] 8.5 Confirm no `aws-cdk`/`cdk.out` references remain outside `node_modules`, lockfiles, and `openspec/`
-- [ ] 8.6 Empty the CDK assets bucket (all versions) and ECR repo, delete the `CDKToolkit` stack, and remove any retained bootstrap resources
-- [ ] 8.7 Confirm `list-stacks` shows neither `SheriffSaleStack` nor `CDKToolkit`
+- [x] 8.1 Delete `backend/bin/`, `backend/lib/`, `backend/cdk.json`, and `packages/tsconfig/awscdk.json` (point `backend/tsconfig.json` at a non-CDK base such as `node20.json` or a new `node24` preset)
+- [x] 8.2 Remove `aws-cdk`, `aws-cdk-lib`, `constructs`, and unused `source-map-support` from `backend/package.json`, the `deploy`/`cdk` scripts, and `cdk.out` from `backend` `clean`; update the lockfile
+- [x] 8.3 Remove `cdk.out/**` outputs and `CDK_DEFAULT_*` env from `turbo.json`, and `backend/cdk.out` from `.gitignore`
+- [x] 8.4 Rewrite `backend/README.md` and update the root `README.md` (backend description, `npm run deploy` row) to describe the OpenTofu flow
+- [x] 8.5 Confirm no `aws-cdk`/`cdk.out` references remain outside `node_modules`, lockfiles, and `openspec/`
+- [x] 8.6 Empty the CDK assets bucket (all versions) and ECR repo, delete the `CDKToolkit` stack, and remove any retained bootstrap resources
+- [x] 8.7 Confirm `list-stacks` shows neither `SheriffSaleStack` nor `CDKToolkit`
 - [ ] 8.8 After the grace period (default: one week after 6.5 and at least one successful scheduled run), empty and delete `nj-sheriff-sale-dev` and delete `/aws/lambda/new-jersey-sheriff-sale-scraper-dev`

@@ -2,17 +2,12 @@
   "name": "@sheriff-sale/backend",
   "version": "0.1.0",
   "private": true,
-  "bin": {
-    "sheriff-sale": "bin/sheriff-sale.js"
-  },
   "scripts": {
     "build": "tsc --noEmit && npm run bundle",
     "bundle": "esbuild src/handlers/newJerseySheriffSaleScraperHandler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js",
-    "deploy": "cdk bootstrap && cdk deploy",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf cdk.out",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk",
     "lint": "eslint --ext .ts ./src",
     "lint:fix": "eslint --fix --ext .ts ./src",
     "start:newJerseyScraper": "ts-node src/handlers/local/newJerseySheriffSaleScraperHandler.local.ts"
@@ -29,7 +24,6 @@
     "@types/node": "20.14.9",
     "@typescript-eslint/eslint-plugin": "7.14.1",
     "@typescript-eslint/parser": "7.14.1",
-    "aws-cdk": "2.139.0",
     "csv-parse": "5.3.3",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
@@ -43,16 +37,13 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.379.1",
     "@sheriff-sale/database": "*",
-    "aws-cdk-lib": "2.139.0",
     "axios": "1.7.2",
     "axios-cookiejar-support": "2.0.3",
-    "constructs": "10.3.0",
     "he": "1.2.0",
     "lodash": "4.17.21",
     "luxon": "2.5.2",
     "node-html-parser": "5.1.0",
     "parse-address": "1.1.2",
-    "reflect-metadata": "0.1.13",
-    "source-map-support": "0.5.16"
+    "reflect-metadata": "0.1.13"
   }
 }

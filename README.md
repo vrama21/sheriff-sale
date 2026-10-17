@@ -2,7 +2,8 @@
 
 Turborepo monorepo with npm workspaces:
 
-- `backend/`: AWS CDK app and its Lambda sources
+- `backend/`: the scraper Lambda's sources, bundled with esbuild
+- `infra/`: OpenTofu config for the AWS resources (see [`infra/README.md`](infra/README.md))
 - `frontend/`: Next.js app
 - `packages/`: shared packages (`database` uses Drizzle, plus shared `config` and `tsconfig`)
 
@@ -35,9 +36,11 @@ as `AWS_PROFILE`, when you `cd` into the repo.
    AWS_PROFILE = "<aws profile for this account>"
    # Optional, if you have more than one gh account:
    GH_TOKEN = "{{ exec(command='gh auth token --user <github user>') }}"
+   # Only needed to run tofu plan/apply in infra/ yourself:
+   TF_VAR_database_url = "<DATABASE_URL>"
    ```
 
-4. Trust the repo's config and install Node:
+4. Trust the repo's config and install Node and OpenTofu:
 
    ```bash
    mise trust
@@ -55,14 +58,19 @@ npm install
 
 ## Scripts
 
-| Command               | Description                             |
-| --------------------- | --------------------------------------- |
-| `npm run dev`         | Run all workspaces in dev mode          |
-| `npm run build`       | Build all workspaces                    |
-| `npm run deploy`      | Deploy the backend CDK stack            |
-| `npm run test`        | Run tests                               |
-| `npm run lint`        | Lint                                    |
-| `npm run format`      | Format with Prettier                    |
-| `npm run db:generate` | Generate Drizzle migrations             |
-| `npm run db:migrate`  | Apply migrations                        |
-| `npm run db:studio`   | Open Drizzle Studio                     |
+| Command               | Description                    |
+| --------------------- | ------------------------------ |
+| `npm run dev`         | Run all workspaces in dev mode |
+| `npm run build`       | Build all workspaces           |
+| `npm run test`        | Run tests                      |
+| `npm run lint`        | Lint                           |
+| `npm run format`      | Format with Prettier           |
+| `npm run db:generate` | Generate Drizzle migrations    |
+| `npm run db:migrate`  | Apply migrations               |
+| `npm run db:studio`   | Open Drizzle Studio            |
+
+## Deploying
+
+Pushes to `main` deploy everything: CI runs the database migrations, applies `infra/` with OpenTofu (which ships the
+scraper Lambda bundle), and deploys the frontend to Vercel. To plan or apply infrastructure changes by hand, see
+[`infra/README.md`](infra/README.md).

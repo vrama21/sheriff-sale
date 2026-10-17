@@ -15,7 +15,6 @@ out/
 # builds
 **/build
 **/dist
-backend/cdk.out
 
 # misc
 .DS_Store
