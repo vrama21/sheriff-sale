@@ -1,0 +1,30 @@
+backend/src/services/listingSync/syncListing.ts
+  s_4243d67b3abe9e::t_9d78972670923c 2-103
+  s_4243d67b3abe9e::t_f2c6b008955dfa 1
+openspec/changes/replay-archived-listings/tasks.md
+  ai_agent 47,53-54
+packages/database/src/index.ts
+  s_4243d67b3abe9e::t_f2c6b008955dfa 4-5
+  s_4243d67b3abe9e::t_3b7374cd99dc82 3
+backend/src/services/listingSync/syncListing.test.ts
+  s_4243d67b3abe9e::t_591d0400d00d65 1-25,27-34,36,39-142,147-232
+  s_4243d67b3abe9e::t_0dc1f2a5a7c151 26,35,37-38,143-146
+backend/src/services/listingSync/index.ts
+  s_4243d67b3abe9e::t_837f858f77a7f1 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3364b2a3e13a11b5de444984637192e1089f4a96",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
