@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Sales Listing Detail</title>
+
+    <link href="/Content/bootstrap.min.css" rel="stylesheet"/>
+<link href="/Content/site.css" rel="stylesheet"/>
+
+
+<link href="/Content/County/00835.css" rel="stylesheet"/>
+
+
+    <script src="/Scripts/jquery-1.10.2.js"></script>
+
+
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+
+</head>
+<body>
+    
+    <div>
+        
+
+<script>
+    window.onload = function () {
+        var elem1 = document.getElementById("shortTable");
+        if (elem1 != null) {
+            var elem = document.getElementById("longTable");
+            elem.style.display = "none";
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "none";
+
+        }
+        else {
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "none";
+
+            var elemExpand = document.getElementById("expand");
+            elemExpand.style.display = "none";
+        }
+    }
+    function toggleTable() {
+        var elem = document.getElementById("longTable");
+        var elem1 = document.getElementById("shortTable");
+        var hide = elem.style.display == "none";
+        if (hide) {
+            elem.style.display = "table";
+            elem1.style.display = "none";
+
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "table";
+
+            var elemExpand = document.getElementById("expand");
+            elemExpand.style.display = "none";
+        }
+        else {
+            elem.style.display = "none";
+            elem1.style.display = "table";
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "none";
+
+            var elemExpand = document.getElementById("expand");
+            elemExpand.style.display = "table";
+        }
+    }
+    function openTab(url) {
+        window.open(url, "_blank");
+    }
+</script>
+
+<div class="container-fluid">
+
+</div>
+
+<div class="container">
+
+    <h3>Sales Listing Detail (Salem County, NJ)</h3>
+
+    
+
+    <div class="row">
+        <p class="text-center"><a href="javascript:history.go(-1)" class="btn btn-primary" role="button">Back</a></p>
+    </div>
+
+    <br />
+
+    <div class="table-responsive">
+
+        <table class="table table-striped">
+
+                <tr>
+                    <td class="heading-bold columnwidth-15">Sheriff #:</td>
+                    <td>
+F-24000056                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Court Case #:</td>
+                    <td>
+F-010586-23                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Sales Date:</td>
+                    <td>
+07/15/2024 02:00 PM                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Plaintiff:</td>
+                    <td>
+PLAINTIFF TRUST PLACEHOLDER, AS OWNER TRUSTEE                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Defendant:</td>
+                    <td>
+DEFENDANT NAME; DEFENDANT NAME; State of New Jersey                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Address:</td>
+                    <td>
+263 Three Bridge Road<br/>Monroeville NJ 08343                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Description:</td>
+                    <td>
+Approximate Upset $292,458.61. The upset amount may be subject to further Orders of additional sums.                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Approx. Upset*:</td>
+                    <td>
+$275,983.46                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="heading-bold columnwidth-15">Attorney:</td>
+                    <td>
+ATTORNEY FIRM PLACEHOLDER, P.A.                    </td>
+
+                    <td class="DetailImageAlign">
+                    </td>
+                </tr>
+
+        </table>
+
+
+        <br />
+
+        <h3>
+            Status History
+
+
+        </h3>
+
+
+        <table class="table table-striped " id="longTable" style="display:table">
+            <thead style="word-wrap: break-word;">
+                <tr>
+                    <th>Status </th>
+                    <th>Date  </th>
+                                        <th id="collapse">
+                        <label class="col-sm-1 control-label text-nowrap" id="collapseLabel">[Collapse All]</label>
+                        <br />
+                        <a href="javascript:;" class="margin-left-18"><span class="glyphicon glyphicon-chevron-up" id="collapseArrow" onclick="toggleTable();"></span></a>
+                    </th>
+
+                </tr>
+            </thead>
+
+                <tr>
+
+                    <td>Scheduled</td>
+
+                        <td>05/20/2024 02:00 PM</td>
+
+
+
+
+                </tr>
+                <tr>
+
+                    <td>Adjourned - Defendant</td>
+
+                        <td>06/17/2024 02:00 PM</td>
+
+
+
+
+                </tr>
+                <tr>
+
+                    <td>Adjourned - Defendant</td>
+
+                        <td>07/15/2024 02:00 PM</td>
+
+
+
+
+                </tr>
+        </table>
+
+
+    </div>
+    <table class="table">
+    </table>
+    
+
+
+        <h4><small> *Excludes Judgment Interest and Sheriff Fees. </small></h4>
+
+</div>
+    </div>
+
+    <script src="/Scripts/bootstrap.min.js"></script>
+<script src="/Scripts/respond.js"></script>
+
+    
+</body>
+</html>

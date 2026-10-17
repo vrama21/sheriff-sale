@@ -1,4 +1,5 @@
 import { NJCounty, NJSheriffSaleCountyIdMap } from '../../types';
+import { countySlug } from './countySlug';
 import { saveHtmlToS3 } from './saveHtmlToS3';
 import { NewJerseySheriffSaleHttpClient } from './newJerseySheriffSaleHttpClient';
 
@@ -25,10 +26,9 @@ export const getCountyListingsHtml = async (
   }
 
   const html = response.data;
-  const countySlug = county.toLowerCase().replace(/\s+/g, '-');
 
   try {
-    await saveHtmlToS3({ html, keyPrefix: 'county-html-files', keySuffix: `${countySlug}-county.html` });
+    await saveHtmlToS3({ html, keyPrefix: 'county-html-files', keySuffix: `${countySlug(county)}-county.html` });
   } catch (error) {
     console.error(`Failed to save html for ${county} County to S3`, error);
   }

@@ -13,7 +13,8 @@ export const listings = pgTable(
     attorney: text('attorney'),
     attorneyPhone: varchar('attorneyPhone', { length: 256 }),
     city: varchar('city', { length: 256 }),
-    county: varchar('county', { length: 256 }),
+    contentHash: text('contentHash'),
+    county: varchar('county', { length: 256 }).notNull(),
     courtCase: text('courtCase'),
     createdAt: timestamp('createdAt').defaultNow(),
     deed: text('deed'),
@@ -31,6 +32,7 @@ export const listings = pgTable(
     saleDate: date('saleDate', { mode: 'string' }),
     secondaryUnit: varchar('secondaryUnit', { length: 256 }),
     sheriffId: text('sheriffId'),
+    snapshotDate: date('snapshotDate', { mode: 'string' }),
     state: varchar('state', { length: 256 }),
     street: varchar('street', { length: 256 }),
     unit: varchar('unit', { length: 256 }),
@@ -38,7 +40,9 @@ export const listings = pgTable(
     upsetAmount: numeric('upsetAmount', { precision: 12, scale: 2, mode: 'number' }),
     zipcode: varchar('zipcode', { length: 256 }),
   },
-  (table) => [uniqueIndex('Listing_propertyId_key').on(table.propertyId)],
+  // A sale keeps its sheriff number within its county; propertyId changes on every search. Rows without a sheriff
+  // number are NULL, which a unique index never matches, so they aren't held to it.
+  (table) => [uniqueIndex('Listing_county_sheriffId_key').on(table.county, table.sheriffId)],
 );
 
 export const listingRelations = relations(listings, ({ many }) => ({
