@@ -1,0 +1,23 @@
+backend/package.json
+  s_164a755b9134ff::t_3acbc8871f2cd4 29
+package-lock.json
+  ai_agent 30,4681,5146,5255,6047-6049,6289,7131
+openspec/changes/upgrade-backend-dependencies/tasks.md
+  ai_agent 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6e4bf8da25d967a0f3512415bc2bdb92cc3c4f72",
+  "prompts": {},
+  "sessions": {
+    "s_164a755b9134ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2fa98df6-30a4-4521-bdf3-a51db4da49f5",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
