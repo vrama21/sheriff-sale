@@ -1,0 +1,55 @@
+openspec/changes/upgrade-node-24/design.md
+  s_74f79274124f67::t_9a766951e1168a 69-71
+  s_74f79274124f67::t_a7c0e3645ff2fb 49
+  s_74f79274124f67::t_ca4b1f4e7df06c 55
+  s_74f79274124f67::t_d0230e31a5be7e 64-65
+  s_74f79274124f67::t_606f5fb1684068 1-8,10,12-14,16-38,41,47-48,50-54,56-63,66-68,72-78
+  s_74f79274124f67::t_8effef21a32f31 9,11
+  s_74f79274124f67::t_0dac75214c13e3 15
+  s_74f79274124f67::t_f72f6b85b49954 42-46
+  s_74f79274124f67::t_b9a1abe741916d 39-40
+openspec/changes/upgrade-node-24/specs/node-toolchain/spec.md
+  s_74f79274124f67::t_51f952abb605a1 30,33-34
+  s_74f79274124f67::t_c4f41e096e06a9 1-29,31-32,35-36,42-45
+  s_74f79274124f67::t_4000e5dfefe4a1 37-41
+packages/tsconfig/node24.json
+  s_74f79274124f67::t_ce763cd946d414 3,9
+  s_74f79274124f67::t_6bc0b22d595cdf 8,12
+openspec/changes/upgrade-node-24/tasks.md
+  s_74f79274124f67::t_d5905db28406d3 1-2,6-8,15-17,21-23,26-28,32-34,39-41
+  s_74f79274124f67::t_656dbc26436675 24-25
+  s_74f79274124f67::t_daa75417637c14 44-45
+  s_74f79274124f67::t_a8145b5fae8b49 29-31
+  s_74f79274124f67::t_ce763cd946d414 9,11-13
+  s_74f79274124f67::t_272c50aba56890 42
+  s_74f79274124f67::t_131545bbb4e405 10,14,43
+  s_74f79274124f67::t_b96f625352f9c0 18-20
+  s_74f79274124f67::t_209382a6d95eed 3-5
+  s_74f79274124f67::t_4291c3876b721a 38
+  s_74f79274124f67::t_9965c2d01474d8 46
+openspec/changes/upgrade-node-24/.openspec.yaml
+  s_74f79274124f67::t_5a57bc9947e282 1-2
+openspec/changes/upgrade-node-24/proposal.md
+  s_74f79274124f67::t_3deed4281908b5 3
+  s_74f79274124f67::t_2660190ed5d184 1-2,4-8,11,14-26,28-29
+  s_74f79274124f67::t_d4cc5a45f8621e 9
+  s_74f79274124f67::t_2f3ba31292085d 10
+  s_74f79274124f67::t_052f632501325d 12-13
+  s_74f79274124f67::t_47aba2fb319107 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a44e0856e38f576da93baff27a374c39b366b08b",
+  "prompts": {},
+  "sessions": {
+    "s_74f79274124f67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "db313350-6df1-4efc-81f8-84fd1989ec05",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
