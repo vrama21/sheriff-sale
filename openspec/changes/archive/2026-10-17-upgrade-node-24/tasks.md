@@ -42,5 +42,5 @@
 - [x] 7.1 Set the Vercel project's Node.js Version (Settings → Build and Deployment) from 18.x to 24.x (manual; may already be done ahead of this change to unblock deploys)
 - [x] 7.2 On the branch, under Node 24 at the repo root, run `vercel pull --yes --environment=production` and `vercel build --prod` (no deploy), and confirm the build succeeds with Root Directory `frontend/` and the frontend lockfile gone
 - [x] 7.3 Push the branch and confirm the `build` job passes on Node 24
-- [ ] 7.4 After merging to `main`, confirm `migrate` and `deploy-frontend` ran on Node 24, `vercel` resolved after mise-action, `deploy-frontend` succeeded (the first successful CI frontend deploy), and the Vercel deployment reports Node.js 24.x
-- [ ] 7.5 Confirm `deploy-backend`'s `tofu apply` didn't change the Lambda runtime (still `nodejs24.x`)
+- [x] 7.4 After merging to `main`, confirm `migrate` and `deploy-frontend` ran on Node 24, `vercel` resolved after mise-action, `deploy-frontend` succeeded (the first successful CI frontend deploy), and the Vercel deployment reports Node.js 24.x
+- [x] 7.5 Confirm `deploy-backend`'s `tofu apply` didn't change the Lambda runtime (still `nodejs24.x`)
