@@ -12,4 +12,4 @@ if (!DATABASE_URL) {
 }
 
 export const sql = postgres(DATABASE_URL, { max: 1 });
-export const db = drizzle(sql, { schema });
+export const db = drizzle({ client: sql, schema });
