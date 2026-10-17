@@ -59,7 +59,7 @@ On dates on or before 2026-10-17, the archived `passaic` county page SHALL be re
 
 ### Requirement: Layout detection
 
-The replay SHALL parse a detail page with the current details parser when it has `.sale-detail-item` elements, with the legacy details parser when it has the old table layout (label cells with class `heading-bold`), and with the current status-history parser in both cases. A page with neither layout SHALL be counted as unrecognised and SHALL NOT be written. A page that fails to parse SHALL be counted as a parse failure, logged with its key, and SHALL NOT be written.
+The replay SHALL parse a detail page with the current details parser when it has `.sale-detail-item` elements, with the legacy details parser when it has the old table layout (label cells with class `heading-bold`), and with the current status-history parser in both cases. Pages of both layouts SHALL be validated by the same listing validation as the daily scrape. A page with neither layout SHALL be counted as unrecognised and SHALL NOT be written. A page that fails to parse, or that listing validation rejects (such as one without an address), SHALL be counted as a parse failure, logged with its key, and SHALL NOT be written. A value listing validation coerces or drops SHALL be counted and logged with its key as a field warning, and SHALL NOT stop the page from being synced.
 
 #### Scenario: Current layout
 
@@ -78,7 +78,7 @@ The replay SHALL parse a detail page with the current details parser when it has
 
 ### Requirement: Legacy details parsing
 
-The legacy details parser SHALL read each row of the old layout's details table whose first cell has class `heading-bold`, take that cell's text without the trailing colon as the label and the next cell as the value, and map labels to listing fields the same way as the current parser. Values SHALL be decoded and whitespace-collapsed like the current parser's, with `<br>` kept as a line break in the address. Labels that aren't listing fields SHALL be left out.
+The legacy details parser SHALL read each row of the old layout's details table whose first cell has class `heading-bold`, take that cell's text without the trailing colon as the label and the next cell as the value, and map labels to listing fields the same way as the current parser. Values SHALL be decoded and whitespace-collapsed like the current parser's, with `<br>` kept as a line break in the address. Like the current parser, it SHALL return the values as text, leaving labels that aren't listing fields to listing validation, which drops them with a field warning.
 
 #### Scenario: Legacy page fields
 
@@ -92,11 +92,11 @@ With `--dry-run`, the replay SHALL read and parse the selected pages and report 
 #### Scenario: Dry run over a range
 
 - **WHEN** the command runs with `--dry-run` over a range
-- **THEN** the summary reports county pages, detail pages, missing, unrecognised, parse failures and pages without a sheriff number, and no database row changes
+- **THEN** the summary reports county pages, detail pages, missing, unrecognised, parse failures, pages without a sheriff number and field warnings, and no database row changes
 
 ### Requirement: Run summary and failures
 
-The replay SHALL print a summary per county and for the whole run: county pages read and missing, detail pages found, missing, unrecognised, failed to parse and without a sheriff number, listings inserted, updated and unchanged, and status rows inserted and extended. A failed S3 read other than a missing key, or a failed sync, SHALL be logged with its key and counted, and SHALL NOT stop the run. The command SHALL exit non-zero if any read or sync failed.
+The replay SHALL print a summary per county and for the whole run: county pages read and missing, detail pages found, missing, unrecognised, failed to parse and without a sheriff number, field warnings, listings inserted, updated and unchanged, and status rows inserted and extended. A failed S3 read other than a missing key, or a failed sync, SHALL be logged with its key and counted, and SHALL NOT stop the run. The command SHALL exit non-zero if any read or sync failed.
 
 #### Scenario: Re-running a replayed range
 
