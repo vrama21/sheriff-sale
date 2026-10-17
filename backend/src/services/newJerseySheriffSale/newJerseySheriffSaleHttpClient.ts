@@ -20,7 +20,9 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
 
         return req;
       },
-      (error) => error,
+      (error) => {
+        throw error;
+      },
     );
 
     this.axiosInstance.interceptors.response.use(
@@ -40,7 +42,9 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
 
         return req;
       },
-      (error) => error,
+      (error) => {
+        throw error;
+      },
     );
 
     this.aspSessionId;
