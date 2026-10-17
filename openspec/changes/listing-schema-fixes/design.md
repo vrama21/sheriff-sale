@@ -32,7 +32,7 @@ The values the site serves today (verified on 2026-10-17): property IDs around 2
 
 - `propertyId`: `bigint('propertyId', { mode: 'number' })`. Values up to 2⁵³ stay exact as JS numbers, so `ListingParse.propertyId` stays `number`. Add `uniqueIndex('Listing_propertyId_key').on(table.propertyId)` in the table's extra-config callback. Postgres treats NULLs as distinct, so a missing `propertyId` doesn't conflict, although the scraper always sets one.
 - `sheriffId`: `text`. Existing integers convert to their text form.
-- `address`, `attorney`, `courtCase`, `deedAddress`, `defendant`, `description`, `judgment`, `parcel`, `plaintiff`, `priors`, `upsetAmount`: `text`. These are copied from public notices with no natural length limit, and `text` costs the same as `varchar` in Postgres.
+- `address`, `attorney`, `courtCase`, `deed`, `deedAddress`, `defendant`, `description`, `judgment`, `parcel`, `plaintiff`, `priors`, `upsetAmount`: `text`. These are copied from public notices with no natural length limit, and `text` costs the same as `varchar` in Postgres.
 - Columns the scraper derives itself stay as they are: `city`, `street`, `unit`, `secondaryUnit`, `zipcode`, `state`, `county`, `saleDate`, `attorneyPhone`, `latitude`, `longitude`, `mapsUrl`. So does `StatusHistory`.
 - _Alternative:_ larger `varchar` limits. These would just move the failure to the next long notice.
 

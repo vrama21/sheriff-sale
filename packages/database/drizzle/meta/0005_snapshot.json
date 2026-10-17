@@ -59,7 +59,7 @@
         },
         "deed": {
           "name": "deed",
-          "type": "varchar(256)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },

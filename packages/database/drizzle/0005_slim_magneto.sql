@@ -1,6 +1,7 @@
 ALTER TABLE "Listing" ALTER COLUMN "address" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "attorney" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "courtCase" SET DATA TYPE text;--> statement-breakpoint
+ALTER TABLE "Listing" ALTER COLUMN "deed" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "deedAddress" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "defendant" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "description" SET DATA TYPE text;--> statement-breakpoint

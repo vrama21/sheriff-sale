@@ -16,7 +16,7 @@ export const listings = pgTable(
     county: varchar('county', { length: 256 }),
     courtCase: text('courtCase'),
     createdAt: timestamp('createdAt').defaultNow(),
-    deed: varchar('deed', { length: 256 }),
+    deed: text('deed'),
     deedAddress: text('deedAddress'),
     defendant: text('defendant'),
     description: text('description'),

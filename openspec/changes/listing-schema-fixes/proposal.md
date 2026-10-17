@@ -11,7 +11,7 @@ Once the scraper can parse listings again (`fix-scraper-db-pipeline`, `adapt-scr
 
 ## What Changes
 
-- **BREAKING (schema)**: `Listing.propertyId` becomes `bigint` with a unique index. `Listing.sheriffId` and the scraped free-text columns (`address`, `attorney`, `courtCase`, `deedAddress`, `defendant`, `description`, `judgment`, `parcel`, `plaintiff`, `priors`, `upsetAmount`) become `text`.
+- **BREAKING (schema)**: `Listing.propertyId` becomes `bigint` with a unique index. `Listing.sheriffId` and the scraped free-text columns (`address`, `attorney`, `courtCase`, `deed`, `deedAddress`, `defendant`, `description`, `judgment`, `parcel`, `plaintiff`, `priors`, `upsetAmount`) become `text`.
 - A data-repair migration runs before the unique index: it relabels every `county = 'Passaic'` row to `Gloucester`, then removes duplicate listings per `propertyId`, keeping the oldest row, and deletes the removed rows' status histories.
 - `saveListing` inserts the listing with `ON CONFLICT ("propertyId") DO NOTHING`, which replaces find-then-insert, and writes the listing and all of its status-history rows in one transaction with one multi-row history insert.
 - Remove the no-op `onConflictDoNothing()` from the status-history insert.
