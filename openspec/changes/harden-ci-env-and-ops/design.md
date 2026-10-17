@@ -45,15 +45,15 @@ Constraints:
 
 `packages/database/src/client.ts` stops importing dotenv and reads `process.env.DATABASE_URL` only. The Lambda, Next.js and Vercel already supply the environment, and a library reading a path relative to its own `dist` is fragile. Each local entry point loads `<root>/.env`, resolved from its own `__dirname`:
 
-| Entry point | Loads root `.env` by |
-| --- | --- |
-| `packages/database/drizzle.config.ts` | `config({ path })` (already does) |
-| `packages/database/src/migrate.ts` | `config({ path })`, then a dynamic `import('./client')` so the client is created after |
-| `backend/.../handler.local.ts` | `config({ path })`, then a dynamic `import('./pipeline')` |
-| `backend/.../replay/index.ts` | already does, and imports the database dynamically |
-| `frontend` `dev` | `dotenv -e ../.env -- next dev` |
-| `docker-compose.yml` | `env_file: .env` (project dir is the root) |
-| `.claude/skills/db-query/scripts/query.sh` | reads `POSTGRES_*` from root `.env` |
+| Entry point                                | Loads root `.env` by                                                                   |
+| ------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `packages/database/drizzle.config.ts`      | `config({ path })` (already does)                                                      |
+| `packages/database/src/migrate.ts`         | `config({ path })`, then a dynamic `import('./client')` so the client is created after |
+| `backend/.../handler.local.ts`             | `config({ path })`, then a dynamic `import('./pipeline')`                              |
+| `backend/.../replay/index.ts`              | already does, and imports the database dynamically                                     |
+| `frontend` `dev`                           | `dotenv -e ../.env -- next dev`                                                        |
+| `docker-compose.yml`                       | `env_file: .env` (project dir is the root)                                             |
+| `.claude/skills/db-query/scripts/query.sh` | reads `POSTGRES_*` from root `.env`                                                    |
 
 Dynamic imports (the pattern `replay/index.ts` already uses) make the load order explicit. A statement placed between static imports would depend on how the import is compiled.
 
@@ -129,15 +129,16 @@ A new `infra-check` job runs on every branch, outside any environment and with n
 
 - **Actions are pinned to the commit their major tag currently resolves to**, with the exact version in a trailing comment. This changes no behaviour; it freezes what runs today.
 
-  | Action | Version | Commit |
-  | --- | --- | --- |
-  | `actions/checkout` | v4.4.0 | `11d5960a326750d5838078e36cf38b85af677262` |
-  | `jdx/mise-action` | v5.2.0 | `9b200bcecbfd6303e69a4a261b2e09e3757440a7` |
-  | `aws-actions/configure-aws-credentials` | v6.3.0 | `e1253824e5c10ff9df46874f81ed3ec929e19cfd` |
-  | `actions/upload-artifact` | v4.6.2 | `ea165f8d65b6e75b540449e92b4886f43607fa02` |
-  | `actions/download-artifact` | v4.3.0 | `d3f86a106a0bac45b974a628896c90dbdf5c8093` |
+  | Action                                  | Version | Commit                                     |
+  | --------------------------------------- | ------- | ------------------------------------------ |
+  | `actions/checkout`                      | v4.4.0  | `11d5960a326750d5838078e36cf38b85af677262` |
+  | `jdx/mise-action`                       | v5.2.0  | `9b200bcecbfd6303e69a4a261b2e09e3757440a7` |
+  | `aws-actions/configure-aws-credentials` | v6.3.0  | `e1253824e5c10ff9df46874f81ed3ec929e19cfd` |
+  | `actions/upload-artifact`               | v4.6.2  | `ea165f8d65b6e75b540449e92b4886f43607fa02` |
+  | `actions/download-artifact`             | v4.3.0  | `d3f86a106a0bac45b974a628896c90dbdf5c8093` |
 
   Dependabot or Renovate for action updates is a possible follow-up, not part of this change.
+
 - **The Vercel CLI is pinned to `vercel@64.5.0`**, today's `latest` and the version of the last local `vercel build`.
 - **The Vercel token goes through the job environment.** `VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}` is set on the step env, and the CLI reads it, so the token never appears in a process's argv.
 - **Build and test are separate steps** in the `build` job.
@@ -203,6 +204,7 @@ Every prod job is gated by `if: github.ref == 'refs/heads/main'`. But that check
 - **Pinning Postgres 15 breaks a local volume initialised by `latest` (16–18)** → Postgres refuses to start with "database files are incompatible with server". The README says to `docker compose down -v` and re-run `npm run db:migrate`. Local data is disposable, and replay can repopulate it.
 - **The drift check can hang on an interactive rename prompt** → bounded by `timeout-minutes`, and it fails safe (CI red).
 - **Removing `.env.local` loading silently changes which DB a developer's tools hit** → the proposal and README call it out. After this change every tool agrees, which is the point.
+- **The developer `.env` currently holds the prod `DATABASE_URL`.** This was found during apply, by comparing it to `PROD_DATABASE_URL` without printing it. Every local tool already writes to prod, and that includes `db:migrate`, because this worktree has no `.env.local`. This change doesn't make it worse, but the single-file rule makes it the only answer → `.env.example` and the README default to the local container. Repointing `.env` is a manual step, because the agent doesn't edit a developer's gitignored secrets.
 - **Merging before the IAM policy is applied** → CI's `tofu apply` fails with AccessDenied on SNS or CloudWatch, after `migrate` has already run. The failure is loud, and re-running after a local targeted apply recovers.
 - **Merging before the Vercel rename** → the Maps key stays undefined in the browser, as it is today. No regression, just no fix yet.
 - **Enabling versioning is one-way** → the lifecycle rule bounds storage. Prod can suspend it later if needed.
