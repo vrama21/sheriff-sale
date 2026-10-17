@@ -56,5 +56,5 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 7. Wrap-up
 
-- [ ] 7.1 Verify the `workspace-dependencies` scenarios: one lockfile, the root devDependencies set, the removed packages, exact pins, `overrides.vite` in lockstep
-- [ ] 7.2 Run `openspec validate upgrade-backend-dependencies --strict`
+- [x] 7.1 Verify the `workspace-dependencies` scenarios: one lockfile, the root devDependencies set, the removed packages, exact pins, `overrides.vite` in lockstep
+- [x] 7.2 Run `openspec validate upgrade-backend-dependencies --strict`
