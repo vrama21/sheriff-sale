@@ -1,0 +1,64 @@
+openspec/changes/migrate-cdk-to-opentofu/design.md
+  s_2d320410b948db::t_2761158348443a 77
+  s_2d320410b948db::t_d78982f0fe0c3f 7,20,22-27,32-33,35,38,40,44,48-56,58-59,61,63,65,68-70,72,74,79,82,86-87,89-92,94,96-104,106-108,112-113,117-119,124-127,129-133,137-153,155,157-166,169-170,174
+  s_2d320410b948db::t_5d69088894bb9c 62
+  s_2d320410b948db::t_1563de4ffb1ad3 8-9,11-12,34,39,76,114,154,156
+mise.toml
+  s_2d320410b948db::t_7b47d3a46c33c6 7
+openspec/changes/migrate-cdk-to-opentofu/specs/infra-delivery/spec.md
+  s_2d320410b948db::t_fd8a60d9eb33d8 15,19,25-35,37-44,54-55,64-67
+openspec/changes/migrate-cdk-to-opentofu/tasks.md
+  s_2d320410b948db::t_7565aac594d670 12,16,18,20,30-35,41-43,54-74
+  s_2d320410b948db::t_ab2c8ea650c9b5 46
+  s_2d320410b948db::t_68360ffae2bddf 38
+  s_2d320410b948db::t_8c39fbaa682d3f 39-40,44
+  s_2d320410b948db::t_1563de4ffb1ad3 49
+  s_2d320410b948db::t_7c770b711e5313 51
+  s_2d320410b948db::t_75058fe2614993 4
+  s_2d320410b948db::t_7c605e0085f933 45
+  s_2d320410b948db::t_3226c9d07b962a 26-28
+  s_2d320410b948db::t_5eb362345294b2 36-37
+  s_2d320410b948db::t_2761158348443a 52
+  s_2d320410b948db::t_1c51617e823b10 53
+  s_2d320410b948db::t_83d2aaaa4d24c6 47-48
+  s_2d320410b948db::t_462eb900cfa458 50
+infra/storage.tf
+  s_2d320410b948db::t_eb2e4f08d2ce13 1-2,4
+infra/backend.tf
+  s_2d320410b948db::t_1e0d5d06f65245 1-9
+openspec/changes/migrate-cdk-to-opentofu/specs/scraper-infrastructure/spec.md
+  s_2d320410b948db::t_1ecbb748f69f2c 3-4,6-12,14-17,19,21-34,45,56,72,75-76,82-83
+  s_2d320410b948db::t_2761158348443a 37,40,52,59,66,70,73,77
+  s_2d320410b948db::t_5d69088894bb9c 79-80,84
+infra/locals.tf
+  s_2d320410b948db::t_90a4818fd667dc 5-7,12
+openspec/changes/migrate-cdk-to-opentofu/proposal.md
+  s_2d320410b948db::t_ab727e07eb880e 3-5,9,11-12,16,24-25,32-33,35-47
+  s_2d320410b948db::t_1563de4ffb1ad3 13,34
+backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts
+  s_2d320410b948db::t_22218a3b83ace4 4-6
+infra/scraper.tf
+  s_2d320410b948db::t_26345a33a2cd25 5,9,26,70,101
+infra/README.md
+  s_2d320410b948db::t_65c9c254bd6d52 3,6
+  s_2d320410b948db::t_eace9e51d07392 7
+  s_2d320410b948db::t_606be720c90743 4
+  s_2d320410b948db::t_c1928dd4a8ebb3 12
+  s_2d320410b948db::t_99230bdb6fc6d9 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "3abb0efa8e04372fc424f726e1a65ba9a25bd1c9",
+  "prompts": {},
+  "sessions": {
+    "s_2d320410b948db": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0b957e7f-672f-4f34-9fa0-b3c88770c61f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
