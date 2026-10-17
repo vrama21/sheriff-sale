@@ -1,0 +1,7 @@
+# Shared mise config. Put your own values in mise.local.toml (gitignored), which
+# mise loads on top of this file, e.g.:
+#
+# [env]
+# AWS_PROFILE = "<aws profile for this account>"
+# GH_TOKEN = "{{ exec(command='gh auth token --user <github user>') }}"
+[env]
