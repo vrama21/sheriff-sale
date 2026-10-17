@@ -41,12 +41,12 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 5. P4 TypeScript 6.0.3
 
-- [ ] 5.1 Pin `"typescript": "5.5.2"` in `frontend/package.json` devDependencies, and confirm `require('typescript').version` from `frontend/` is 5.5.2 after install
-- [ ] 5.2 Bump the root `typescript` to 6.0.3
-- [ ] 5.3 Move `moduleResolution: "node"` from `packages/tsconfig/base.json` into `nextjs.json`
-- [ ] 5.4 Set `module: "preserve"` and `moduleResolution: "bundler"` in `node24.json` (`lambda.json` already has them from 3.6). Remove `experimentalDecorators` and `emitDecoratorMetadata` from `lambda.json`
-- [ ] 5.5 Fix any other TS 6 deprecation or default-change errors in the shared configs (no `ignoreDeprecations`)
-- [ ] 5.6 Confirm backend and database `tsc --noEmit` pass, and that `vp pack` emits `.d.cts`/`.d.mts` that the frontend's `next build` reads. Run the gate and commit P4
+- [x] 5.1 Pin `"typescript": "5.5.2"` in `frontend/package.json` devDependencies, and confirm `require('typescript').version` from `frontend/` is 5.5.2 after install
+- [x] 5.2 Bump the root `typescript` to 6.0.3
+- [x] 5.3 Move `moduleResolution: "node"` from `packages/tsconfig/base.json` into `nextjs.json`
+- [x] 5.4 Set `module: "preserve"` and `moduleResolution: "bundler"` in `node24.json` (`lambda.json` already has them from 3.6). Remove `experimentalDecorators` and `emitDecoratorMetadata` from `lambda.json`
+- [x] 5.5 Fix any other TS 6 deprecation or default-change errors in the shared configs (no `ignoreDeprecations`): set `types: ["node"]` in `node24.json`, since TS 6 defaults `types` to `[]`
+- [x] 5.6 Confirm backend and database `tsc --noEmit` pass, and that `vp pack` emits `.d.cts`/`.d.mts` that the frontend's `next build` reads. Run the gate and commit P4
 
 ## 6. P5 TypeScript 7.0.2 (gated)
 
