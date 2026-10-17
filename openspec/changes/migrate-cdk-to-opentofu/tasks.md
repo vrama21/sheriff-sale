@@ -1,25 +1,25 @@
 ## 1. Freeze CDK deploys
 
-- [ ] 1.1 Remove the `deploy-backend` job from `.github/workflows/cicd.yml` (keep `build`, `migrate`, `deploy-frontend`)
+- [x] 1.1 Remove the `deploy-backend` job from `.github/workflows/cicd.yml` (keep `build`, `migrate`, `deploy-frontend`)
 - [ ] 1.2 Merge to `main` and confirm the `main` run has no CDK deploy step
 
 ## 2. Tooling and Lambda bundle
 
-- [ ] 2.1 Add `opentofu = "1.10"` under `[tools]` in `mise.toml` and verify `tofu version` via mise
-- [ ] 2.2 Replace the `backend` `build` script with `tsc --noEmit` plus an esbuild bundle of `src/handlers/newJerseySheriffSaleScraperHandler.ts` to `dist/index.js` (`--bundle --platform=node --target=node24 --format=cjs`, `@aws-sdk/*` bundled)
-- [ ] 2.3 Remove `cdk synth` from the build and confirm `npm run build` succeeds with placeholder `DATABASE_URL`/`ENV` and no AWS credentials
-- [ ] 2.4 Verify `require('./backend/dist/index.js').handler` is a function under Node 24
+- [x] 2.1 Add `opentofu = "1.13"` under `[tools]` in `mise.toml` and verify `tofu version` via mise
+- [x] 2.2 Replace the `backend` `build` script with `tsc --noEmit` plus an esbuild bundle of `src/handlers/newJerseySheriffSaleScraperHandler.ts` to `dist/index.js` (`--bundle --platform=node --target=node24 --format=cjs`, `@aws-sdk/*` bundled)
+- [x] 2.3 Remove `cdk synth` from the build and confirm `npm run build` succeeds with placeholder `DATABASE_URL`/`ENV` and no AWS credentials
+- [x] 2.4 Verify `require('./backend/dist/index.js').handler` is a function under Node 24
 - [ ] 2.5 Smoke-test the scraper locally on Node 24 (`npm run start:newJerseyScraper`)
 
 ## 3. OpenTofu config
 
-- [ ] 3.1 Create `infra/` with `versions.tf` (`required_version >= 1.10`, aws `~> 6`, archive `~> 2`), `providers.tf` (us-east-2, `allowed_account_ids = ["590184139982"]`), `locals.tf` (`env = "dev"`, `state_bucket = "sheriff-sale-tofu-state-590184139982"`), `variables.tf` (`database_url`, sensitive), and `.gitignore`
-- [ ] 3.2 Write `state.tf`: state bucket with versioning, Block Public Access, AES256 SSE, and `prevent_destroy`
-- [ ] 3.3 Write `storage.tf`: `nj-sheriff-sale-${local.env}` bucket with `prevent_destroy` and its AES256 SSE configuration
-- [ ] 3.4 Write `scraper.tf`: log group, DLQ (14-day retention, SQS-managed SSE), IAM role + `s3-archive-access` and `dlq-send` inline policies + BasicExecutionRole attachment, `archive_file` over `backend/dist`, Lambda (`nodejs24.x`, `index.handler`, 512 MB, 900 s, DLQ, env `DATABASE_URL`/`ENV`), EventBridge rule `cron(0 0 * * ? *)` + target, and `AllowEventBridgeInvoke` permission
-- [ ] 3.5 Write `imports.tf` with import blocks for the archive bucket, its SSE config, and the log group
-- [ ] 3.6 Write `infra/README.md` documenting the bootstrap, `TF_VAR_database_url`, and the day-to-day plan/apply flow
-- [ ] 3.7 `tofu fmt -check` and `tofu validate` pass
+- [x] 3.1 Create `infra/` with `versions.tf` (`required_version >= 1.10`, aws `~> 6`, archive `~> 2`), `providers.tf` (us-east-2, `allowed_account_ids = ["590184139982"]`), `locals.tf` (`env = "dev"`, `state_bucket = "sheriff-sale-tofu-state-590184139982"`), `variables.tf` (`database_url`, sensitive), and `.gitignore`
+- [x] 3.2 Write `state.tf`: state bucket with versioning, Block Public Access, AES256 SSE, and `prevent_destroy`
+- [x] 3.3 Write `storage.tf`: `nj-sheriff-sale-${local.env}` bucket with `prevent_destroy` and its AES256 SSE configuration
+- [x] 3.4 Write `scraper.tf`: log group, DLQ (14-day retention, SQS-managed SSE), IAM role + `s3-archive-access` and `dlq-send` inline policies + BasicExecutionRole attachment, `archive_file` over `backend/dist`, Lambda (`nodejs24.x`, `index.handler`, 512 MB, 900 s, DLQ, env `DATABASE_URL`/`ENV`), EventBridge rule `cron(0 0 * * ? *)` + target, and `AllowEventBridgeInvoke` permission
+- [x] 3.5 Write `imports.tf` with import blocks for the archive bucket, its SSE config, and the log group
+- [x] 3.6 Write `infra/README.md` documenting the bootstrap, `TF_VAR_database_url`, and the day-to-day plan/apply flow
+- [x] 3.7 `tofu fmt -check` and `tofu validate` pass
 
 ## 4. Bootstrap state
 

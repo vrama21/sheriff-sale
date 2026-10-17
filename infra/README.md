@@ -1,0 +1,48 @@
+# infra
+
+OpenTofu config for the backend's AWS resources (account `590184139982`, `us-east-2`, env `dev`):
+
+- `nj-sheriff-sale-dev`: S3 archive of scraped pages (`prevent_destroy`)
+- `new-jersey-sheriff-sale-scraper-dev`: scraper Lambda, its IAM role, SQS dead-letter queue, log
+  group, and the daily `cron(0 0 * * ? *)` EventBridge schedule
+- `sheriff-sale-tofu-state-590184139982`: the bucket holding this config's own state
+  (`prevent_destroy`, versioned)
+
+## Prerequisites
+
+- OpenTofu, pinned in the root `mise.toml` (`mise install`).
+- AWS credentials for the account, e.g. `AWS_PROFILE` in `mise.local.toml`.
+- `TF_VAR_database_url` set to the dev `DATABASE_URL` (e.g. in `mise.local.toml`).
+- The Lambda bundle: `npm run build` from the repo root (writes `backend/dist/index.js`).
+
+## Day to day
+
+```sh
+cd infra
+tofu init
+tofu plan
+tofu apply
+```
+
+CI runs `tofu apply` on every push to `main`, after the database migration.
+
+## Bootstrapping the state bucket
+
+The state bucket is managed by this same config, so it has to exist before the `s3` backend can
+use it. This is a one-time step and has already been done; it is kept here for disaster recovery.
+
+1. Move `backend.tf` aside so OpenTofu uses local state, then `tofu init`.
+2. Create only the state bucket:
+
+   ```sh
+   tofu apply \
+     -target=aws_s3_bucket.tofu_state \
+     -target=aws_s3_bucket_versioning.tofu_state \
+     -target=aws_s3_bucket_public_access_block.tofu_state \
+     -target=aws_s3_bucket_server_side_encryption_configuration.tofu_state
+   ```
+
+3. Restore `backend.tf` and copy the local state into the bucket: `tofu init -migrate-state`.
+4. Delete the local `terraform.tfstate*` files.
+
+If the state object is ever corrupted, restore a previous version from the bucket's version history.

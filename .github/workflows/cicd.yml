@@ -17,8 +17,8 @@ env:
 
 jobs:
   # Runs on every branch, so it stays outside the dev environment (main and cicd* only) and gets
-  # placeholders instead of its secrets: drizzle.config.ts and the CDK synth only check that these
-  # are set, and nothing in build or test connects to the database.
+  # placeholders instead of its secrets: drizzle.config.ts only checks that these are set, and
+  # nothing in build or test connects to the database.
   build:
     runs-on: ubuntu-latest
     env:
@@ -55,30 +55,6 @@ jobs:
           npm ci
           npm run db:generate
           npm run db:migrate
-
-  deploy-backend:
-    needs: migrate
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Only runs on the main branch
-    environment: dev
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: ./packages/database/dist
-      - name: CDK Deploy
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'deploy'
-          cdk_args: '--require-approval never'
-          actions_comment: false
-          working_dir: './backend'
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-2'
 
   deploy-frontend:
     needs: migrate
