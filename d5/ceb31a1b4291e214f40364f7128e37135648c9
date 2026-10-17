@@ -1,0 +1,26 @@
+backend/src/services/listingSync/syncListing.test.ts
+  s_4243d67b3abe9e::t_bd240e3016aaa7 133
+backend/src/services/listingSync/syncListing.ts
+  s_4243d67b3abe9e::t_bd240e3016aaa7 34-37,65,71
+backend/scripts/replayArchive/replay.test.ts
+  s_4243d67b3abe9e::t_04529efcd440f2 79,94
+  s_4243d67b3abe9e::t_0cf9a338668f8e 186-197
+backend/scripts/replayArchive/replay.ts
+  s_4243d67b3abe9e::t_04529efcd440f2 36-37,66,117-123,248-249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d5ceb31a1b4291e214f40364f7128e37135648c9",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
