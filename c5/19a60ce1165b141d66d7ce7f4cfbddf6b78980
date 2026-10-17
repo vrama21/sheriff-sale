@@ -1,0 +1,35 @@
+openspec/changes/migrate-lint-format-to-vite-plus/tasks.md
+  s_c0b20ded9e1925::t_0c3442d67963d4 3-5,9-14,18-22,26-29,33-36,40,44-49
+  s_c0b20ded9e1925::t_c0c9bfbd96c931 1-2,6-8,15-17,23-25,30-32,37-39,41-43
+openspec/changes/migrate-lint-format-to-vite-plus/.openspec.yaml
+  s_c0b20ded9e1925::t_3b5efed8c53603 1-2
+openspec/changes/migrate-lint-format-to-vite-plus/design.md
+  s_c0b20ded9e1925::t_fb1b81e2201f8d 93
+  s_c0b20ded9e1925::t_07d6e69bc86222 17,86-92,94-97
+  s_c0b20ded9e1925::t_2696f8cbf978ae 1-15,18-23,25-32,34,36-41,43-45,47-49,51-53,55-57,59,61-63,65-85
+  s_c0b20ded9e1925::t_c434e592da118c 16,24,33,35,42,46,50,54,58,60,64
+openspec/changes/migrate-lint-format-to-vite-plus/proposal.md
+  s_c0b20ded9e1925::t_89e894d1988636 1-11,13-17,19-21,23-30
+  s_c0b20ded9e1925::t_07d6e69bc86222 12
+  s_c0b20ded9e1925::t_c434e592da118c 18,22
+openspec/changes/migrate-lint-format-to-vite-plus/specs/vite-plus-toolchain/spec.md
+  s_c0b20ded9e1925::t_c434e592da118c 8,13,18,27,32,37,46,51,60,65,74,79,88
+  s_c0b20ded9e1925::t_07d6e69bc86222 5,10,71
+  s_c0b20ded9e1925::t_2728d0718b37a7 1-4,6-7,9,11-12,14-17,19-26,28-31,33-36,38-45,47-50,52-59,61-64,66-70,72-73,75-78,80-87,89-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c519a60ce1165b141d66d7ce7f4cfbddf6b78980",
+  "prompts": {},
+  "sessions": {
+    "s_c0b20ded9e1925": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bc66daf4-c619-4533-97fd-c898f7c1d470",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
