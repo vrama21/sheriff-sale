@@ -4,9 +4,6 @@
     "**/.env"
   ],
   "globalEnv": [
-    "AWS_ACCOUNT_ID",
-    "CDK_DEFAULT_ACCOUNT",
-    "CDK_DEFAULT_REGION",
     "DATABASE_URL",
     "ENV",
     "NEXT_GOOGLE_MAPS_API_KEY",
@@ -26,17 +23,7 @@
       "outputs": [
         "dist/**",
         ".next/**",
-        "!.next/cache/**",
-        "cdk.out/**"
-      ]
-    },
-    "deploy": {
-      "cache": false,
-      "dependsOn": [
-        "build",
-        "db:generate",
-        "db:migrate",
-        "^deploy"
+        "!.next/cache/**"
       ]
     },
     "db:generate": {

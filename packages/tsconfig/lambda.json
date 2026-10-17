@@ -28,11 +28,10 @@
     "strictPropertyInitialization": false,
     "target": "ES2022",
   },
-  "display": "AWS CDK",
+  "display": "Node Lambda",
   "extends": "./node20.json",
   "exclude": [
     "node_modules",
-    "cdk.out",
     "dist"
   ]
 }

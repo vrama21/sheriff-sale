@@ -1,7 +1,6 @@
 *.d.ts
 
 build
-cdk.out
 node_modules
 
 .prettierrc.js
