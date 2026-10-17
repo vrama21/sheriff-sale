@@ -21,7 +21,7 @@
     "@types/lodash": "4.14.176",
     "@types/luxon": "3.2.0",
     "@types/mocha": "10.0.7",
-    "@types/node": "20.14.9",
+    "@types/node": "24.19.2",
     "@typescript-eslint/eslint-plugin": "7.14.1",
     "@typescript-eslint/parser": "7.14.1",
     "csv-parse": "5.3.3",
@@ -45,5 +45,8 @@
     "node-html-parser": "5.1.0",
     "parse-address": "1.1.2",
     "reflect-metadata": "0.1.13"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

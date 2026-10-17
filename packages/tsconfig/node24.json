@@ -1,14 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 20",
+  "display": "Node 24",
   "extends": "./base.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2022"],
+    "lib": ["ES2023"],
     "module": "ES6",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2023"
   }
 }

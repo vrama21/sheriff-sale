@@ -37,3 +37,4 @@ mise.local.toml
 
 # turbo
 .turbo
+.vercel

@@ -29,7 +29,7 @@
     "target": "ES2022",
   },
   "display": "Node Lambda",
-  "extends": "./node20.json",
+  "extends": "./node24.json",
   "exclude": [
     "node_modules",
     "dist"

@@ -27,9 +27,10 @@ jobs:
       ENV: ci
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Install Node
+        uses: jdx/mise-action@v5
         with:
-          node-version: '20'
+          install_args: node
       - name: Build
         run: |
           npm ci
@@ -53,9 +54,10 @@ jobs:
     environment: prod
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Install Node
+        uses: jdx/mise-action@v5
         with:
-          node-version: '20'
+          install_args: node
       - name: Database Migration
         run: |
           npm ci
@@ -105,6 +107,10 @@ jobs:
         with:
           name: build-artifacts
           path: ./packages/database/dist
+      - name: Install Node
+        uses: jdx/mise-action@v5
+        with:
+          install_args: node
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
