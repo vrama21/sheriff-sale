@@ -1,5 +1,8 @@
-## ADDED Requirements
+# scraper-infrastructure Specification
 
+## Purpose
+The AWS resources behind the daily New Jersey sheriff sale scraper: the `nj-sheriff-sale` archive bucket, the Lambda and its IAM role, dead-letter queue, schedule, and log group, plus their names and protection rules.
+## Requirements
 ### Requirement: Archive bucket
 OpenTofu SHALL manage an S3 bucket named `nj-sheriff-sale`. The name SHALL NOT be derived from the environment. The resource SHALL set `lifecycle { prevent_destroy = true }` and declare AES256 default server-side encryption.
 
@@ -70,7 +73,7 @@ OpenTofu SHALL manage an EventBridge rule on the default event bus named `new-je
 - **THEN** the function is invoked once by the rule and a new log stream appears in `/aws/lambda/new-jersey-sheriff-sale-scraper`
 
 ### Requirement: Scraper log group
-OpenTofu SHALL create and manage the log group `/aws/lambda/new-jersey-sheriff-sale-scraper` before the function, so that Lambda does not create it outside OpenTofu. The old log group `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` SHALL be deleted at cleanup.
+OpenTofu SHALL create and manage the log group `/aws/lambda/new-jersey-sheriff-sale-scraper` before the function, so that Lambda does not create it outside OpenTofu. The old log group `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` SHALL be kept, outside OpenTofu, so the pre-migration history stays searchable in CloudWatch alongside the new group.
 
 #### Scenario: Log group owned by OpenTofu
 - **WHEN** the function is first invoked after apply
@@ -82,3 +85,4 @@ AWS SHALL host exactly one deployed environment. No resource name SHALL contain 
 #### Scenario: Names after cutover
 - **WHEN** the scraper resources are listed after cutover
 - **THEN** the function, role, queue, rule, and log group are named `new-jersey-sheriff-sale-scraper`, `…-role`, `…-dlq`, `…-rule`, and `/aws/lambda/new-jersey-sheriff-sale-scraper`, and no OpenTofu-managed resource name ends in `-prod` or `-dev`
+

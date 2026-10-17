@@ -67,7 +67,7 @@ CI SHALL NOT run OpenTofu until the cutover is verified. The CDK deploy step SHA
 - **THEN** `tofu plan` from a developer machine already reports no changes against live infrastructure
 
 ### Requirement: CDK toolchain and legacy resources removed
-After cutover, the repository SHALL NOT contain the CDK app (`backend/bin/`, `backend/lib/`, `backend/cdk.json`), CDK npm dependencies, CDK-specific turbo outputs or env vars, or CDK instructions in the READMEs. The `SheriffSaleStack` and `CDKToolkit` CloudFormation stacks SHALL be deleted from account 590184139982 in us-east-2. After the archive grace period, `nj-sheriff-sale-dev` and `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` SHALL also be deleted.
+After cutover, the repository SHALL NOT contain the CDK app (`backend/bin/`, `backend/lib/`, `backend/cdk.json`), CDK npm dependencies, CDK-specific turbo outputs or env vars, or CDK instructions in the READMEs. The `SheriffSaleStack` and `CDKToolkit` CloudFormation stacks SHALL be deleted from account 590184139982 in us-east-2. After the archive grace period, `nj-sheriff-sale-dev` SHALL also be deleted. `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` is kept (see scraper-infrastructure).
 
 #### Scenario: No CDK references remain
 - **WHEN** the repository (excluding `node_modules`, lockfiles, and `openspec/`) is searched for `aws-cdk` and `cdk.out`
@@ -77,6 +77,6 @@ After cutover, the repository SHALL NOT contain the CDK app (`backend/bin/`, `ba
 - **WHEN** `aws cloudformation list-stacks` is run in us-east-2 for active stacks
 - **THEN** neither `SheriffSaleStack` nor `CDKToolkit` is listed
 
-#### Scenario: No dev resources remain
-- **WHEN** the account's S3 buckets and `/aws/lambda/` log groups are listed after the grace period
-- **THEN** neither `nj-sheriff-sale-dev` nor `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` exists
+#### Scenario: Old archive bucket removed
+- **WHEN** the account's S3 buckets are listed after the grace period
+- **THEN** `nj-sheriff-sale-dev` does not exist, and `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` still exists
