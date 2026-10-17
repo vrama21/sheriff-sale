@@ -2,18 +2,19 @@
 
 The backend runs as one CloudFormation stack, `SheriffSaleStack` (account 590184139982, us-east-2), synthesized from the CDK app in `backend/bin` and `backend/lib`. A live read on 2026-10-16 showed:
 
-| CFN logical ID | Type | Physical ID | Fate |
-|---|---|---|---|
-| `NewJerseySheriffSaleBucketA75A18D1` | S3 bucket | `nj-sheriff-sale-dev` (47,498 objects, 1,249,289,548 bytes) | **Retain**, copy into `nj-sheriff-sale`, delete after grace period |
-| `NewJerseySheriffSaleScraper80654AD5` | Lambda | `new-jersey-sheriff-sale-scraper-dev` (nodejs20.x) | delete, recreate with an env-less name |
-| `NewJerseySheriffSaleScraperRoleD78E4208` | IAM role (+ inline `NewJerseySheriffSaleScraperPolicy`) | `new-jersey-sheriff-sale-scraper-role-dev` | delete, recreate with an env-less name |
-| `NewJerseySheriffSaleScraperRoleDefaultPolicy05FC6E9E` | IAM policy (inline on role) | `sqs:SendMessage` on DLQ | delete, recreate under a readable name |
-| `NewJerseySheriffSaleScraperDLQEEECC262` | SQS | `new-jersey-sheriff-sale-scraper-dlq-dev` (0 messages) | delete, recreate with an env-less name |
-| `NewJerseySheriffSaleScraperRule058BA2B7` | EventBridge rule | `new-jersey-sheriff-sale-scraper-rule-dev`, `cron(0 0 * * ? *)` | delete, recreate with an env-less name |
-| `…RuleAllowEventRule…3A8ABCD33B5A41E9` | Lambda permission | generated statement ID | delete, recreate |
-| `CDKMetadata` | CDK metadata | none | drop |
+| CFN logical ID                                         | Type                                                    | Physical ID                                                     | Fate                                                               |
+| ------------------------------------------------------ | ------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `NewJerseySheriffSaleBucketA75A18D1`                   | S3 bucket                                               | `nj-sheriff-sale-dev` (47,498 objects, 1,249,289,548 bytes)     | **Retain**, copy into `nj-sheriff-sale`, delete after grace period |
+| `NewJerseySheriffSaleScraper80654AD5`                  | Lambda                                                  | `new-jersey-sheriff-sale-scraper-dev` (nodejs20.x)              | delete, recreate with an env-less name                             |
+| `NewJerseySheriffSaleScraperRoleD78E4208`              | IAM role (+ inline `NewJerseySheriffSaleScraperPolicy`) | `new-jersey-sheriff-sale-scraper-role-dev`                      | delete, recreate with an env-less name                             |
+| `NewJerseySheriffSaleScraperRoleDefaultPolicy05FC6E9E` | IAM policy (inline on role)                             | `sqs:SendMessage` on DLQ                                        | delete, recreate under a readable name                             |
+| `NewJerseySheriffSaleScraperDLQEEECC262`               | SQS                                                     | `new-jersey-sheriff-sale-scraper-dlq-dev` (0 messages)          | delete, recreate with an env-less name                             |
+| `NewJerseySheriffSaleScraperRule058BA2B7`              | EventBridge rule                                        | `new-jersey-sheriff-sale-scraper-rule-dev`, `cron(0 0 * * ? *)` | delete, recreate with an env-less name                             |
+| `…RuleAllowEventRule…3A8ABCD33B5A41E9`                 | Lambda permission                                       | generated statement ID                                          | delete, recreate                                                   |
+| `CDKMetadata`                                          | CDK metadata                                            | none                                                            | drop                                                               |
 
 Outside the stack:
+
 - Log group `/aws/lambda/new-jersey-sheriff-sale-scraper-dev`: created by Lambda, never expires, 57 MB.
 - `CDKToolkit` bootstrap stack (v20): its assets bucket holds the current Lambda zip.
 
@@ -22,6 +23,7 @@ The `-dev` names are a leftover from CDK. AWS hosts exactly one deployed environ
 CI's `deploy-backend` job fails in CDK synth today. `main` is the only branch that deploys, through the GitHub environment `dev` (secrets plus `ENV=dev`), with long-lived AWS keys.
 
 **Progress when this design was revised:**
+
 - The state bucket is bootstrapped.
 - `nj-sheriff-sale-dev` is `Retain` in CloudFormation.
 - `nj-sheriff-sale-dev`, its SSE config, and the `-dev` log group were imported into OpenTofu state under the earlier `-dev` plan. They have to come out of state again (D3).
@@ -29,12 +31,14 @@ CI's `deploy-backend` job fails in CDK synth today. `main` is the only branch th
 ## Goals / Non-Goals
 
 **Goals:**
+
 - One OpenTofu root config (`infra/`) owns all backend AWS resources for the single `prod` environment, plus its own state bucket.
 - The full scrape archive ends up in `nj-sheriff-sale`, a bucket with no env in its name. Nothing is lost.
 - The scraper keeps its daily schedule under readable env-less names, moving to `nodejs24.x`.
 - CI deploys from a `prod` GitHub environment. The CDK toolchain, CDK stacks, and `-dev` leftovers are removed.
 
 **Non-Goals:**
+
 - Keeping the `nj-sheriff-sale-dev` bucket itself. Only its data is kept.
 - Multiple environments, workspaces, or modules. `env` is a single local set to `"prod"`, used only as the Lambda's `ENV` value; resource names carry no env.
 - Isolating local runs. Local scraper runs write to `nj-sheriff-sale` and the hosted Railway database, just as local runs already use that database today. This is left for a later change.
@@ -46,59 +50,74 @@ CI's `deploy-backend` job fails in CDK synth today. `main` is the only branch th
 ## Decisions
 
 ### D1. Keep the data, not the bucket: copy into `nj-sheriff-sale`
+
 S3 buckets can't be renamed, so the archive moves into a new bucket, `nj-sheriff-sale`, created by OpenTofu. Its name has no env, so it never needs renaming again; `HeadBucket` returned 404, so the name was free. The data is copied with `aws s3 sync s3://nj-sheriff-sale-dev s3://nj-sheriff-sale`, which copies object to object inside S3. Roughly 47k COPY requests cost about $0.25, and in-region transfer is free.
-- The sync runs *after* `SheriffSaleStack` is deleted, so the old Lambda can't add objects during or after the copy.
+
+- The sync runs _after_ `SheriffSaleStack` is deleted, so the old Lambda can't add objects during or after the copy.
 - Copied objects get a new `LastModified`. That doesn't matter: keys already carry the scrape date (`<prefix>/<YYYY-MM-DD>/<suffix>`), and nothing reads `LastModified`.
 - To verify, the object count and total bytes must match, and a second `aws s3 sync --dryrun` must list nothing to copy.
 - `nj-sheriff-sale-dev` stays as a fallback for a grace period, then it is emptied and deleted (tasks group 7).
 - Everything else in the stack is stateless config and is recreated, not imported.
-- *Alternative, keep the `nj-sheriff-sale-dev` name:* no copy needed, but the single `prod` environment would keep a permanent `dev` name.
-- *Alternative, `nj-sheriff-sale-prod`:* still tied to an environment, which goes against the single-environment model.
+- _Alternative, keep the `nj-sheriff-sale-dev` name:_ no copy needed, but the single `prod` environment would keep a permanent `dev` name.
+- _Alternative, `nj-sheriff-sale-prod`:_ still tied to an environment, which goes against the single-environment model.
 
 ### D2. Release the old bucket from CloudFormation by changing its policy to Retain (done)
+
 Ran a direct `update-stack` through a change set with the deployed template, editing only `DeletionPolicy` and `UpdateReplacePolicy` to `Retain` on `NewJerseySheriffSaleBucketA75A18D1`. CloudFormation listed four dependent resources as `Dynamic` changes, because they reference the bucket ARN through `GetAtt`. None of them were actually updated. When the stack is deleted, CloudFormation removes everything except `nj-sheriff-sale-dev`, which is then left unmanaged until it is deleted.
 
 ### D3. Undo the `-dev` imports and drop `imports.tf`
-Under the earlier plan, `nj-sheriff-sale-dev`, its SSE config, and `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` were imported into state at `aws_s3_bucket.archive`, `aws_s3_bucket_server_side_encryption_configuration.archive`, and `aws_cloudwatch_log_group.scraper`. With the names changed, a plan would try to replace them, and `prevent_destroy` would block that. They are removed from state with `tofu state rm`, which leaves the real resources alone, *before* the config with the new names is planned. `infra/imports.tf` is deleted. No resource is imported in the final design: `nj-sheriff-sale`, the scraper's log group, and the scraper are all created.
-- *Alternative, `removed` blocks:* these record in the config that the resources were dropped. For a one-time cleanup during a manual cutover, the CLI is simpler and leaves nothing behind in the config.
+
+Under the earlier plan, `nj-sheriff-sale-dev`, its SSE config, and `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` were imported into state at `aws_s3_bucket.archive`, `aws_s3_bucket_server_side_encryption_configuration.archive`, and `aws_cloudwatch_log_group.scraper`. With the names changed, a plan would try to replace them, and `prevent_destroy` would block that. They are removed from state with `tofu state rm`, which leaves the real resources alone, _before_ the config with the new names is planned. `infra/imports.tf` is deleted. No resource is imported in the final design: `nj-sheriff-sale`, the scraper's log group, and the scraper are all created.
+
+- _Alternative, `removed` blocks:_ these record in the config that the resources were dropped. For a one-time cleanup during a manual cutover, the CLI is simpler and leaves nothing behind in the config.
 
 ### D4. The state bucket lives in the same root config, bootstrapped from local state (done)
+
 The state bucket (`sheriff-sale-tofu-state-590184139982`) is an `aws_s3_bucket` in `infra/state.tf`, with versioning, Block Public Access, AES256 default encryption, and `prevent_destroy`. Bootstrap steps:
+
 1. Start with no `backend` block, so state is local.
 2. `tofu apply -target` the state bucket resources.
 3. Add `backend "s3" { bucket = local.state_bucket, key = "sheriff-sale.tfstate", region = local.region, use_lockfile = true }`.
 4. `tofu init -migrate-state`, then delete the local state files.
 
 OpenTofu ≥ 1.8 can evaluate locals in the backend block. `use_lockfile` (OpenTofu ≥ 1.10) locks with a file in S3, so no DynamoDB table is needed. The state bucket name has no env and is not affected by the rename.
-- *Alternative, a separate bootstrap root config:* rejected, since the decision is one root config.
-- *Alternative, OpenTofu client-side state encryption:* rejected for now. Anyone who can read the state bucket already has account access and can read `DATABASE_URL` from the Lambda.
+
+- _Alternative, a separate bootstrap root config:_ rejected, since the decision is one root config.
+- _Alternative, OpenTofu client-side state encryption:_ rejected for now. Anyone who can read the state bucket already has account access and can read `DATABASE_URL` from the Lambda.
 
 ### D5. Readable env-less names, generated names dropped
+
 Function, role, queue, rule, and log group become `new-jersey-sheriff-sale-scraper`, `…-role`, `…-dlq`, `…-rule`, and `/aws/lambda/new-jersey-sheriff-sale-scraper`. The two inline policies get readable names, `s3-archive-access` and `dlq-send`. The permission's `statement_id` is `AllowEventBridgeInvoke`. `s3:PutObjectAcl` is dropped: the code never sets an ACL, and the bucket has ACLs disabled.
 
 The new names don't overlap with the old stack's, so creating them doesn't depend on the stack being deleted first, and there is no SQS same-name cooldown. The order in D10 deletes the stack first anyway, because of the archive copy (D1). The log group is created by OpenTofu, and the function `depends_on` it, so Lambda never creates it outside OpenTofu.
 
 Mapping CDK resources to OpenTofu resources:
+
 - Role → `aws_iam_role` + 2× `aws_iam_role_policy` + `aws_iam_role_policy_attachment` (BasicExecutionRole).
 - Rule → `aws_cloudwatch_event_rule` + `aws_cloudwatch_event_target`.
 - Lambda → `aws_lambda_function` with `dead_letter_config`, `depends_on` the policies and the log group.
 
 ### D6. Bundle with esbuild in the backend build, zip with `archive_file` (done)
+
 `backend` `build` is `tsc --noEmit && npm run bundle`. `bundle` runs esbuild on the handler with `--bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js`. `@aws-sdk/*` is bundled, so the pinned `3.379.1` client runs. `infra/` uses `data "archive_file"` (`output_file_mode = "0644"`) over `backend/dist/index.js`, and sets `source_code_hash` from it. `AWS_NODEJS_CONNECTION_REUSE_ENABLED` is dropped, since it only affected SDK v2. The handler is `async` with no callback, which `nodejs24.x` requires.
 
 ### D7. Inputs, secrets, and the fixed bucket name
+
 - `variable "database_url" { sensitive = true }` is supplied as `TF_VAR_database_url`. Locally it is set in `mise.local.toml` or the shell; in CI it comes from the `prod` environment's `DATABASE_URL` secret. The value ends up in state, as it does in the CloudFormation template today.
 - `ENV` is set from `local.env` (`prod`). The code no longer uses it to build the bucket name, but it stays in the Lambda environment.
 - `saveHtmlToS3.ts` replaces `` `nj-sheriff-sale-${ENV}` `` with the constant `nj-sheriff-sale` and drops its `ENV` check. A bucket-name env var was considered and deferred, together with isolating local runs.
 
 ### D8. CI: build anywhere, apply only on main, in `prod`
+
 - `build` (all branches): also uploads `backend/dist` as an artifact. The placeholder env stays, since the build no longer needs AWS access.
 - `migrate`, `deploy-backend`, and `deploy-frontend` (main only) use `environment: prod`.
 - `deploy-backend` (`needs: migrate`): downloads the artifact, installs OpenTofu with `jdx/mise-action`, which installs the version pinned in `mise.toml` so CI and local runs match, then runs `tofu init` and `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets.
 - Workflow concurrency still cancels superseded runs on other branches, but never on `main`. Cancelling a `tofu apply` partway could leave infrastructure half-applied and the state lock held.
 
 ### D9. GitHub environment `dev` → `prod`
+
 The repo has a `dev` environment with 6 secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`) and the variable `ENV=dev`. Environments can't be renamed, and GitHub's API can't read secret values, so they can't be copied:
+
 1. Create the `prod` environment (branch rules `main`, `cicd*`, same as `dev`) and set `ENV=prod`. This can be done with `gh`.
 2. `DATABASE_URL` and `VERCEL_TOKEN` are re-entered as secrets. `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are identifiers, not credentials, so they become environment variables (`vars.*`), taken from `frontend/.vercel/project.json`. The AWS keys are not carried over (D11).
 3. Switch the workflow to `environment: prod`.
@@ -107,7 +126,9 @@ The repo has a `dev` environment with 6 secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRE
 The repo also has a `Preview` environment, probably created by Vercel. It is left alone.
 
 ### D11. CI authenticates with GitHub OIDC, scoped to project resources
+
 Today CI deploys with two long-lived access keys belonging to the IAM user `cicd-pipeline-deployer`, which has `AdministratorAccess`. Instead, `infra/github-actions.tf` manages:
+
 - the IAM OIDC provider for `token.actions.githubusercontent.com` (audience `sts.amazonaws.com`);
 - the role `sheriff-sale-github-actions`, whose trust policy requires `sub = repo:vrama21/sheriff-sale:environment:prod`. Only jobs in the `prod` environment can assume it, and `prod` only allows `main` and `cicd*`;
 - an inline policy `tofu-apply`. It grants the full set of actions for each service, but only on this project's ARNs:
@@ -121,16 +142,20 @@ Today CI deploys with two long-lived access keys belonging to the IAM user `cicd
   - `logs:DescribeLogGroups` on `*`, since it has no resource-level permissions.
 
 `deploy-backend` gets `permissions: id-token: write` and runs `aws-actions/configure-aws-credentials@v6` with `role-to-assume`. The provider and role were applied locally first (SSO), so CI can authenticate from its first run. They were verified from a temporary `cicd-oidc-check` branch: the role was assumed and a full plan refreshed with no access errors.
-- *Alternative, `AdministratorAccess` on the role:* never blocks a future change. Rejected because anyone who can push to `main` could do anything in the account.
-- *Trade-off:* a new kind of resource needs a new statement in the policy, applied locally, before CI can manage it. The role can edit its own policy, so pushing to `main` can still widen its rights within IAM. This is accepted, since `main` is only written by the repo owner.
-- *Retiring the keys:* once the first OIDC `main` run passes, deactivate both `cicd-pipeline-deployer` keys, delete them and the user, and delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets. The `dev` environment, with its copies, is deleted in 7.7.
+
+- _Alternative, `AdministratorAccess` on the role:_ never blocks a future change. Rejected because anyone who can push to `main` could do anything in the account.
+- _Trade-off:_ a new kind of resource needs a new statement in the policy, applied locally, before CI can manage it. The role can edit its own policy, so pushing to `main` can still widen its rights within IAM. This is accepted, since `main` is only written by the repo owner.
+- _Retiring the keys:_ once the first OIDC `main` run passes, deactivate both `cicd-pipeline-deployer` keys, delete them and the user, and delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets. The `dev` environment, with its copies, is deleted in 7.7.
 
 ### D12. Keep the old log group rather than fold it in
+
 `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` holds about 848 streams (57 MB, back to 2024-08). It can't be merged into `/aws/lambda/new-jersey-sheriff-sale-scraper`: CloudWatch Logs has no merge or rename, and `PutLogEvents` rejects events older than 14 days, so copying would only work by changing their timestamps. The group is kept as it is, outside OpenTofu, with no retention period. Logs Insights can query both groups in one search. Storage costs about $0.002/month.
-- *Alternative, export to S3 and delete:* leaves a single log group, but the old logs could then only be read in S3, not CloudWatch.
-- *Alternative, import into OpenTofu (`scraper_legacy`):* possible later. The CI role's policy would then need the old group's ARN too.
+
+- _Alternative, export to S3 and delete:_ leaves a single log group, but the old logs could then only be read in S3, not CloudWatch.
+- _Alternative, import into OpenTofu (`scraper_legacy`):_ possible later. The CI role's policy would then need the old group's ARN too.
 
 ### D10. Layout
+
 ```
 infra/
   versions.tf    required_version >= 1.10; aws ~> 6, archive ~> 2
@@ -194,6 +219,7 @@ Run manually from a developer machine with `AWS_PROFILE=sheriff-sale` and `TF_VA
     - After the grace period, empty and delete `nj-sheriff-sale-dev`. The `-dev` log group is kept (D12).
 
 **Rollback:**
+
 - Before step 7: CloudFormation still owns the scraper, and the `-dev` bucket's `Retain` is harmless. Restore the `-dev` config and state, or simply don't continue.
 - After step 7: `nj-sheriff-sale-dev` is the safe copy until the grace period ends. The scraper can be recreated by fixing the HCL and re-applying. Going back to CDK is not planned.
 

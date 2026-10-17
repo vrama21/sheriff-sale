@@ -31,10 +31,10 @@ Remember the choice for the rest of the session. Switch only when the user passe
 
 ## Connections
 
-| Env | Source |
-|---|---|
+| Env     | Source                                                                                                                                                                                                  |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `local` | `LOCAL_DATABASE_URL` if set, else `postgresql://postgres:$POSTGRES_PASSWORD@localhost:5432/postgres` with `POSTGRES_PASSWORD` read from the repo-root `.env` (the same file `docker-compose.yml` uses). |
-| `prod` | `PROD_DATABASE_URL`, set in `mise.local.toml` under `[env]` (gitignored). |
+| `prod`  | `PROD_DATABASE_URL`, set in `mise.local.toml` under `[env]` (gitignored).                                                                                                                               |
 
 If `local` fails to connect, the container is probably down — tell the user to run `docker compose up -d postgres` rather than retrying. If `prod` says `PROD_DATABASE_URL is not set`, tell the user to add it to `mise.local.toml`; never read it out of `.env` or echo the URL.
 

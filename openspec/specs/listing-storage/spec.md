@@ -1,8 +1,11 @@
 # listing-storage Specification
 
 ## Purpose
+
 TBD - created by archiving change listing-schema-fixes. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Columns fit the site's values
 
 The `Listing` table SHALL store `propertyId` as a 64-bit integer, and SHALL store `sheriffId` and the scraped free-text fields (`address`, `attorney`, `courtCase`, `deed`, `deedAddress`, `defendant`, `description`, `parcel`, `plaintiff`, `priors`) as unbounded text. It SHALL store `upsetAmount` and `judgment` as exact decimals with two fraction digits (`numeric(12,2)`), read back as numbers, and SHALL store `saleDate` as a calendar date. `StatusHistory.date` SHALL be a calendar date. `saleDate`, `plaintiff`, `sheriffId`, `upsetAmount` and `judgment` SHALL be nullable.
@@ -112,4 +115,3 @@ The migration that changes the column types SHALL first normalize the existing p
 
 - **WHEN** the migration runs on a row with `attorneyPhone` `"\r (973) 575-0707                    "`
 - **THEN** the row's `attorneyPhone` is `(973) 575-0707`
-

@@ -1,8 +1,11 @@
 # listing-address-backfill Specification
 
 ## Purpose
+
 TBD - created by archiving change backfill-listing-addresses. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Recover the street and city boundary
 
 The backfill SHALL find where the street ends and the city begins in a stored address whose `<br/>` was dropped. It SHALL look only at the text before the trailing `NJ` (with optional ZIP or ZIP+4), and SHALL try these methods in order, using the first that matches:
@@ -189,4 +192,3 @@ The backfill SHALL apply its planned updates as one custom Drizzle migration. Ea
 
 - **WHEN** the migration's SQL runs again after it has been applied
 - **THEN** no row's values change: rows whose guarded values changed are skipped, and any other planned row is written with the values it already holds
-

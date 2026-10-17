@@ -31,9 +31,13 @@ jobs:
         uses: jdx/mise-action@v5
         with:
           install_args: node
+      - name: Install dependencies
+        run: npm ci
+      # Format check and lint (Oxfmt + Oxlint) against the root vite.config.ts.
+      - name: Check
+        run: npx vp check
       - name: Build
         run: |
-          npm ci
           npm run build
           npm run test
       - name: Upload build artifacts

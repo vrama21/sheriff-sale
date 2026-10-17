@@ -9,10 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "lib": [
-      "ES2022",
-      "DOM"
-    ],
+    "lib": ["ES2022", "DOM"],
     "module": "CommonJS",
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": true,
@@ -26,12 +23,9 @@
     "strict": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
-    "target": "ES2022",
+    "target": "ES2022"
   },
   "display": "Node Lambda",
   "extends": "./node24.json",
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

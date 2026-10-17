@@ -1,8 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env"
-  ],
+  "globalDependencies": ["**/.env", "vite.config.ts"],
   "globalEnv": [
     "DATABASE_URL",
     "ENV",
@@ -17,19 +15,11 @@
   ],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "db:generate": {
-      "dependsOn": [
-        "^db:generate"
-      ]
+      "dependsOn": ["^db:generate"]
     },
     "db:migrate": {},
     "db:pull": {},
@@ -40,14 +30,10 @@
       "persistent": true
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
     },
     "test": {
-      "dependsOn": [
-        "^test"
-      ]
+      "dependsOn": ["^test"]
     }
   }
 }
