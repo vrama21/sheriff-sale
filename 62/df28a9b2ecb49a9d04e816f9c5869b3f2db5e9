@@ -1,0 +1,25 @@
+.claude/skills/db-query/scripts/query.sh
+  s_942a79e3cbe536::t_b098c8fb7205fe 1-19,21-60,65-82
+  s_942a79e3cbe536::t_79cff6decc92e7 61-64
+  s_942a79e3cbe536::t_387f0d0b45d903 20
+.claude/skills/db-query/SKILL.md
+  s_942a79e3cbe536::t_0b408a08deb7b5 1-81
+mise.toml
+  s_942a79e3cbe536::t_387f0d0b45d903 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "62df28a9b2ecb49a9d04e816f9c5869b3f2db5e9",
+  "prompts": {},
+  "sessions": {
+    "s_942a79e3cbe536": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34359c52-d881-4fb0-a1c9-0c008dd9475f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
