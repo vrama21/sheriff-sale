@@ -16,9 +16,9 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 2. P1 Low-risk bumps
 
-- [ ] 2.1 Re-check `npm view` for anything newer, then bump turbo 2.11.9 (root), tsx 4.23.15 (backend, database), `@aws-sdk/client-s3` 3.1152.0, axios 1.20.0, zod 4.6.7 and `@types/luxon` 3.7.6 (backend), and postgres 3.4.9 and drizzle-orm 0.45.4 (database). drizzle-kit stays 0.31.11
-- [ ] 2.2 Confirm `DATABASE_URL=postgres://localhost/unused npm run db:generate` in `packages/database` reports no schema changes and adds no migration
-- [ ] 2.3 Run the gate and commit P1
+- [x] 2.1 Re-check `npm view` for anything newer, then bump turbo 2.11.9 (root), tsx 4.23.15 (backend, database), `@aws-sdk/client-s3` 3.1152.0, axios 1.20.0, zod 4.6.7 and `@types/luxon` 3.7.6 (backend), and postgres 3.4.9 and drizzle-orm 0.45.4 (database). drizzle-kit stays 0.31.11
+- [x] 2.2 Confirm `DATABASE_URL=postgres://localhost/unused npm run db:generate` in `packages/database` reports no schema changes and adds no migration
+- [x] 2.3 Run the gate and commit P1
 
 ## 3. P2 Jest → vp test
 

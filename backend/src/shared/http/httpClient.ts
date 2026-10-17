@@ -112,7 +112,7 @@ export class HttpClient {
    * ```
    */
   public async request<T, R = AxiosResponse<T>>(config: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.request(config);
+    return this.axiosInstance.request<T, R>(config) as Promise<R>;
   }
 
   /**
@@ -128,7 +128,7 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async get<T, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.get(url, config);
+    return this.axiosInstance.get<T, R>(url, config) as Promise<R>;
   }
 
   /**
@@ -144,7 +144,7 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async options<T, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.options(url, config);
+    return this.axiosInstance.options<T, R>(url, config) as Promise<R>;
   }
 
   /**
@@ -160,7 +160,7 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async delete<T, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.delete(url, config);
+    return this.axiosInstance.delete<T, R>(url, config) as Promise<R>;
   }
   /**
    * HTTP HEAD method.
@@ -175,7 +175,7 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async head<T, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.head(url, config);
+    return this.axiosInstance.head<T, R>(url, config) as Promise<R>;
   }
 
   /**
@@ -193,7 +193,7 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async post<T, B, R = AxiosResponse<T>>(url: string, data?: B, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.post(url, data, config);
+    return this.axiosInstance.post<T, R, B>(url, data, config) as Promise<R>;
   }
 
   /**
@@ -211,7 +211,7 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async put<T, B, R = AxiosResponse<T>>(url: string, data?: B, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.put(url, data, config);
+    return this.axiosInstance.put<T, R, B>(url, data, config) as Promise<R>;
   }
 
   /**
@@ -229,6 +229,6 @@ export class HttpClient {
    * @memberof HttpClient
    */
   public async patch<T, B, R = AxiosResponse<T>>(url: string, data?: B, config?: AxiosRequestConfig): Promise<R> {
-    return this.axiosInstance.patch(url, data, config);
+    return this.axiosInstance.patch<T, R, B>(url, data, config) as Promise<R>;
   }
 }
