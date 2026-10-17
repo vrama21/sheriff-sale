@@ -44,13 +44,14 @@
 
 ## 5. Listing sync
 
-- [ ] 5.1 Add `syncListing(snapshot)` per design Decisions 3 and 4, in one `db.transaction`:
+- [x] 5.1 Add `syncListing(snapshot)` per design Decisions 3 and 4, in one `db.transaction`:
   - Upsert the listing with `onConflictDoUpdate({ target: [listings.county, listings.sheriffId], targetWhere: sql\`"sheriffId" <> ''\`, set, setWhere })`.
   - Return `id` and whether it was an insert (`xmax = 0`). On no row, select the `id` by `(county, sheriffId)`.
   - Merge all status rows in one multi-row insert with `onConflictDoUpdate` using `LEAST`/`GREATEST` and the `setWhere` guard, returning per-row insert or update.
   - Resolve `{ listing: 'inserted' | 'updated' | 'unchanged', statusInserted, statusExtended }`.
   - Reject snapshots with a blank sheriff number before the transaction.
-- [ ] 5.2 Unit-test `syncListing` with `@sheriff-sale/database` mocked, in the style of `newJerseySheriffSaleScraper.test.ts`: the insert, update and unchanged outcomes; status rows merged on "unchanged"; a status failure rejecting; and a blank sheriff number never opening a transaction.
+  - Done: `backend/src/services/listingSync/syncListing.ts`. The backend has no `drizzle-orm` dependency of its own, so `@sheriff-sale/database` now re-exports `and`, `eq` and drizzle's `sql`. The last is exported as `drizzleSql`, because `sql` is already the package's postgres.js client and an explicit re-export would silently shadow it. The update sets only `SNAPSHOT_FIELDS`, `propertyId`, `contentHash`, `snapshotDate` and `updatedAt`. Also checked against a throwaway local Postgres: insert, update, unchanged on re-sync, unchanged when only `propertyId` differs, an older snapshot (unchanged, `firstSeenOn` moved earlier), an edited status date kept as a second row, two counties sharing a sheriff number, and a blank sheriff number rejected.
+- [x] 5.2 Unit-test `syncListing` with `@sheriff-sale/database` mocked, in the style of `newJerseySheriffSaleScraper.test.ts`: the insert, update and unchanged outcomes; status rows merged on "unchanged"; a status failure rejecting; and a blank sheriff number never opening a transaction.
 - [ ] 5.3 Switch the live scraper to the shared path. `scrapeListing` fetches the HTML and calls `parseListingSnapshot` and `buildListingSnapshot` with the snapshot date `saveHtmlToS3` uses (export a `todaysArchiveDate()` helper from `saveHtmlToS3.ts` rather than computing it twice). An unrecognised layout becomes a per-listing failure, as now. `saveListing` calls `syncListing`. `CountyParseSummary` replaces `inserted` with `inserted`, `updated` and `unchanged`, and the log line and the "every database write fails" rule keep working.
 - [ ] 5.4 Update `newJerseySheriffSaleScraper.test.ts` and the handler test for the new summary and write path. Keep the isolation, limiter and county-rule tests passing.
 
