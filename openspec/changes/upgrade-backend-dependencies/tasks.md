@@ -32,7 +32,7 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 4. P3 Backend majors (one commit each)
 
-- [ ] 4.1 luxon 2.5.2 → 3.7.2. Check the call sites in `parse/listingSchema.ts`, `scrape/saveHtmlToS3.ts` and `replay/args.ts` against the v3 changelog. Run the gate and commit
+- [x] 4.1 luxon 2.5.2 → 3.7.2. Check the call sites in `parse/listingSchema.ts`, `scrape/saveHtmlToS3.ts` and `replay/args.ts` against the v3 changelog. Run the gate and commit
 - [ ] 4.2 dotenv → 18.0.8 in `backend` and `packages/database`. Pass `quiet: true` to every `config()` call (`modules/sheriffSale/handler.local.ts`, `modules/sheriffSale/replay/index.ts`, `packages/database/drizzle.config.ts`, `packages/database/src/client.ts`, `packages/database/src/migrate.ts`). Run the gate and commit
 - [ ] 4.3 esbuild 0.21.5 → 0.28.2. Rebuild the bundle and smoke-test that `require('./backend/dist/index.js').handler` is a function. Run the gate and commit
 - [ ] 4.4 node-html-parser 5.1.0 → 9.0.4. Check the call sites in `parse/` (`detailValueText.ts`, `parseListingDetails.ts`, `parseLegacyListingDetails.ts`, `parseStatusHistory.ts`, `parseListingSnapshot.ts`, `parseCountyPropertyIds.ts`) against the v6–v9 changelogs (v8 replaced `he` with `entities`). Remove the temporary `customConditions` from `lambda.json` (9.x ships typed `exports`). The fixture tests must pass with no expectation changes
