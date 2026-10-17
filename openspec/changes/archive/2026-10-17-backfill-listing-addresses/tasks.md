@@ -26,4 +26,4 @@
 
 - [x] 4.1 Run `npm run build`, `npm test` and `npm run lint` in `backend/`, and `npm run build` in `packages/database/`.
 - [x] 4.2 Run `openspec validate backfill-listing-addresses --strict` and fix any issues.
-- [ ] 4.3 After CI applies the migration, re-run the checks in design Migration Plan step 4 read-only against prod and record the results here.
+- [x] 4.3 After CI applies the migration, re-run the checks in design Migration Plan step 4 read-only against prod and record the results here. _(2026-10-17, prod with all 12 migrations through `0011` applied, 3,752 listings: 0 `city` starting with `Nue`, 0 `city = ''`, 0 `city` with digits, 0 `address` with `\r`, 0 `address` with leading or trailing whitespace. `saleDate` is now a `date` column (from `validate-scraped-listings`), so its `\r`/whitespace checks are trivially 0.)_
