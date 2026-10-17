@@ -40,48 +40,39 @@ export const scrapeListing = async (county: NJCounty, propertyId: number): Promi
 };
 
 /**
- * Inserts the listing and its status histories unless the listing is already in the DB.
+ * Inserts the listing and its status histories in one transaction unless the listing is already in the DB.
  * Resolves true when it inserted, false when the listing already existed.
  */
 export const saveListing = async ({
   listing: parsedListing,
   statusHistory: parsedStatusHistories,
-}: ScrapedListing): Promise<boolean> => {
-  const listingInDB = await db.query.listings.findFirst({
-    where: (listings, { eq }) => eq(listings.propertyId, parsedListing.propertyId as number),
-  });
-
-  if (listingInDB) {
-    return false;
-  }
-
-  // One transaction, so a failed status-history insert rolls back the listing too. Otherwise the next run
-  // would find the listing, skip it, and never write its histories.
-  await db.transaction(async (tx) => {
+}: ScrapedListing): Promise<boolean> =>
+  db.transaction(async (tx) => {
     console.log(`Inserting Listing propertyId ${parsedListing.propertyId} and address ${parsedListing.address} ...`);
+    // The unique index on propertyId answers "already stored?", so concurrent saves can't both insert.
     const [newListing] = await tx
       .insert(listings)
-      .values({ ...parsedListing })
-      .returning();
+      .values(parsedListing)
+      .onConflictDoNothing({ target: listings.propertyId })
+      .returning({ id: listings.id });
+
+    if (!newListing) {
+      return false;
+    }
+
     console.log(`Inserted Listing ${newListing.id}`);
 
-    console.log(`Found ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
-    for (const parsedStatusHistory of parsedStatusHistories) {
-      console.log(`Inserting Status History for listing ${newListing.id} ...`);
-      const [newStatusHistory] = await tx
+    if (parsedStatusHistories.length > 0) {
+      console.log(`Inserting ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
+      await tx
         .insert(statusHistories)
-        .values({
-          ...parsedStatusHistory,
-          listingId: newListing.id,
-        })
-        .onConflictDoNothing()
-        .returning();
-      console.log(`Inserted Status History ${newStatusHistory?.id} for listing ${newListing.id}`);
+        .values(
+          parsedStatusHistories.map((parsedStatusHistory) => ({ ...parsedStatusHistory, listingId: newListing.id })),
+        );
     }
-  });
 
-  return true;
-};
+    return true;
+  });
 
 export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promise<CountyParseSummary> => {
   console.log(`Parsing ${county} County...`);

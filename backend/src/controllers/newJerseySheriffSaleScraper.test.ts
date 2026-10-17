@@ -1,15 +1,16 @@
-import { db } from '@sheriff-sale/database';
+import { db, listings, statusHistories } from '@sheriff-sale/database';
 import { newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
 import { ListingParse } from '../types';
-import { LISTING_CONCURRENCY, newJerseySheriffSaleCountyParser } from './newJerseySheriffSaleScraper';
+import {
+  LISTING_CONCURRENCY,
+  ScrapedListing,
+  newJerseySheriffSaleCountyParser,
+  saveListing,
+} from './newJerseySheriffSaleScraper';
 
 jest.mock('@sheriff-sale/database', () => ({
-  db: {
-    query: { listings: { findFirst: jest.fn() } },
-    insert: jest.fn(),
-    transaction: jest.fn(),
-  },
-  listings: {},
+  db: { transaction: jest.fn() },
+  listings: { id: 'Listing.id', propertyId: 'Listing.propertyId' },
   statusHistories: {},
 }));
 
@@ -25,14 +26,74 @@ jest.mock('../services/newJerseySheriffSale', () => ({
 }));
 
 const service = jest.mocked(newJerseySheriffSaleService);
-const mockedDb = jest.mocked(db);
+const transaction = jest.mocked(db).transaction as unknown as jest.Mock;
 
-const findFirst = mockedDb.query.listings.findFirst as unknown as jest.Mock;
-const insertValues = jest.fn();
-// Inserts must go through the transaction; db.insert is left unmocked so a direct insert fails.
-const txInsert = jest.fn();
+type Write = { table: 'Listing' | 'StatusHistory'; values: unknown };
+
+// A fake transaction: writes are buffered and only land in `committed` when the callback resolves.
+// Like the unique index, a listing insert conflicts when its propertyId is stored or claimed by an open transaction.
+let committed: Write[];
+let storedPropertyIds: Set<number | null>;
+let claimedPropertyIds: Set<number | null>;
+const listingInsert = jest.fn();
+const historyInsert = jest.fn();
+
+const fakeTransaction = async <T>(callback: (tx: unknown) => Promise<T>): Promise<T> => {
+  const pending: Write[] = [];
+  const claimed: (number | null)[] = [];
+
+  const tx = {
+    insert: (table: unknown) => ({
+      values: (values: unknown) => {
+        if (table === statusHistories) {
+          return historyInsert(values).then(() => {
+            pending.push({ table: 'StatusHistory', values });
+          });
+        }
+
+        if (table !== listings) {
+          throw new Error('unexpected table');
+        }
+
+        return {
+          onConflictDoNothing: (config: unknown) => ({
+            returning: async (columns: unknown) => {
+              await listingInsert(values, config, columns);
+              const { propertyId } = values as ListingParse;
+
+              if (storedPropertyIds.has(propertyId) || claimedPropertyIds.has(propertyId)) {
+                return [];
+              }
+
+              claimedPropertyIds.add(propertyId);
+              claimed.push(propertyId);
+              pending.push({ table: 'Listing', values });
+
+              return [{ id: `listing-${propertyId}` }];
+            },
+          }),
+        };
+      },
+    }),
+  };
+
+  try {
+    const result = await callback(tx);
+    committed.push(...pending);
+    claimed.forEach((propertyId) => storedPropertyIds.add(propertyId));
+
+    return result;
+  } finally {
+    claimed.forEach((propertyId) => claimedPropertyIds.delete(propertyId));
+  }
+};
 
 const range = (start: number, count: number) => Array.from({ length: count }, (_, i) => start + i);
+
+const scraped = (propertyId: number, statusHistory: ScrapedListing['statusHistory'] = []): ScrapedListing => ({
+  listing: { propertyId, address: '1 MAIN STREET' } as ListingParse,
+  statusHistory,
+});
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -45,14 +106,78 @@ beforeEach(() => {
   service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET' } as ListingParse);
   service.parseStatusHistory.mockReturnValue([{ status: 'Scheduled', date: '1/1/2026' }]);
 
-  findFirst.mockResolvedValue(undefined);
-  insertValues.mockImplementation(async () => [{ id: 'new-id' }]);
+  committed = [];
+  storedPropertyIds = new Set();
+  claimedPropertyIds = new Set();
+  listingInsert.mockResolvedValue(undefined);
+  historyInsert.mockResolvedValue(undefined);
+  transaction.mockImplementation(fakeTransaction);
+});
 
-  const returning = () => insertValues();
-  txInsert.mockImplementation(() => ({
-    values: () => ({ returning, onConflictDoNothing: () => ({ returning }) }),
-  }));
-  (mockedDb.transaction as unknown as jest.Mock).mockImplementation(async (run) => run({ insert: txInsert }));
+describe('saveListing', () => {
+  it('inserts the listing and all its status histories in one statement inside the transaction', async () => {
+    const statusHistory = [
+      { status: 'Scheduled', date: '1/1/2026' },
+      { status: 'Adjourned', date: '2/1/2026' },
+    ];
+
+    await expect(saveListing(scraped(2195502430, statusHistory))).resolves.toBe(true);
+
+    expect(transaction).toHaveBeenCalledTimes(1);
+    expect(listingInsert).toHaveBeenCalledWith(
+      { propertyId: 2195502430, address: '1 MAIN STREET' },
+      { target: listings.propertyId },
+      { id: listings.id },
+    );
+    expect(historyInsert).toHaveBeenCalledTimes(1);
+    expect(committed).toEqual([
+      { table: 'Listing', values: { propertyId: 2195502430, address: '1 MAIN STREET' } },
+      {
+        table: 'StatusHistory',
+        values: [
+          { status: 'Scheduled', date: '1/1/2026', listingId: 'listing-2195502430' },
+          { status: 'Adjourned', date: '2/1/2026', listingId: 'listing-2195502430' },
+        ],
+      },
+    ]);
+  });
+
+  it('returns false and writes no status history when the propertyId is already stored', async () => {
+    storedPropertyIds.add(2195453969);
+
+    await expect(saveListing(scraped(2195453969, [{ status: 'Scheduled', date: '1/1/2026' }]))).resolves.toBe(false);
+
+    expect(historyInsert).not.toHaveBeenCalled();
+    expect(committed).toEqual([]);
+  });
+
+  it('skips the status-history insert when the listing has none', async () => {
+    await expect(saveListing(scraped(1))).resolves.toBe(true);
+
+    expect(historyInsert).not.toHaveBeenCalled();
+    expect(committed).toEqual([{ table: 'Listing', values: { propertyId: 1, address: '1 MAIN STREET' } }]);
+  });
+
+  it('rejects and stores nothing when the status-history insert fails', async () => {
+    historyInsert.mockRejectedValueOnce(new Error('value too long'));
+
+    await expect(saveListing(scraped(1, [{ status: 'Scheduled', date: '1/1/2026' }]))).rejects.toThrow(
+      'value too long',
+    );
+
+    expect(committed).toEqual([]);
+  });
+
+  it('inserts only one listing when the same propertyId is saved concurrently', async () => {
+    const results = await Promise.all([
+      saveListing(scraped(1, [{ status: 'Scheduled', date: '1/1/2026' }])),
+      saveListing(scraped(1, [{ status: 'Scheduled', date: '1/1/2026' }])),
+    ]);
+
+    expect(results.filter(Boolean)).toHaveLength(1);
+    expect(committed.filter((write) => write.table === 'Listing')).toHaveLength(1);
+    expect(committed.filter((write) => write.table === 'StatusHistory')).toHaveLength(1);
+  });
 });
 
 describe('newJerseySheriffSaleCountyParser', () => {
@@ -76,7 +201,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
       inserted: 2,
       failedWrites: 0,
     });
-    expect(findFirst).toHaveBeenCalledTimes(2);
+    expect(transaction).toHaveBeenCalledTimes(2);
     expect(console.error).toHaveBeenCalledWith(
       'Failed to parse listing propertyId 2 in Atlantic County',
       expect.any(TypeError),
@@ -85,7 +210,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
 
   it('does not insert listings already in the database', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    findFirst.mockResolvedValueOnce({ id: 'existing' });
+    storedPropertyIds.add(1);
 
     const summary = await newJerseySheriffSaleCountyParser('Bergen');
 
@@ -100,12 +225,12 @@ describe('newJerseySheriffSaleCountyParser', () => {
     await expect(newJerseySheriffSaleCountyParser('Camden')).rejects.toThrow(
       'All 2 listings in Camden County failed to parse.',
     );
-    expect(findFirst).not.toHaveBeenCalled();
+    expect(transaction).not.toHaveBeenCalled();
   });
 
   it('rejects when every database write fails', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    findFirst.mockRejectedValue(new Error('connection refused'));
+    transaction.mockRejectedValue(new Error('connection refused'));
 
     await expect(newJerseySheriffSaleCountyParser('Essex')).rejects.toThrow(
       'All 2 listing writes in Essex County failed.',
@@ -115,15 +240,16 @@ describe('newJerseySheriffSaleCountyParser', () => {
   it('writes a listing and its status histories in one transaction, failing it when a history insert fails', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1]);
     const historyError = new Error('value too long for type character varying(12)');
-    insertValues.mockResolvedValueOnce([{ id: 'new-id' }]).mockRejectedValueOnce(historyError);
+    historyInsert.mockRejectedValueOnce(historyError);
 
     await expect(newJerseySheriffSaleCountyParser('Gloucester')).rejects.toThrow(
       'All 1 listing writes in Gloucester County failed.',
     );
 
-    expect(mockedDb.transaction).toHaveBeenCalledTimes(1);
-    expect(txInsert).toHaveBeenCalledTimes(2);
-    expect(mockedDb.insert).not.toHaveBeenCalled();
+    expect(transaction).toHaveBeenCalledTimes(1);
+    expect(listingInsert).toHaveBeenCalledTimes(1);
+    expect(historyInsert).toHaveBeenCalledTimes(1);
+    expect(committed).toEqual([]);
     expect(console.error).toHaveBeenCalledWith(
       'Failed to save listing propertyId 1 in Gloucester County',
       historyError,
@@ -132,7 +258,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
 
   it('resolves when only some database writes fail', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    findFirst.mockRejectedValueOnce(new Error('value too long'));
+    transaction.mockRejectedValueOnce(new Error('value too long'));
 
     const summary = await newJerseySheriffSaleCountyParser('Hudson');
 
