@@ -1,0 +1,23 @@
+infra/github-actions.tf
+  s_2d320410b948db::t_47afe5bf15c5fd 1-113
+.github/workflows/cicd.yml
+  s_2d320410b948db::t_cdd4cf1b36ec4f 70-72,82-87
+.github/workflows/oidc-check.yml
+  ai_agent 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "19a988606e3c64710f930f44bbaac52b8c885239",
+  "prompts": {},
+  "sessions": {
+    "s_2d320410b948db": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0b957e7f-672f-4f34-9fa0-b3c88770c61f",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
