@@ -16,7 +16,6 @@
     "@sheriff-sale/config": "*",
     "@sheriff-sale/tsconfig": "*",
     "@types/aws-lambda": "8.10.109",
-    "@types/he": "1.1.2",
     "@types/jest": "29.5.12",
     "@types/lodash": "4.14.176",
     "@types/luxon": "3.2.0",
@@ -38,12 +37,9 @@
     "@aws-sdk/client-s3": "3.379.1",
     "@sheriff-sale/database": "*",
     "axios": "1.7.2",
-    "axios-cookiejar-support": "2.0.3",
-    "he": "1.2.0",
     "lodash": "4.17.21",
     "luxon": "2.5.2",
     "node-html-parser": "5.1.0",
-    "parse-address": "1.1.2",
     "reflect-metadata": "0.1.13"
   },
   "engines": {

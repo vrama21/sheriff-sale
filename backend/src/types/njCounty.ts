@@ -3,16 +3,19 @@ export const NJ_COUNTIES = [
   'Bergen',
   'Burlington',
   'Camden',
+  'Cape May',
   'Cumberland',
   'Essex',
   'Gloucester',
   'Hudson',
   'Hunterdon',
+  'Middlesex',
   'Monmouth',
   'Morris',
+  'Ocean',
   'Passaic',
   'Salem',
   'Union',
 ] as const;
 
-export type NJCounty = typeof NJ_COUNTIES[number];
+export type NJCounty = (typeof NJ_COUNTIES)[number];

@@ -1,6 +1,6 @@
 import { ListingParse, NJCounty, StatusHistoryParse } from '../types';
 import { db, listings, statusHistories } from '@sheriff-sale/database';
-import { newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
+import { NewJerseySheriffSaleHttpClient, newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
 import { createConcurrencyLimiter } from '../utils';
 
 // Module-level so every county in the run shares one cap on in-flight listing fetches.
@@ -21,8 +21,12 @@ export type CountyParseSummary = {
   failedWrites: number;
 };
 
-export const scrapeListing = async (county: NJCounty, propertyId: number): Promise<ScrapedListing> => {
-  const listingDetailsHtml = await newJerseySheriffSaleService.getListingDetailsHtml({ propertyId });
+export const scrapeListing = async (
+  client: NewJerseySheriffSaleHttpClient,
+  county: NJCounty,
+  propertyId: number,
+): Promise<ScrapedListing> => {
+  const listingDetailsHtml = await newJerseySheriffSaleService.getListingDetailsHtml(client, { propertyId });
 
   const listingDetails = newJerseySheriffSaleService.parseListingDetails(listingDetailsHtml);
   const statusHistory = newJerseySheriffSaleService.parseStatusHistory(listingDetailsHtml);
@@ -77,7 +81,10 @@ export const saveListing = async ({
 export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promise<CountyParseSummary> => {
   console.log(`Parsing ${county} County...`);
 
-  const countyListingsHtml = await newJerseySheriffSaleService.getCountyListingsHtml(county);
+  // The site scopes a session to one county, so each county run gets its own client and session.
+  const client = new NewJerseySheriffSaleHttpClient();
+
+  const countyListingsHtml = await newJerseySheriffSaleService.getCountyListingsHtml(client, county);
 
   const propertyIds = await newJerseySheriffSaleService.parseCountyProperyIds(countyListingsHtml);
 
@@ -86,7 +93,7 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
   console.log(`Parsing ${propertyIds.length} listings in ${county} County...`);
 
   const scrapeResults = await Promise.allSettled(
-    propertyIds.map((propertyId) => limitListing(() => scrapeListing(county, propertyId))),
+    propertyIds.map((propertyId) => limitListing(() => scrapeListing(client, county, propertyId))),
   );
 
   const scrapedListings: ScrapedListing[] = [];

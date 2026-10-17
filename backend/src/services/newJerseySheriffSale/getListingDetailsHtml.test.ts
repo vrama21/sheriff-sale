@@ -2,33 +2,17 @@ import { AxiosError } from 'axios';
 import { getListingDetailsHtml } from './getListingDetailsHtml';
 import { NewJerseySheriffSaleHttpClient } from './newJerseySheriffSaleHttpClient';
 import { saveHtmlToS3 } from './saveHtmlToS3';
+import { readFixture, StubResponse, stubClientAdapter } from './__fixtures__/stubClientAdapter';
 
 jest.mock('./saveHtmlToS3', () => ({ saveHtmlToS3: jest.fn() }));
 
 const mockedSaveHtmlToS3 = jest.mocked(saveHtmlToS3);
 
-/** A client whose requests never leave the process: `respond` plays the server. */
-const createClient = (respond: (status: number) => { status: number; data: unknown }, status = 200) => {
+const createClient = (response: StubResponse) => {
   const client = new NewJerseySheriffSaleHttpClient();
-  const axiosInstance = (client as unknown as { axiosInstance: { defaults: { adapter: unknown } } }).axiosInstance;
+  const requests = stubClientAdapter(client, () => response);
 
-  axiosInstance.defaults.adapter = async (config: never) => {
-    const response = { ...respond(status), statusText: '', headers: {}, config, request: {} };
-
-    if (response.status >= 400) {
-      throw new AxiosError(
-        `Request failed with status code ${response.status}`,
-        'ERR_BAD_RESPONSE',
-        config,
-        {},
-        response,
-      );
-    }
-
-    return response;
-  };
-
-  jest.spyOn(NewJerseySheriffSaleHttpClient, 'getClient').mockReturnValue(client);
+  return { client, requests };
 };
 
 beforeEach(() => {
@@ -40,23 +24,44 @@ beforeEach(() => {
 });
 
 describe('getListingDetailsHtml', () => {
-  it('decodes the html once, archives it, and returns the same html', async () => {
-    createClient((status) => ({ status, data: '<table>&amp;amp;</table>' }));
+  it('archives and returns the html as served, without decoding entities', async () => {
+    const { client } = createClient({ status: 200, data: '<div>A &lt;b&gt; &amp;amp; C</div>' });
 
-    const html = await getListingDetailsHtml({ propertyId: 42 });
+    const html = await getListingDetailsHtml(client, { propertyId: 42 });
 
-    expect(html).toBe('<table>&amp;</table>');
+    expect(html).toBe('<div>A &lt;b&gt; &amp;amp; C</div>');
     expect(mockedSaveHtmlToS3).toHaveBeenCalledWith({
-      html,
+      html: '<div>A &lt;b&gt; &amp;amp; C</div>',
       keyPrefix: 'listing-html-files',
       keySuffix: 'property-id-42.html',
     });
   });
 
-  it('rejects with the HTTP error when the request fails', async () => {
-    createClient((status) => ({ status, data: 'Service Unavailable' }), 503);
+  it('requests the property without following redirects', async () => {
+    const { client, requests } = createClient({ status: 200, data: '<div></div>' });
 
-    await expect(getListingDetailsHtml({ propertyId: 42 })).rejects.toThrow('Request failed with status code 503');
+    await getListingDetailsHtml(client, { propertyId: 42 });
+
+    expect(requests).toEqual([
+      expect.objectContaining({ url: '/Sales/SaleDetails', params: { PropertyId: '42' }, maxRedirects: 0 }),
+    ]);
+  });
+
+  it('rejects with a session error naming the property when the site redirects', async () => {
+    const { client } = createClient({ status: 302, data: readFixture('home.html'), headers: { location: '/' } });
+
+    await expect(getListingDetailsHtml(client, { propertyId: 42 })).rejects.toThrow(
+      'Session rejected for propertyId 42: redirected to /',
+    );
+    expect(mockedSaveHtmlToS3).not.toHaveBeenCalled();
+  });
+
+  it('rejects with the HTTP error when the request fails', async () => {
+    const { client } = createClient({ status: 503, data: 'Service Unavailable' });
+
+    await expect(getListingDetailsHtml(client, { propertyId: 42 })).rejects.toThrow(
+      'Request failed with status code 503',
+    );
     expect(mockedSaveHtmlToS3).not.toHaveBeenCalled();
   });
 
@@ -68,9 +73,8 @@ describe('getListingDetailsHtml', () => {
     axiosInstance.defaults.adapter = async (config: { timeout?: number }) => {
       throw new AxiosError(`timeout of ${config.timeout}ms exceeded`, 'ECONNABORTED', config as never, {});
     };
-    jest.spyOn(NewJerseySheriffSaleHttpClient, 'getClient').mockReturnValue(client);
 
-    await expect(getListingDetailsHtml({ propertyId: 42 })).rejects.toMatchObject({
+    await expect(getListingDetailsHtml(client, { propertyId: 42 })).rejects.toMatchObject({
       code: 'ECONNABORTED',
       message: 'timeout of 30000ms exceeded',
     });
@@ -78,18 +82,18 @@ describe('getListingDetailsHtml', () => {
   });
 
   it('rejects naming the property when the response body is empty', async () => {
-    createClient((status) => ({ status, data: '' }));
+    const { client } = createClient({ status: 200, data: '' });
 
-    await expect(getListingDetailsHtml({ propertyId: 42 })).rejects.toThrow(
+    await expect(getListingDetailsHtml(client, { propertyId: 42 })).rejects.toThrow(
       'Empty listing details response for propertyId 42',
     );
   });
 
   it('still returns the html when archiving to S3 fails', async () => {
-    createClient((status) => ({ status, data: '<table></table>' }));
+    const { client } = createClient({ status: 200, data: '<table></table>' });
     mockedSaveHtmlToS3.mockRejectedValue(new Error('getaddrinfo EBUSY'));
 
-    await expect(getListingDetailsHtml({ propertyId: 42 })).resolves.toBe('<table></table>');
+    await expect(getListingDetailsHtml(client, { propertyId: 42 })).resolves.toBe('<table></table>');
     expect(console.error).toHaveBeenCalledWith('Failed to save html for propertyId 42 to S3', expect.any(Error));
   });
 });
