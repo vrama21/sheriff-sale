@@ -125,6 +125,11 @@ Today CI deploys with two long-lived access keys belonging to the IAM user `cicd
 - *Trade-off:* a new kind of resource needs a new statement in the policy, applied locally, before CI can manage it. The role can edit its own policy, so pushing to `main` can still widen its rights within IAM. This is accepted, since `main` is only written by the repo owner.
 - *Retiring the keys:* once the first OIDC `main` run passes, deactivate both `cicd-pipeline-deployer` keys, delete them and the user, and delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets. The `dev` environment, with its copies, is deleted in 7.7.
 
+### D12. Keep the old log group rather than fold it in
+`/aws/lambda/new-jersey-sheriff-sale-scraper-dev` holds about 848 streams (57 MB, back to 2024-08). It can't be merged into `/aws/lambda/new-jersey-sheriff-sale-scraper`: CloudWatch Logs has no merge or rename, and `PutLogEvents` rejects events older than 14 days, so copying would only work by changing their timestamps. The group is kept as it is, outside OpenTofu, with no retention period. Logs Insights can query both groups in one search. Storage costs about $0.002/month.
+- *Alternative, export to S3 and delete:* leaves a single log group, but the old logs could then only be read in S3, not CloudWatch.
+- *Alternative, import into OpenTofu (`scraper_legacy`):* possible later. The CI role's policy would then need the old group's ARN too.
+
 ### D10. Layout
 ```
 infra/
@@ -186,7 +191,7 @@ Run manually from a developer machine with `AWS_PROFILE=sheriff-sale` and `TF_VA
 12. **Clean up:**
     - Remove the CDK files and dependencies.
     - Empty and delete `CDKToolkit`.
-    - After the grace period, empty and delete `nj-sheriff-sale-dev` and delete the `-dev` log group.
+    - After the grace period, empty and delete `nj-sheriff-sale-dev`. The `-dev` log group is kept (D12).
 
 **Rollback:**
 - Before step 7: CloudFormation still owns the scraper, and the `-dev` bucket's `Retain` is harmless. Restore the `-dev` config and state, or simply don't continue.

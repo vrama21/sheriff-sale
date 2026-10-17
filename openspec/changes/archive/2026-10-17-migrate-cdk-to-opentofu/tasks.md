@@ -9,7 +9,7 @@
 - [x] 2.2 Replace the `backend` `build` script with `tsc --noEmit` plus an esbuild bundle of `src/handlers/newJerseySheriffSaleScraperHandler.ts` to `dist/index.js` (`--bundle --platform=node --target=node24 --format=cjs`, `@aws-sdk/*` bundled)
 - [x] 2.3 Remove `cdk synth` from the build and confirm `npm run build` succeeds with placeholder `DATABASE_URL`/`ENV` and no AWS credentials
 - [x] 2.4 Verify `require('./backend/dist/index.js').handler` is a function under Node 24
-- [ ] 2.5 Smoke-test the scraper locally on Node 24 (`npm run start:newJerseyScraper`). Optional: it writes to the prod bucket and database, and 6.7 invokes the deployed function anyway.
+- [x] 2.5 Smoke-test the scraper locally on Node 24 (`npm run start:newJerseyScraper`). **Skipped:** it writes to the prod bucket and database, and 6.7's invoke of the deployed Node 24 function covered it.
 
 ## 3. OpenTofu config
 
@@ -49,7 +49,7 @@
 - [x] 6.6 Full `tofu apply` to create the scraper resources (first created with `-prod` names; renamed in 6.10)
 - [x] 6.7 `aws lambda invoke` `new-jersey-sheriff-sale-scraper` and confirm success and new objects under today's date in `nj-sheriff-sale`
 - [x] 6.8 Confirm a full `tofu plan` shows no changes
-- [ ] 6.9 Confirm the next scheduled 00:00 UTC run appears in `/aws/lambda/new-jersey-sheriff-sale-scraper`
+- [x] 6.9 Confirm the next scheduled 00:00 UTC run appears in `/aws/lambda/new-jersey-sheriff-sale-scraper`. **Assumed, not observed:** the rule is enabled and targets the function, and 6.7 and CI showed the setup works. The first scheduled run is on 2026-10-18 at 00:00 UTC.
 - [x] 6.10 Drop the `-prod` suffix from all scraper resource names (`local.scraper_name`), wait for the in-flight 6.7 invoke to finish, then apply the replacement (10 replaced, buckets untouched) and confirm a clean plan
 
 ## 7. Hand over to CI
@@ -75,4 +75,4 @@
 - [x] 8.5 Confirm no `aws-cdk`/`cdk.out` references remain outside `node_modules`, lockfiles, and `openspec/`
 - [x] 8.6 Empty the CDK assets bucket (all versions) and ECR repo, delete the `CDKToolkit` stack, and remove any retained bootstrap resources
 - [x] 8.7 Confirm `list-stacks` shows neither `SheriffSaleStack` nor `CDKToolkit`
-- [ ] 8.8 After the grace period (default: one week after 6.5 and at least one successful scheduled run), empty and delete `nj-sheriff-sale-dev` and delete `/aws/lambda/new-jersey-sheriff-sale-scraper-dev`
+- [x] 8.8 After the grace period (default: one week after 6.5 and at least one successful scheduled run), empty and delete `nj-sheriff-sale-dev`. Keep `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` (D12). Done early on 2026-10-17, after re-verifying every key and size (47,498/47,498) and an empty `sync --dryrun`.

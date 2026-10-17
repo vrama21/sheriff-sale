@@ -60,6 +60,23 @@ describe('getListingDetailsHtml', () => {
     expect(mockedSaveHtmlToS3).not.toHaveBeenCalled();
   });
 
+  it('rejects with the timeout error when the request hangs past the 30 s timeout', async () => {
+    const client = new NewJerseySheriffSaleHttpClient();
+    const axiosInstance = (client as unknown as { axiosInstance: { defaults: { adapter: unknown } } }).axiosInstance;
+
+    // Rejects the way axios's http adapter does when `config.timeout` elapses.
+    axiosInstance.defaults.adapter = async (config: { timeout?: number }) => {
+      throw new AxiosError(`timeout of ${config.timeout}ms exceeded`, 'ECONNABORTED', config as never, {});
+    };
+    jest.spyOn(NewJerseySheriffSaleHttpClient, 'getClient').mockReturnValue(client);
+
+    await expect(getListingDetailsHtml({ propertyId: 42 })).rejects.toMatchObject({
+      code: 'ECONNABORTED',
+      message: 'timeout of 30000ms exceeded',
+    });
+    expect(mockedSaveHtmlToS3).not.toHaveBeenCalled();
+  });
+
   it('rejects naming the property when the response body is empty', async () => {
     createClient((status) => ({ status, data: '' }));
 

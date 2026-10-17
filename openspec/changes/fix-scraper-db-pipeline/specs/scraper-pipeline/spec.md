@@ -33,9 +33,14 @@ A listing whose detail fetch or parse fails SHALL be logged with its `propertyId
 - **WHEN** a listing's detail response has an empty or non-string body
 - **THEN** fetching that listing fails with an error that names the `propertyId`, and the listing is skipped
 
+#### Scenario: Detail request hangs
+
+- **WHEN** a listing's detail request gets no response within the request timeout (30 s)
+- **THEN** the request rejects with a timeout error, the listing is logged and skipped, and its limiter slot frees for the next listing
+
 ### Requirement: Best-effort HTML archive
 
-The scraper SHALL decode each listing's detail HTML once, and SHALL archive that HTML to S3 before parsing it. If the archive fails, the scraper SHALL log the error and go on to parse and save the listing. The archive's existence check SHALL NOT leave S3 response bodies unread.
+The scraper SHALL decode each listing's detail HTML once, and SHALL archive that HTML to S3 before parsing it. If the archive fails, the scraper SHALL log the error and go on to parse and save the listing. The archive SHALL write with a single `PutObject` and SHALL NOT read from the bucket first.
 
 #### Scenario: S3 archive fails
 
@@ -44,8 +49,8 @@ The scraper SHALL decode each listing's detail HTML once, and SHALL archive that
 
 #### Scenario: Archive already exists
 
-- **WHEN** today's archive key for a listing already exists in the bucket
-- **THEN** the save is skipped, without reading the existing object's body
+- **WHEN** today's archive key for a listing already exists in the bucket, for example on a retry
+- **THEN** the save overwrites it with the new HTML, without reading from the bucket first
 
 ### Requirement: County failure rule
 

@@ -237,6 +237,25 @@ describe('newJerseySheriffSaleCountyParser', () => {
     );
   });
 
+  it('writes a listing and its status histories in one transaction, failing it when a history insert fails', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1]);
+    const historyError = new Error('value too long for type character varying(12)');
+    historyInsert.mockRejectedValueOnce(historyError);
+
+    await expect(newJerseySheriffSaleCountyParser('Gloucester')).rejects.toThrow(
+      'All 1 listing writes in Gloucester County failed.',
+    );
+
+    expect(transaction).toHaveBeenCalledTimes(1);
+    expect(listingInsert).toHaveBeenCalledTimes(1);
+    expect(historyInsert).toHaveBeenCalledTimes(1);
+    expect(committed).toEqual([]);
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to save listing propertyId 1 in Gloucester County',
+      historyError,
+    );
+  });
+
   it('resolves when only some database writes fail', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
     transaction.mockRejectedValueOnce(new Error('value too long'));

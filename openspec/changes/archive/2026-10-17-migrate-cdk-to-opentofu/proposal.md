@@ -10,7 +10,7 @@ It is also the point to settle the environment model: AWS hosts exactly one depl
 - Add an S3 state bucket, created by the AWS provider in that same config, with versioning, `prevent_destroy`, and S3-native lockfile locking. Bootstrap it once with local state, then migrate the state into the bucket.
 - Move the scrape archive from `nj-sheriff-sale-dev` into a new bucket with no env in its name, `nj-sheriff-sale` (`prevent_destroy`), using a server-side `aws s3 sync`. Keep `nj-sheriff-sale-dev` out of the CloudFormation deletion (Retain), and delete it only after the copy is verified and a grace period has passed.
 - `saveHtmlToS3.ts` writes to the fixed bucket name `nj-sheriff-sale` instead of `nj-sheriff-sale-${ENV}`.
-- **BREAKING** (infra only): Delete `SheriffSaleStack` and recreate the scraper Lambda, its IAM role and policies, the SQS dead-letter queue, the EventBridge schedule rule and target, the Lambda invoke permission, and the log group with OpenTofu, under readable names with no environment in them (e.g. `new-jersey-sheriff-sale-scraper`). CDK-generated names are dropped. The old `-dev` log group is deleted at cleanup.
+- **BREAKING** (infra only): Delete `SheriffSaleStack` and recreate the scraper Lambda, its IAM role and policies, the SQS dead-letter queue, the EventBridge schedule rule and target, the Lambda invoke permission, and the log group with OpenTofu, under readable names with no environment in them (e.g. `new-jersey-sheriff-sale-scraper`). CDK-generated names are dropped. The old `-dev` log group is kept, unmanaged, so its history stays searchable.
 - Move the Lambda runtime from `nodejs20.x` to `nodejs24.x`. Bundle the handler with esbuild (including `@aws-sdk/*`) instead of CDK's `NodejsFunction`. Drop `AWS_NODEJS_CONNECTION_REUSE_ENABLED`.
 - Replace the CI `deploy-backend` CDK step with `tofu apply` on `main`, fed by an esbuild bundle built in the `build` job.
 - **BREAKING** (CI): Replace the GitHub environment `dev` with `prod` (`ENV=prod`), and delete `dev`.
@@ -34,7 +34,7 @@ It is also the point to settle the environment model: AWS hosts exactly one depl
   - `SheriffSaleStack` and `CDKToolkit` are deleted.
   - The scraper resources are recreated with env-less names, so the scraper is briefly unavailable between daily runs.
   - New buckets: `nj-sheriff-sale` (the archive data is copied in) and the state bucket.
-  - `nj-sheriff-sale-dev` and the `-dev` log group are deleted after the grace period.
+  - `nj-sheriff-sale-dev` is deleted after the grace period. The `-dev` log group is kept.
 - **Code**:
   - New `infra/`.
   - `backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts` uses the fixed bucket name.
