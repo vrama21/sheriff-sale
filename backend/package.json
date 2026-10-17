@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "build": "tsc --noEmit && npm run bundle",
-    "bundle": "esbuild src/handlers/newJerseySheriffSaleScraperHandler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js",
+    "bundle": "esbuild src/modules/sheriffSale/handler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "watch": "tsc -w",
     "test": "jest",
-    "lint": "eslint --ext .ts ./src ./scripts",
-    "lint:fix": "eslint --fix --ext .ts ./src ./scripts",
-    "replay:archive": "ts-node scripts/replayArchive/index.ts",
-    "start:newJerseyScraper": "ts-node src/handlers/local/newJerseySheriffSaleScraperHandler.local.ts"
+    "lint": "eslint --ext .ts ./src",
+    "lint:fix": "eslint --fix --ext .ts ./src",
+    "replay:archive": "ts-node src/modules/sheriffSale/replay/index.ts",
+    "start:newJerseyScraper": "ts-node src/modules/sheriffSale/handler.local.ts"
   },
   "devDependencies": {
     "@sheriff-sale/config": "*",
