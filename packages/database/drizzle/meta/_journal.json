@@ -71,6 +71,20 @@
       "when": 1792224826789,
       "tag": "0009_bitter_juggernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792224848873,
+      "tag": "0010_repair_listing_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792224884058,
+      "tag": "0011_fluffy_vampiro",
+      "breakpoints": true
     }
   ]
 }

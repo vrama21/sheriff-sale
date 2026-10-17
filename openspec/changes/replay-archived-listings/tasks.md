@@ -11,16 +11,20 @@
 
 - [x] 2.1 Run `npm run db:generate` in `packages/database` (with `DATABASE_URL=postgres://localhost/unused` if needed) for tasks 1.1–1.2. Check that the SQL adds the four columns, drops `Listing_propertyId_key`, sets the types and NOT NULLs, and doesn't drop or recreate any column. Quote identifiers by hand if drizzle-kit leaves them unquoted (it did in `0005`).
   - Done: `0007_material_cammi.sql`. Every identifier is quoted. The type/NOT NULL changes are no-ops on prod, which already has them.
-- [ ] 2.2 Generate the custom migration (`npx drizzle-kit generate --custom --name repair_listing_identity`) and write its SQL in this order:
+- [x] 2.2 Generate the custom migration (`npx drizzle-kit generate --custom --name repair_listing_identity`) and write its SQL in this order:
   - Remove all whitespace from `"Listing"."sheriffId"`.
   - Normalize `"StatusHistory"."status"` (collapse whitespace, trim) and `"date"` per design Decision 5: rewrite only values matching `M/D/YYYY` → `YYYY-MM-DD` or `M/D/YYYY h:mm AM|PM` → `YYYY-MM-DD HH24:MI`, and collapse and trim the rest.
   - Set `"Listing"."snapshotDate" = "createdAt"::date`, and each status row's `firstSeenOn` and `lastSeenOn` to its listing's `"createdAt"::date`.
   - For each `("county", "sheriffId")` with `"sheriffId" <> ''` and more than one row, re-point status rows to the survivor (latest `"createdAt"`, then highest `"id"`), then delete the other listings.
   - Collapse status rows sharing `("listingId", "status", "date")` into the one with the lowest `"id"`, giving it `MIN("firstSeenOn")` and `MAX("lastSeenOn")`, and delete the rest.
   - Add a header comment explaining why, like `0004`.
-- [ ] 2.3 Add `uniqueIndex('Listing_county_sheriffId_key').on(table.county, table.sheriffId).where(sql\`"sheriffId" <> ''\`)` to `listings`, and `uniqueIndex('StatusHistory_listingId_status_date_key').on(listingId, status, date)` plus `.notNull()` on `firstSeenOn` and `lastSeenOn` to `statusHistories`. Run `npm run db:generate` again. Check the new migration orders after 2.2 in `drizzle/meta/_journal.json`, has both indexes (the partial one with its `WHERE`) and the NOT NULLs, and quotes identifiers.
-- [ ] 2.4 Run `npm run db:generate` once more and confirm it reports no changes.
-- [ ] 2.5 Add `packages/database/drizzle/inspect_listing_identity.sql` (outside the journal) with read-only queries: duplicate `(county, normalized sheriffId)` groups and rows to delete, blank-sheriff rows, status rows to move and to collapse, and the distinct status-date formats. Run it with `db-query --env prod` (read-only) and record the counts as done notes. Expect about 2,174 groups, about 3,300 rows to delete, and 133 blank.
+  - Done: `0008_repair_listing_identity.sql`. Whitespace is JavaScript's `\s` set spelled out (`[\s\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]`) so it matches `normalize.ts` exactly. AM/PM is matched case-insensitively. Prod has no NULL `createdAt` and no orphaned status rows (checked read-only), so the seen-date backfill leaves no NULLs for 0009's NOT NULL.
+- [x] 2.3 Add `uniqueIndex('Listing_county_sheriffId_key').on(table.county, table.sheriffId).where(sql\`"sheriffId" <> ''\`)` to `listings`, and `uniqueIndex('StatusHistory_listingId_status_date_key').on(listingId, status, date)` plus `.notNull()` on `firstSeenOn` and `lastSeenOn` to `statusHistories`. Run `npm run db:generate` again. Check the new migration orders after 2.2 in `drizzle/meta/_journal.json`, has both indexes (the partial one with its `WHERE`) and the NOT NULLs, and quotes identifiers.
+  - Done: `0009_secret_nuke.sql`. drizzle-kit left the index columns unquoted; I quoted them by hand.
+- [x] 2.4 Run `npm run db:generate` once more and confirm it reports no changes.
+  - Done: "No schema changes, nothing to migrate".
+- [x] 2.5 Add `packages/database/drizzle/inspect_listing_identity.sql` (outside the journal) with read-only queries: duplicate `(county, normalized sheriffId)` groups and rows to delete, blank-sheriff rows, status rows to move and to collapse, and the distinct status-date formats. Run it with `db-query --env prod` (read-only) and record the counts as done notes. Expect about 2,174 groups, about 3,300 rows to delete, and 133 blank.
+  - Done (prod, read-only, 2026-10-17): 2,174 duplicate groups holding 5,493 rows; 3,319 listings to delete, leaving 3,619 with a sheriff number; 133 blank. Status rows: 8,253 in total, 4,380 to move, 2,946 to collapse, leaving 5,307. Five date formats: `9/99/9999` 4,252, `9/9/9999` 2,634, `99/99/9999` 667, `99/9/9999` 458, `99/99/9999 99:99 aa` 242. All of them parse with the migration's `to_date`/`to_timestamp`.
 
 ## 3. Normalization and snapshot building (backend)
 

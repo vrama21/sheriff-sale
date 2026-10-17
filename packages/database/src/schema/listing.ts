@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { bigint, date, numeric, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { bigint, date, numeric, pgTable, text, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { statusHistories } from './statusHistory';
 import { randomUUID } from 'crypto';
 
@@ -40,6 +40,9 @@ export const listings = pgTable(
     upsetAmount: numeric('upsetAmount', { precision: 12, scale: 2, mode: 'number' }),
     zipcode: varchar('zipcode', { length: 256 }),
   },
+  // A sale keeps its sheriff number within its county; propertyId changes on every search. Rows without a sheriff
+  // number are NULL, which a unique index never matches, so they aren't held to it.
+  (table) => [uniqueIndex('Listing_county_sheriffId_key').on(table.county, table.sheriffId)],
 );
 
 export const listingRelations = relations(listings, ({ many }) => ({
