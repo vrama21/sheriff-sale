@@ -1,0 +1,34 @@
+backend/src/services/listingSync/syncListing.test.ts
+  s_4243d67b3abe9e::t_46e26ca5c0e1c0 58-62,118-123
+backend/src/services/newJerseySheriffSale/parseListingSnapshot.ts
+  s_4243d67b3abe9e::t_46e26ca5c0e1c0 13
+backend/src/services/listingSync/contentHash.ts
+  s_4243d67b3abe9e::t_46e26ca5c0e1c0 16-18
+backend/src/controllers/newJerseySheriffSaleScraper.ts
+  s_4243d67b3abe9e::t_e83f612849a6b9 1-2,4,17-18,22-25,30,32,34,36-38,40,42-44,46-47,49-51,53-61,81,99,104,123,128-130
+openspec/changes/replay-archived-listings/tasks.md
+  ai_agent 55-57
+backend/src/handlers/newJerseySheriffSaleScraperHandler.test.ts
+  s_4243d67b3abe9e::t_ebbda705270255 18-19
+backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts
+  s_4243d67b3abe9e::t_3eb9634dae5ce2 13-14,16-17
+backend/src/controllers/newJerseySheriffSaleScraper.test.ts
+  s_4243d67b3abe9e::t_2eed9fc07f8e11 1,3,8,13,21,25,27-28,32-35,43,46-47,50-62,64-67,70-71,73-75,78-79,81-82,85,87-90,92-93,100,105,116-117,120,127-133,137-149,159,164,171,173-174,180,185,204-205,261-275,289-290
+  s_4243d67b3abe9e::t_fb0e2c6c0af34c 11-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7c086198de98a507db19304c4c18933b8b7ef4ac",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
