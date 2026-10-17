@@ -91,7 +91,12 @@ TS 7.0 (the native port) ships without the JS compiler API, which is expected in
 
 ### TypeScript 7 spike result
 
-_To be filled in during P5._
+The spike passed, so 7.0.2 landed at root (2026-10-17):
+
+- Backend `tsc --noEmit` passes on 7.0.2 with no config changes after P4, and it still reports a type error planted in a test file. `packages/database` `tsc --noEmit` passes too.
+- `vp pack` with `dts: true` emits `index.d.cts`/`index.d.mts` with typescript@7.0.2. It warns "TypeScript 7.0 does not yet have a stable API and is experimental. Some options will be unavailable", but the pack uses no option it lacks. Compared with the TS 6.0.3 output, the declarations differ only in quote style (`dialect: "pg"` → `dialect: 'pg'`, two lines per file), and `index.cjs`/`index.mjs` are byte-identical.
+- The frontend's `next build` type-checks on its pinned 5.5.2 against the TS 7 declarations. `vite-plus-core`'s optional `typescript` peer (`^5 || ^6 || ^7`) is satisfied.
+- Fallback, if a later Vite+ or tsdown release breaks declaration emit on 7.0: set the root `typescript` to 6.0.3. The P4 tsconfig changes are valid on both versions.
 
 ## Implementation notes
 

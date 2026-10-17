@@ -50,9 +50,9 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 6. P5 TypeScript 7.0.2 (gated)
 
-- [ ] 6.1 Spike: with the root `typescript` at 7.0.2, check whether `vp pack` (`dts: true`) emits declarations and backend `tsc --noEmit` passes
-- [ ] 6.2 If the spike passes, land 7.0.2 at root. If not, revert to 6.0.3 and record why under "TypeScript 7 spike result" in `design.md`. The frontend stays on 5.5.2 either way
-- [ ] 6.3 Run the gate and commit P5
+- [x] 6.1 Spike: with the root `typescript` at 7.0.2, check whether `vp pack` (`dts: true`) emits declarations and backend `tsc --noEmit` passes
+- [x] 6.2 If the spike passes, land 7.0.2 at root. If not, revert to 6.0.3 and record why under "TypeScript 7 spike result" in `design.md`. The frontend stays on 5.5.2 either way
+- [x] 6.3 Run the gate and commit P5
 
 ## 7. Wrap-up
 
