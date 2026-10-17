@@ -28,9 +28,10 @@
 
 ## 3. Normalization and snapshot building (backend)
 
-- [ ] 3.1 Add `backend/src/services/listingSync/normalize.ts` with `normalizeSheriffId`, `normalizeStatus` and `normalizeStatusDate` (Luxon), per spec "Status history is merged across snapshots" and design Decision 5. Write a unit test for each format seen in the archive (`9/7/2023`, `07/20/2023`, `10/07/2024 02:00 PM`, `12/30/2024 12:05 AM`, non-date text, `\r` padding).
-- [ ] 3.2 Add `contentHash(listing)`: SHA-256 hex of the JSON of the listing's fields in sorted key order, excluding `propertyId`, `snapshotDate`, `contentHash`, `id`, `createdAt` and `updatedAt`. Test that it ignores `propertyId` and changes when any field changes.
-- [ ] 3.3 Define a `ListingSnapshot` type (`listing` fields, `statusHistory`, `snapshotDate`, `contentHash`) and `buildListingSnapshot({ html-parse result, county, propertyId, snapshotDate })`. It applies `cleanAddress`, normalizes the sheriff number and status rows, drops exact duplicate status rows within the snapshot, and computes the hash.
+- [x] 3.1 Add `backend/src/services/listingSync/normalize.ts` with `normalizeSheriffId`, `normalizeStatus` and `normalizeStatusDate` (Luxon), per spec "Status history is merged across snapshots" and design Decision 5. Write a unit test for each format seen in the archive (`9/7/2023`, `07/20/2023`, `10/07/2024 02:00 PM`, `12/30/2024 12:05 AM`, non-date text, `\r` padding).
+- [x] 3.2 Add `contentHash(listing)`: SHA-256 hex of the JSON of the listing's fields in sorted key order, excluding `propertyId`, `snapshotDate`, `contentHash`, `id`, `createdAt` and `updatedAt`. Test that it ignores `propertyId` and changes when any field changes.
+- [x] 3.3 Define a `ListingSnapshot` type (`listing` fields, `statusHistory`, `snapshotDate`, `contentHash`) and `buildListingSnapshot({ html-parse result, county, propertyId, snapshotDate })`. It applies `cleanAddress`, normalizes the sheriff number and status rows, drops exact duplicate status rows within the snapshot, and computes the hash.
+  - Done: in `backend/src/services/listingSync/buildListingSnapshot.ts`. The snapshot's `listing` always has every scraped field (`SNAPSHOT_FIELDS`), with `null` where the page has none, so an update clears a field the site dropped. `latitude`, `longitude` and `mapsUrl` aren't scraped, so they're left out and a sync never overwrites them. A page without an address gets null address fields; `cleanAddress('')` isn't called.
 
 ## 4. Parsers and layout detection
 
