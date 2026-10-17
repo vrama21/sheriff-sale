@@ -1,0 +1,35 @@
+openspec/changes/harden-ci-env-and-ops/design.md
+  s_513ef2be50818c::t_ff43cf269d33f0 1-231
+openspec/changes/harden-ci-env-and-ops/specs/database-toolchain/spec.md
+  s_513ef2be50818c::t_6fd71cf8911027 1-54
+openspec/changes/harden-ci-env-and-ops/specs/infra-delivery/spec.md
+  s_513ef2be50818c::t_934171da8b510f 1-76
+openspec/changes/harden-ci-env-and-ops/specs/ci-pipeline/spec.md
+  s_513ef2be50818c::t_6fd71cf8911027 1-56
+openspec/changes/harden-ci-env-and-ops/specs/scraper-infrastructure/spec.md
+  s_513ef2be50818c::t_934171da8b510f 1-111
+openspec/changes/harden-ci-env-and-ops/tasks.md
+  s_513ef2be50818c::t_1dcec21f57bbd2 1-79
+openspec/changes/harden-ci-env-and-ops/.openspec.yaml
+  s_513ef2be50818c::t_b92bd05babe69f 1-2
+openspec/changes/harden-ci-env-and-ops/proposal.md
+  s_513ef2be50818c::t_95f33306b469c9 1-43
+openspec/changes/harden-ci-env-and-ops/specs/local-environment/spec.md
+  s_513ef2be50818c::t_6fd71cf8911027 1-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c1a8e2bdcf26b293e98ec29b52c3ee0cabb22a6e",
+  "prompts": {},
+  "sessions": {
+    "s_513ef2be50818c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6a679107-1fd6-481c-90fb-3cd238d730de",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
