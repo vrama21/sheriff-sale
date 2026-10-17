@@ -1,10 +1,8 @@
 {
-  "id": "b9ef4992-bdbd-40f6-88a5-51fe3fb12b95",
-  "prevId": "367ff0d0-7b13-40db-92f8-36bae5a4e685",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "Listing": {
+    "public.Listing": {
       "name": "Listing",
       "schema": "",
       "columns": {
@@ -190,7 +188,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "StatusHistory": {
+    "public.StatusHistory": {
       "name": "StatusHistory",
       "schema": "",
       "columns": {
@@ -242,8 +240,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "b9ef4992-bdbd-40f6-88a5-51fe3fb12b95",
+  "prevId": "367ff0d0-7b13-40db-92f8-36bae5a4e685"
 }
