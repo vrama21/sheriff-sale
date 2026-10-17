@@ -1,0 +1,41 @@
+packages/database/drizzle/0008_peaceful_omega_flight.sql
+  s_4f24430d23095a::t_c4afb1ec493d14 1-6
+backend/src/services/newJerseySheriffSale/listingSchema.test.ts
+  s_4f24430d23095a::t_4a3db577a0bd27 1-3,7-12,29-217,226-267
+  s_4f24430d23095a::t_350006dfd7b88f 4-6,13,17-28,218-225
+  s_4f24430d23095a::t_f40d0c3ae196b2 14-16
+openspec/changes/validate-scraped-listings/design.md
+  s_4f24430d23095a::t_ec5b57e41c6010 137-146
+packages/database/src/schema/statusHistory.ts
+  s_4f24430d23095a::t_3a7b7ea4254b72 2,13
+packages/database/drizzle/inspect_listing_values.sql
+  s_4f24430d23095a::t_d80791fe88a6b2 1-131
+packages/database/src/schema/listing.ts
+  s_4f24430d23095a::t_3a7b7ea4254b72 2,23,31,38
+packages/database/drizzle/0007_normalize_listing_values.sql
+  s_4f24430d23095a::t_edfa68f2bdbef6 1-76
+openspec/changes/validate-scraped-listings/tasks.md
+  s_4f24430d23095a::t_97613e94193fcd 5
+  s_4f24430d23095a::t_28f119e88b150a 22-26
+  s_4f24430d23095a::t_ec5b57e41c6010 36-37
+  s_4f24430d23095a::t_cb35dd50e40d62 1-4,6-21,27-35
+backend/src/services/newJerseySheriffSale/listingSchema.ts
+  s_4f24430d23095a::t_186b8e99c93f6f 1-13,15-185
+  s_4f24430d23095a::t_f40d0c3ae196b2 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "92dfc998cac72fb190695de6aaf13e590e6cdb9d",
+  "prompts": {},
+  "sessions": {
+    "s_4f24430d23095a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9aabc25b-7d80-4944-ac80-f86e396985f4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": null
+    }
+  }
+}
