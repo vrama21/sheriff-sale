@@ -2,17 +2,17 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 1. P0 Hygiene
 
-- [ ] 1.1 Run `npm ci` at the root (the copied `node_modules` was stale), delete the stale `packages/config` copy if present, and record the baseline: gate green, backend test count
-- [ ] 1.2 Delete `backend/package-lock.json`
-- [ ] 1.3 Remove the unused backend packages `reflect-metadata`, `csv-parse`, `@types/mocha`, `@types/aws-lambda`, `jsdom` and `jest-environment-jsdom`. Set `testEnvironment: 'node'` in `backend/jest.config.js`
-- [ ] 1.4 Replace `ts-node` with `tsx` in the backend `replay:archive` and `start:newJerseyScraper` scripts, and remove `ts-node`
-- [ ] 1.5 Remove `pg` and `rimraf` from `packages/database`, and change its `clean` script to `rm -rf .turbo node_modules dist`
-- [ ] 1.6 Move `esbuild` and `tsx` from root to `backend` devDependencies. Move `tsx` to `packages/database` devDependencies, and add `vite-plus` to `backend` devDependencies
-- [ ] 1.7 Move `dotenv` from root to `backend` devDependencies, and from `packages/database` devDependencies to its `dependencies`. Root keeps only `turbo`, `typescript`, `@types/node` and `vite-plus`
-- [ ] 1.8 Add `backend/src/modules/sheriffSale/parse/cleanPropertyKey.test.ts` covering every detail-page label in `__fixtures__/listingDetails*.html` (current and legacy layouts) plus the already-camelCased keys (`sheriffId`, `upsetAmount`, `saleDate`). Run it with lodash still installed and confirm it passes
-- [ ] 1.9 Replace lodash `camelCase` in `parse/cleanPropertyKey.ts` with a local function (split on non-alphanumerics and lower→upper boundaries, lowercase the first word, capitalize the rest), and confirm the 1.8 test passes unchanged
-- [ ] 1.10 Remove `lodash` and `@types/lodash` from `backend`
-- [ ] 1.11 Run `npm install` to refresh the lockfile, then confirm `npm ci` succeeds, `npm run replay:archive -- --help` runs through `tsx`, and the gate is green. Commit P0
+- [x] 1.1 Run `npm ci` at the root (the copied `node_modules` was stale), delete the stale `packages/config` copy if present, and record the baseline: gate green, backend test count
+- [x] 1.2 Delete `backend/package-lock.json`
+- [x] 1.3 Remove the unused backend packages `reflect-metadata`, `csv-parse`, `@types/mocha`, `@types/aws-lambda`, `jsdom` and `jest-environment-jsdom`. Set `testEnvironment: 'node'` in `backend/jest.config.js`
+- [x] 1.4 Replace `ts-node` with `tsx` in the backend `replay:archive` and `start:newJerseyScraper` scripts, and remove `ts-node`
+- [x] 1.5 Remove `pg` and `rimraf` from `packages/database`, and change its `clean` script to `rm -rf .turbo node_modules dist`
+- [x] 1.6 Move `esbuild` and `tsx` from root to `backend` devDependencies. Move `tsx` to `packages/database` devDependencies, and add `vite-plus` to `backend` devDependencies
+- [x] 1.7 Move `dotenv` from root to `backend` devDependencies, and from `packages/database` devDependencies to its `dependencies`. Root keeps only `turbo`, `typescript`, `@types/node` and `vite-plus`
+- [x] 1.8 Add `backend/src/modules/sheriffSale/parse/cleanPropertyKey.test.ts` covering every detail-page label in `__fixtures__/listingDetails*.html` (current and legacy layouts) plus the already-camelCased keys (`sheriffId`, `upsetAmount`, `saleDate`). Run it with lodash still installed and confirm it passes
+- [x] 1.9 Replace lodash `camelCase` in `parse/cleanPropertyKey.ts` with a local function (split on non-alphanumerics and lower→upper boundaries, lowercase the first word, capitalize the rest), and confirm the 1.8 test passes unchanged
+- [x] 1.10 Remove `lodash` and `@types/lodash` from `backend`
+- [x] 1.11 Run `npm install` to refresh the lockfile, then confirm `npm ci` succeeds, `npm run replay:archive -- --help` runs through `tsx`, and the gate is green. Commit P0
 
 ## 2. P1 Low-risk bumps
 
