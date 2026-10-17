@@ -10,6 +10,8 @@ locals {
   scraper_dlq_arn       = "arn:aws:sqs:${local.region}:${local.account_id}:${local.scraper_name}-dlq"
   scraper_rule_arn      = "arn:aws:events:${local.region}:${local.account_id}:rule/${local.scraper_name}-rule"
   scraper_log_group_arn = "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/${local.scraper_name}"
+  scraper_alarms_arn    = "arn:aws:sns:${local.region}:${local.account_id}:${local.scraper_name}-alarms"
+  scraper_alarm_arns    = "arn:aws:cloudwatch:${local.region}:${local.account_id}:alarm:${local.scraper_name}-*"
   github_actions_role   = "sheriff-sale-github-actions"
 }
 
@@ -33,7 +35,9 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
       values   = ["sts.amazonaws.com"]
     }
 
-    # Only jobs running in this repo's prod environment, which itself only allows main and cicd*.
+    # Only jobs running in this repo's prod environment. The environment's deployment branch policy
+    # decides which branches get here; the workflow's `if: main` checks are not a boundary, because
+    # whoever pushes a branch controls them.
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
@@ -48,8 +52,9 @@ resource "aws_iam_role" "github_actions" {
 }
 
 # Everything `tofu apply` in this config touches, scoped to this project's resource ARNs. A new kind of
-# resource needs a statement here first, applied locally. The role can edit its own policy, so anyone
-# who can push to main can widen it within IAM.
+# resource needs a statement here first, applied locally
+# (`tofu apply -target=aws_iam_role_policy.github_actions_tofu`) before CI applies the resource. The
+# role can edit its own policy, so anyone who can push to main can widen it within IAM.
 data "aws_iam_policy_document" "github_actions_tofu" {
   statement {
     sid       = "StateBucket"
@@ -57,7 +62,8 @@ data "aws_iam_policy_document" "github_actions_tofu" {
     resources = [aws_s3_bucket.tofu_state.arn, "${aws_s3_bucket.tofu_state.arn}/*"]
   }
 
-  # Bucket configuration only; CI never reads or writes archived objects.
+  # Bucket configuration only (encryption, public access block, versioning, lifecycle); CI never reads
+  # or writes archived objects.
   statement {
     sid       = "ArchiveBucket"
     actions   = ["s3:*"]
@@ -102,6 +108,26 @@ data "aws_iam_policy_document" "github_actions_tofu" {
   statement {
     sid       = "DescribeLogGroups"
     actions   = ["logs:DescribeLogGroups"]
+    resources = ["*"]
+  }
+
+  # The topic and its subscriptions, whose ARNs are the topic ARN plus a suffix.
+  statement {
+    sid       = "AlarmTopic"
+    actions   = ["sns:*"]
+    resources = [local.scraper_alarms_arn, "${local.scraper_alarms_arn}:*"]
+  }
+
+  statement {
+    sid       = "ScraperAlarms"
+    actions   = ["cloudwatch:*"]
+    resources = [local.scraper_alarm_arns]
+  }
+
+  # Read-only, and the provider may call it without an alarm-name filter.
+  statement {
+    sid       = "DescribeAlarms"
+    actions   = ["cloudwatch:DescribeAlarms"]
     resources = ["*"]
   }
 }

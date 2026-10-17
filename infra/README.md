@@ -3,19 +3,27 @@
 OpenTofu config for the backend's AWS resources (account `590184139982`, `us-east-2`). AWS hosts a
 single environment; all testing is local.
 
-- `nj-sheriff-sale`: S3 archive of scraped pages (`prevent_destroy`)
+- `nj-sheriff-sale`: S3 archive of scraped pages (`prevent_destroy`, Block Public Access,
+  versioned; noncurrent versions expire after 30 days)
 - `new-jersey-sheriff-sale-scraper`: scraper Lambda, its IAM role, SQS dead-letter queue, log
-  group, and the daily `cron(0 0 * * ? *)` EventBridge schedule
+  group (90-day retention), and the daily `cron(0 0 * * ? *)` EventBridge schedule. Failed async
+  runs are not retried; they go straight to the dead-letter queue.
+- `new-jersey-sheriff-sale-scraper-alarms`: SNS topic for two alarms, `…-dlq-messages` (anything in
+  the dead-letter queue) and `…-errors` (any Lambda error)
 - `sheriff-sale-tofu-state-590184139982`: the bucket holding this config's own state
   (`prevent_destroy`, versioned)
 
-Resource names carry no environment; the Lambda runs with `ENV=prod`.
+Resource names carry no environment.
 
 ## Prerequisites
 
 - OpenTofu, pinned in the root `mise.toml` (`mise install`).
 - AWS credentials for the account, e.g. `AWS_PROFILE` in `mise.local.toml`.
 - `TF_VAR_database_url` set to the prod `DATABASE_URL` (e.g. in `mise.local.toml`).
+- Optionally `TF_VAR_alarm_email`, the address subscribed to the alarm topic. Set it to the same value
+  as the GitHub `prod` environment variable `ALARM_EMAIL`, which CI passes, or local and CI applies
+  will fight over the subscription. Leave both empty for no subscription. AWS emails a confirmation
+  link after the first apply.
 - The Lambda bundle: `npm run build` from the repo root (writes `backend/dist/index.js`).
 
 ## Day to day
@@ -27,7 +35,23 @@ tofu plan
 tofu apply
 ```
 
-CI runs `tofu apply` on every push to `main`, after the database migration.
+CI runs `tofu apply` on every push to `main`, after the database migration. Every branch also runs
+`tofu fmt -check -recursive` and `tofu validate` (no backend, no AWS credentials), so run
+`tofu fmt -recursive` before pushing. `tofu init` in CI uses `-lockfile=readonly`: after a provider
+upgrade, commit the updated `.terraform.lock.hcl`, with hashes for `linux_amd64`
+(`tofu providers lock -platform=linux_amd64 -platform=darwin_arm64`).
+
+### New kinds of resources
+
+CI's role (`github-actions.tf`) is scoped per resource ARN. Before a change that adds a new kind of
+resource reaches `main`, add its statement to `github_actions_tofu` and apply the policy from your
+machine:
+
+```sh
+tofu apply -target=aws_iam_role_policy.github_actions_tofu
+```
+
+Otherwise CI's apply fails with `AccessDenied` on the new resource.
 
 ## Bootstrapping the state bucket
 

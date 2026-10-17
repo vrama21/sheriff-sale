@@ -3,3 +3,9 @@ variable "database_url" {
   type        = string
   sensitive   = true
 }
+
+variable "alarm_email" {
+  description = "Email address subscribed to the scraper alarm topic. Empty (the default) creates no subscription. CI passes the prod environment variable ALARM_EMAIL."
+  type        = string
+  default     = ""
+}
