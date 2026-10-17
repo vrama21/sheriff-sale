@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import { saveS3 } from '../s3';
 
 // Managed in infra/storage.tf.
-const bucketName = 'nj-sheriff-sale';
+export const ARCHIVE_BUCKET_NAME = 'nj-sheriff-sale';
 
 export type SaveHtmlToS3Args = {
   html: string;
@@ -18,9 +18,9 @@ export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3A
 
   // No existence check: without s3:ListBucket a missing key returns 403, not 404. Overwriting today's
   // key on a retry is harmless.
-  console.log(`Saving ${s3FileName} to bucket ${bucketName} ...`);
+  console.log(`Saving ${s3FileName} to bucket ${ARCHIVE_BUCKET_NAME} ...`);
   await saveS3({
-    bucketName,
+    bucketName: ARCHIVE_BUCKET_NAME,
     data: html,
     key: s3FileName,
   });

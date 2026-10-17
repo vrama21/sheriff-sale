@@ -10,6 +10,7 @@
     "test": "jest",
     "lint": "eslint --ext .ts ./src ./scripts",
     "lint:fix": "eslint --fix --ext .ts ./src ./scripts",
+    "replay:archive": "ts-node scripts/replayArchive/index.ts",
     "start:newJerseyScraper": "ts-node src/handlers/local/newJerseySheriffSaleScraperHandler.local.ts"
   },
   "devDependencies": {
