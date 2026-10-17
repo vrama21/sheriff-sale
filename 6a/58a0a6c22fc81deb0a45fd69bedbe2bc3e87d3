@@ -1,0 +1,54 @@
+backend/scripts/replayArchive/args.test.ts
+  s_4243d67b3abe9e::t_a40f5ad94569c2 1-68
+backend/scripts/replayArchive/replay.test.ts
+  s_4243d67b3abe9e::t_61a5f8a16f89c7 1-17,21-115,117-122,129-139,146-164,166-261
+  s_4243d67b3abe9e::t_96996d634e8c2e 18-20,123-128,140-145
+  s_4243d67b3abe9e::t_6e11d9d39e5be4 116,165
+backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts
+  s_4243d67b3abe9e::t_3eb9634dae5ce2 13-14,16-17
+  s_4243d67b3abe9e::t_82132c294142d4 5,21,23
+backend/src/services/newJerseySheriffSale/getCountyListingsHtml.ts
+  s_4243d67b3abe9e::t_82132c294142d4 2,31
+backend/src/services/newJerseySheriffSale/countySlug.ts
+  s_4243d67b3abe9e::t_82132c294142d4 1-4
+backend/package.json
+  s_4243d67b3abe9e::t_de1ce870b8381d 13
+backend/scripts/replayArchive/index.ts
+  s_4243d67b3abe9e::t_b09982e5ffb1ee 1-35,37-74
+  s_4243d67b3abe9e::t_8e021cf813af6a 36
+backend/scripts/replayArchive/plan.ts
+  s_4243d67b3abe9e::t_df06c89300ec8c 1-42
+backend/scripts/replayArchive/replay.ts
+  s_4243d67b3abe9e::t_394f17f98f8ef6 1-204,209-253
+  s_4243d67b3abe9e::t_96996d634e8c2e 205-208
+backend/scripts/replayArchive/args.ts
+  s_4243d67b3abe9e::t_33c9970e93301b 1-15,21-95,98-101
+  s_4243d67b3abe9e::t_96996d634e8c2e 16-20,96-97
+backend/scripts/replayArchive/plan.test.ts
+  s_4243d67b3abe9e::t_05f4d55b5263d9 1-54
+backend/src/services/s3/getS3Text.test.ts
+  s_4243d67b3abe9e::t_0c48d7617ffd2b 1-34
+backend/src/services/s3/index.ts
+  s_4243d67b3abe9e::t_0c48d7617ffd2b 2
+openspec/changes/replay-archived-listings/tasks.md
+  ai_agent 1-4,9-11,15-20,28-30,35-37,44-46,48-52,58-60,70-78,8,13-14,21-27,31-34,38-43,47,53-57,61-69
+  s_4243d67b3abe9e::t_577c87859d9bba 5-7,12
+backend/src/services/s3/getS3Text.ts
+  s_4243d67b3abe9e::t_0c48d7617ffd2b 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6a58a0a6c22fc81deb0a45fd69bedbe2bc3e87d3",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
