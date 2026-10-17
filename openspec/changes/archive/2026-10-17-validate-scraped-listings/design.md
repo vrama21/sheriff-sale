@@ -13,26 +13,28 @@ No field is checked. `parseListingDetails` does `.replace('\n', ' ')`, which rep
 
 Prod state (read-only profile, 2026-10-17). The schema is Prisma-era: every column is `text`. `address`, `plaintiff`, `saleDate`, `sheriffId`, `StatusHistory.date` and `StatusHistory.status` are NOT NULL, but Drizzle declares them all nullable, so drizzle-kit will never emit DROP NOT NULL for them. Migrations `0004`–`0006` are applied. `0006` already trimmed `address` and `saleDate`.
 
-| Field | Shape in prod |
-|---|---|
-| `upsetAmount` / `judgment` | `$D,DDD.DD`, about 55% with `\r ` prefix and trailing spaces. `upsetAmount`: 1,979 NULL, 437 `\r`-only, 240 `''`. `judgment`: 4,090 NULL. `$0.00`: 118 / 24. |
-| `saleDate` | `M/D/YYYY` 6,871, `MM/DD/YYYY 02:00 PM` 67, `''` 133, year 3021 ×2. No month > 12. |
-| `StatusHistory.date` | `M/D/YYYY` 8,011, with ` 02:00 PM` 242, year 3021 ×2. |
-| `attorneyPhone` | 2,034 dirty. Shapes: `999-999-9999` 1,592, `(999) 999-9999` 484, `999 999-9999` 290, `(999)999-9999` 45, `… (NJ)` 39, `1(999)…` 56, `(999)-999-9999` 14, about 20 with EXT/FAX/names. |
-| `plaintiff`/`attorney`/`defendant` | about 5,226 with `\r`/untrimmed. 133 empty `plaintiff`. |
-| `description` | 4,123 dirty, 2,229 with inner newlines. |
+| Field                              | Shape in prod                                                                                                                                                                         |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `upsetAmount` / `judgment`         | `$D,DDD.DD`, about 55% with `\r ` prefix and trailing spaces. `upsetAmount`: 1,979 NULL, 437 `\r`-only, 240 `''`. `judgment`: 4,090 NULL. `$0.00`: 118 / 24.                          |
+| `saleDate`                         | `M/D/YYYY` 6,871, `MM/DD/YYYY 02:00 PM` 67, `''` 133, year 3021 ×2. No month > 12.                                                                                                    |
+| `StatusHistory.date`               | `M/D/YYYY` 8,011, with ` 02:00 PM` 242, year 3021 ×2.                                                                                                                                 |
+| `attorneyPhone`                    | 2,034 dirty. Shapes: `999-999-9999` 1,592, `(999) 999-9999` 484, `999 999-9999` 290, `(999)999-9999` 45, `… (NJ)` 39, `1(999)…` 56, `(999)-999-9999` 14, about 20 with EXT/FAX/names. |
+| `plaintiff`/`attorney`/`defendant` | about 5,226 with `\r`/untrimmed. 133 empty `plaintiff`.                                                                                                                               |
+| `description`                      | 4,123 dirty, 2,229 with inner newlines.                                                                                                                                               |
 
 **`.env` at the repo root points at prod.** `drizzle.config.ts`, `client.ts` and `migrate.ts` load it. CI's `migrate` job runs `db:generate` then `db:migrate` on `main`.
 
 ## Goals / Non-Goals
 
 **Goals:**
+
 - One hand-written Zod 4 schema is the single source of the scraped listing's runtime check and TypeScript type.
 - A flexible policy: one bad field never drops a listing. Only a missing address does.
 - Money and dates are stored as real types, and existing rows are converted losslessly.
 - Field-level problems are visible in the run summary.
 
 **Non-Goals:**
+
 - drizzle-zod or schemas generated from the table. The scraped data and the database row are different shapes.
 - Sharing schemas with the frontend. The frontend stays on Zod 3.23 for tRPC.
 - Fixing the 173 empty-address listings already in prod, populating the `saleDates` dropdown, or updating stored listings.
@@ -51,7 +53,7 @@ type FieldWarning = { field: string; value: string; reason: string }
 
 `validateListingDetails` throws when `address` is missing or blank. That's the only fatal case, and `scrapeListing` lets it propagate, so the existing `Promise.allSettled` counts it as a failed listing. `scrapeListing` attaches `propertyId` and county to warnings and returns them. `parseCountyListings` logs each warning and sums them into `fieldWarnings`.
 
-*Alternative: `.strict()` everywhere and reject on any failure.* The user chose flexible: site drift on one field shouldn't drop listings.
+_Alternative: `.strict()` everywhere and reject on any failure._ The user chose flexible: site drift on one field shouldn't drop listings.
 
 ### 2. Field helpers built from Zod 4 primitives, with warnings via `.catch(ctx => …)`
 
@@ -72,7 +74,7 @@ The object schema uses Zod 4's default `z.object` behavior, which strips unknown
 
 `z.coerce.number()` is not used: `Number('$1,234.56')` is `NaN`.
 
-*Alternative: hand-rolled validation functions.* That loses `z.infer` as the single type source, and the user asked for a Pydantic-like library.
+_Alternative: hand-rolled validation functions._ That loses `z.infer` as the single type source, and the user asked for a Pydantic-like library.
 
 ### 3. Types come from the schemas
 
@@ -80,22 +82,23 @@ The object schema uses Zod 4's default `z.object` behavior, which strips unknown
 
 ### 4. Column types
 
-| Column | Drizzle | Read as |
-|---|---|---|
-| `upsetAmount`, `judgment` | `numeric(name, { precision: 12, scale: 2, mode: 'number' })` | `number \| null` |
-| `saleDate`, `StatusHistory.date` | `date(name, { mode: 'string' })` | `'YYYY-MM-DD' \| null` |
+| Column                           | Drizzle                                                      | Read as                |
+| -------------------------------- | ------------------------------------------------------------ | ---------------------- |
+| `upsetAmount`, `judgment`        | `numeric(name, { precision: 12, scale: 2, mode: 'number' })` | `number \| null`       |
+| `saleDate`, `StatusHistory.date` | `date(name, { mode: 'string' })`                             | `'YYYY-MM-DD' \| null` |
 
 The dates use `mode: 'string'`, not `'date'`. A JS `Date` at UTC midnight shifts a day when rendered in US time zones, and tRPC (no superjson) would serialize it to an ISO timestamp anyway.
 
 `numeric(12,2)` holds values up to $9,999,999,999.99. The largest seen is $1,007,691.69. `mode: 'number'` reads through `parseFloat`, which is exact for display at this scale.
 
-*Alternative: integer cents.* That would also work, but `upgrade-drizzle` makes `numeric` read as a number, and dollars stay legible in SQL.
+_Alternative: integer cents._ That would also work, but `upgrade-drizzle` makes `numeric` read as a number, and dollars stay legible in SQL.
 
 ### 5. Migrations: custom data migration, then the generated schema migration with hand-added `USING`
 
 Following the `listing-schema-fixes` precedent (`0004` custom, then `0005` generated and hand-edited):
 
 **`0007_normalize_listing_values` (custom, `drizzle-kit generate --custom`):**
+
 1. `ALTER TABLE "Listing" ALTER COLUMN "saleDate" / "plaintiff" / "sheriffId" DROP NOT NULL`. This is Prisma drift that Drizzle can't see.
 2. Normalize text in every scraped free-text column plus `upsetAmount`, `judgment`, `saleDate` and `StatusHistory.status`: `nullif(btrim(replace(col, E'\r', ''), E' \t\n'), '')`. Leave `address` alone: `0006` trimmed it, and it stays NOT NULL.
 3. `attorneyPhone`: apply `PHONE_RE` with `regexp_match(…, 'i')` and rebuild the formatted string where it matches. Otherwise keep the trimmed text.
@@ -103,6 +106,7 @@ Following the `listing-schema-fixes` precedent (`0004` custom, then `0005` gener
 5. `DELETE FROM "StatusHistory"` for rows whose `date` fails the same rule (expected: 2 rows).
 
 **`0008_<generated>` (schema, from `npm run db:generate` after the Drizzle schema edit):** drizzle-kit emits `SET DATA TYPE numeric(12,2)` / `date` without `USING`, and Postgres refuses to cast `text` to these types implicitly. Hand-add:
+
 - money: `USING regexp_replace(col, '[$,]', '', 'g')::numeric(12,2)`
 - dates: `USING to_date(split_part(col, ' ', 1), 'MM/DD/YYYY')`
 

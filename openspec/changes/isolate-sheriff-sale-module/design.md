@@ -83,7 +83,7 @@ Moves use `git mv` so history follows each file.
 
 The user's framing is that each pipeline is "scrape, parse, ingest", so those are the stage folders. Imports between stages run one way: `scrape` and `parse` never import `ingest`. That's what breaks the current cycle. `ParsedListingPage` is the output of parsing, so it moves to `parse/parseListingSnapshot.ts`, and `ingest/buildListingSnapshot` imports it from there. `listingSchema` goes in `parse/` because `parseStatusHistory` needs its `RawStatusRow`. `buildListingSnapshot` keeps calling the validators, now as an `ingest → parse` import, which points the allowed way.
 
-*Alternative*: keep `listingSync` as its own module. Rejected: snapshots, the content hash, status normalization and the `(county, sheriffId)` identity only make sense for civilview listings.
+_Alternative_: keep `listingSync` as its own module. Rejected: snapshots, the content hash, status normalization and the `(county, sheriffId)` identity only make sense for civilview listings.
 
 ### The handler lives in the module; no top-level `handlers/` or `contracts/`
 
@@ -101,7 +101,7 @@ Each module is its own deployable pipeline, so it owns its Lambda entry point. A
 
 `contentHash` hashes JSON with sorted keys, so moving where `state` is set doesn't change any hash: same keys, same values. Existing rows still compare `unchanged`.
 
-*Alternative*: split it now into a free-text splitter and a field normalizer, since parcel data may arrive pre-split. Deferred until parcel's raw shape is known; the existing tests pin today's behaviour for whenever that split happens.
+_Alternative_: split it now into a free-text splitter and a field normalizer, since parcel data may arrive pre-split. Deferred until parcel's raw shape is known; the existing tests pin today's behaviour for whenever that split happens.
 
 ### The S3 archive helper stays in the module
 
@@ -111,15 +111,15 @@ Each module is its own deployable pipeline, so it owns its Lambda entry point. A
 
 The unmerged `migrate-lint-format-to-vite-plus` change deletes `backend/.eslintrc.js` and lints with `vp lint`, so ESLint rules added here would be thrown away. In this change the boundaries are checked by review and by the import greps in the verification tasks. A follow-up adds these rules to the Vite+ lint config:
 
-| target | may not import | except |
-|---|---|---|
-| `src/shared/**` | `src/modules/**` | |
-| `src/modules/<m>/{scrape,parse}/**` | `src/modules/<m>/ingest/**` | |
-| anything outside `src/modules/<m>/` | `src/modules/<m>/**` | `src/modules/<m>/index.ts` |
+| target                              | may not import              | except                     |
+| ----------------------------------- | --------------------------- | -------------------------- |
+| `src/shared/**`                     | `src/modules/**`            |                            |
+| `src/modules/<m>/{scrape,parse}/**` | `src/modules/<m>/ingest/**` |                            |
+| anything outside `src/modules/<m>/` | `src/modules/<m>/**`        | `src/modules/<m>/index.ts` |
 
 The `lint` scripts lint `./src` only, since `./scripts` is gone.
 
-*Alternative*: add `eslint-plugin-import`'s `no-restricted-paths` now. Rejected: the Vite+ migration would delete it. *Alternative*: TS project references or a workspace per module. Rejected as heavyweight for one module, and it would complicate the single esbuild bundle.
+_Alternative_: add `eslint-plugin-import`'s `no-restricted-paths` now. Rejected: the Vite+ migration would delete it. _Alternative_: TS project references or a workspace per module. Rejected as heavyweight for one module, and it would complicate the single esbuild bundle.
 
 ### Scripts fold in or go
 

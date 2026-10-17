@@ -1,8 +1,11 @@
 # archive-replay Specification
 
 ## Purpose
+
 TBD - created by archiving change replay-archived-listings. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Replay command
 
 The backend SHALL provide a `replay:archive` command that takes one or more `--county` names, `--from` and `--to` dates (inclusive, `YYYY-MM-DD`), and an optional `--dry-run`. With no `--county`, it SHALL replay every NJ county. It SHALL reject an unknown county, a malformed date or `--from` after `--to` before reading anything. It SHALL process dates in ascending order.
@@ -110,4 +113,3 @@ The replay SHALL print a summary per county and for the whole run: county pages 
 
 - **WHEN** one listing's sync rejects
 - **THEN** it is logged and counted as failed, the other listings are synced, and the command exits non-zero
-

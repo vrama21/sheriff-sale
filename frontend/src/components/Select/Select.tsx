@@ -1,4 +1,4 @@
-import { Select as MUISelect, MenuProps as MenuP } from '@mui/material';
+import { Select as MUISelect } from '@mui/material';
 import { SelectInputProps } from '@mui/material/Select/SelectInput';
 import React from 'react';
 import { useStyles } from './Select.styles';

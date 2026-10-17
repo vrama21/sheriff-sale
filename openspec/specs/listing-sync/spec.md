@@ -1,8 +1,11 @@
 # listing-sync Specification
 
 ## Purpose
+
 TBD - created by archiving change replay-archived-listings. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Listing identity is county and sheriff number
 
 A listing SHALL be identified by its county and its sheriff number with all whitespace removed. A sheriff number that is blank once its whitespace is removed SHALL be stored as NULL. The database SHALL enforce at most one `Listing` row per `(county, sheriffId)` among rows whose `sheriffId` is not NULL. `propertyId` SHALL NOT identify a listing; it SHALL hold the site ID from the snapshot the row's fields came from, and SHALL NOT be unique.
@@ -158,4 +161,3 @@ Rows without a sheriff number SHALL be left unmerged. A failure SHALL leave the 
 
 - **WHEN** creating either unique index fails
 - **THEN** the whole migration run rolls back, including the repair
-
