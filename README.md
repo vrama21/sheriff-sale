@@ -52,16 +52,17 @@ npm install
 
 ## Scripts
 
-| Command               | Description                    |
-| --------------------- | ------------------------------ |
-| `npm run dev`         | Run all workspaces in dev mode |
-| `npm run build`       | Build all workspaces           |
-| `npm run test`        | Run tests                      |
-| `npm run lint`        | Lint                           |
-| `npm run format`      | Format with Prettier           |
-| `npm run db:generate` | Generate Drizzle migrations    |
-| `npm run db:migrate`  | Apply migrations               |
-| `npm run db:studio`   | Open Drizzle Studio            |
+| Command               | Description                          |
+| --------------------- | ------------------------------------ |
+| `npm run dev`         | Run all workspaces in dev mode       |
+| `npm run build`       | Build all workspaces                 |
+| `npm run test`        | Run tests                            |
+| `npm run lint`        | Lint with Oxlint (`vp lint`)         |
+| `npm run format`      | Format with Oxfmt (`vp fmt`)         |
+| `npx vp check`        | Format check and lint, as CI runs it |
+| `npm run db:generate` | Generate Drizzle migrations          |
+| `npm run db:migrate`  | Apply migrations                     |
+| `npm run db:studio`   | Open Drizzle Studio                  |
 
 ## Deploying
 

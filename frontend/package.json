@@ -6,7 +6,7 @@
     "dev": "dotenv -e ../.env.local next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "vp lint src"
   },
   "dependencies": {
     "@emotion/react": "11.10.5",
@@ -31,7 +31,6 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@sheriff-sale/config": "*",
     "@sheriff-sale/tsconfig": "*",
     "@tanstack/react-query-devtools": "5.48.0",
     "@types/node": "24.19.2",
