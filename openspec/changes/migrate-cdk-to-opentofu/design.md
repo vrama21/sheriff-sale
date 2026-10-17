@@ -38,7 +38,7 @@ CI's `deploy-backend` job fails in CDK synth today. `main` is the only branch th
 - Keeping the `nj-sheriff-sale-dev` bucket itself. Only its data is kept.
 - Multiple environments, workspaces, or modules. `env` is a single local set to `"prod"`, used only as the Lambda's `ENV` value; resource names carry no env.
 - Isolating local runs. Local scraper runs write to `nj-sheriff-sale` and the hosted Railway database, just as local runs already use that database today. This is left for a later change.
-- Plans on PRs or feature branches, or GitHub OIDC in place of access keys.
+- Plans on PRs or feature branches.
 - Moving `DATABASE_URL` to SSM or Secrets Manager.
 - Fixing the handler's `Promise.allSettled` error swallowing. Today it means the DLQ never receives anything; this is noted for a follow-up change.
 - Managing the archive bucket's Block Public Access and ownership controls. They stay AWS defaults on the new bucket, not declared. The same goes for a log retention policy.
@@ -94,16 +94,36 @@ Mapping CDK resources to OpenTofu resources:
 ### D8. CI: build anywhere, apply only on main, in `prod`
 - `build` (all branches): also uploads `backend/dist` as an artifact. The placeholder env stays, since the build no longer needs AWS access.
 - `migrate`, `deploy-backend`, and `deploy-frontend` (main only) use `environment: prod`.
-- `deploy-backend` (`needs: migrate`): downloads the artifact, installs OpenTofu (`opentofu/setup-opentofu`, version matching `mise.toml`), then runs `tofu init` and `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets.
+- `deploy-backend` (`needs: migrate`): downloads the artifact, installs OpenTofu with `jdx/mise-action`, which installs the version pinned in `mise.toml` so CI and local runs match, then runs `tofu init` and `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets.
+- Workflow concurrency still cancels superseded runs on other branches, but never on `main`. Cancelling a `tofu apply` partway could leave infrastructure half-applied and the state lock held.
 
 ### D9. GitHub environment `dev` → `prod`
-The repo has a `dev` environment with 6 secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`) and the variable `ENV=dev`. GitHub's API can't read secret values, so they can't be copied:
-1. Create the `prod` environment and set `ENV=prod`. This can be done with `gh`.
-2. The user re-enters the 6 secrets, e.g. `gh secret set <NAME> --env prod`.
+The repo has a `dev` environment with 6 secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`) and the variable `ENV=dev`. Environments can't be renamed, and GitHub's API can't read secret values, so they can't be copied:
+1. Create the `prod` environment (branch rules `main`, `cicd*`, same as `dev`) and set `ENV=prod`. This can be done with `gh`.
+2. `DATABASE_URL` and `VERCEL_TOKEN` are re-entered as secrets. `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are identifiers, not credentials, so they become environment variables (`vars.*`), taken from `frontend/.vercel/project.json`. The AWS keys are not carried over (D11).
 3. Switch the workflow to `environment: prod`.
 4. Delete `dev` once a `main` run succeeds.
 
 The repo also has a `Preview` environment, probably created by Vercel. It is left alone.
+
+### D11. CI authenticates with GitHub OIDC, scoped to project resources
+Today CI deploys with two long-lived access keys belonging to the IAM user `cicd-pipeline-deployer`, which has `AdministratorAccess`. Instead, `infra/github-actions.tf` manages:
+- the IAM OIDC provider for `token.actions.githubusercontent.com` (audience `sts.amazonaws.com`);
+- the role `sheriff-sale-github-actions`, whose trust policy requires `sub = repo:vrama21/sheriff-sale:environment:prod`. Only jobs in the `prod` environment can assume it, and `prod` only allows `main` and `cicd*`;
+- an inline policy `tofu-apply`. It grants the full set of actions for each service, but only on this project's ARNs:
+  - `s3:*` on the state bucket and its objects;
+  - `s3:*` on the archive bucket ARN only, so no object access;
+  - `lambda:*` on the scraper function;
+  - `iam:*` on the scraper role, the CI role itself, and the OIDC provider;
+  - `sqs:*` on the DLQ;
+  - `events:*` on the rule;
+  - `logs:*` on the log group;
+  - `logs:DescribeLogGroups` on `*`, since it has no resource-level permissions.
+
+`deploy-backend` gets `permissions: id-token: write` and runs `aws-actions/configure-aws-credentials@v6` with `role-to-assume`. The provider and role were applied locally first (SSO), so CI can authenticate from its first run. They were verified from a temporary `cicd-oidc-check` branch: the role was assumed and a full plan refreshed with no access errors.
+- *Alternative, `AdministratorAccess` on the role:* never blocks a future change. Rejected because anyone who can push to `main` could do anything in the account.
+- *Trade-off:* a new kind of resource needs a new statement in the policy, applied locally, before CI can manage it. The role can edit its own policy, so pushing to `main` can still widen its rights within IAM. This is accepted, since `main` is only written by the repo owner.
+- *Retiring the keys:* once the first OIDC `main` run passes, deactivate both `cicd-pipeline-deployer` keys, delete them and the user, and delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets. The `dev` environment, with its copies, is deleted in 7.7.
 
 ### D10. Layout
 ```
@@ -116,10 +136,13 @@ infra/
   state.tf       tofu state bucket
   storage.tf     nj-sheriff-sale + SSE
   scraper.tf     log group, lambda, iam, dlq, rule, target, permission
+  github-actions.tf  OIDC provider, CI role + scoped tofu-apply policy
   .gitignore     .terraform/, *.tfstate*, crash logs, .build/
 ```
 
 ## Risks / Trade-offs
+
+- [The CI role lacks a permission a future change needs] → `tofu apply` fails on that call. Extend `github-actions.tf` and apply locally first. Current coverage was verified with a full plan from CI.
 
 - [The copy misses objects] → Compare object counts and total bytes, and require a second `sync --dryrun` to list nothing. Keep `nj-sheriff-sale-dev` through the grace period.
 - [The old Lambda writes to `nj-sheriff-sale-dev` after the copy] → Copy only after `SheriffSaleStack` is `DELETE_COMPLETE`.
