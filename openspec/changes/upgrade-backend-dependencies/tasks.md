@@ -22,19 +22,20 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 
 ## 3. P2 Jest → vp test
 
-- [ ] 3.1 Confirm which import specifier `vite-plus/prefer-vite-plus-imports` accepts for test APIs (`vite-plus/test` or `vitest`)
-- [ ] 3.2 Convert the nine test files that use `jest.*` (`shared/s3/getS3Text.test.ts`, and under `modules/sheriffSale/`: `handler.test.ts`, `pipeline.test.ts`, `ingest/syncListing.test.ts`, `parse/parseListingSnapshot.test.ts`, `replay/replay.test.ts`, `scrape/saveHtmlToS3.test.ts`, `scrape/getListingDetailsHtml.test.ts`, `scrape/newJerseySheriffSaleHttpClient.test.ts`): `jest.*` → `vi.*`, `jest.Mock` → `Mock`, hoisting-safe `vi.mock` factories
-- [ ] 3.3 Add explicit test-API imports (`describe`, `it`, `expect`, …) to every backend `*.test.ts`, with no `globals: true`
-- [ ] 3.4 Audit the `restoreAllMocks` calls in `parse/parseListingSnapshot.test.ts`, `scrape/getListingDetailsHtml.test.ts` and `scrape/newJerseySheriffSaleHttpClient.test.ts`, and add `vi.resetAllMocks()` where `vi.fn()` state would leak between tests
-- [ ] 3.5 Set the backend `test` script to `vp test run`. Remove `jest`, `ts-jest`, `@types/jest` and `backend/jest.config.js`. Add a backend `vite.config.ts` only if Vitest's defaults (node environment, `**/*.test.ts`) are not enough
-- [ ] 3.6 Confirm `tsc --noEmit` in backend type-checks the tests, that the passing test count equals P1's, and that no `jest` reference remains in `backend/`. Run the gate and commit P2
+- [x] 3.1 Confirm which import specifier `vite-plus/prefer-vite-plus-imports` accepts for test APIs (`vite-plus/test` or `vitest`)
+- [x] 3.2 Convert the nine test files that use `jest.*` (`shared/s3/getS3Text.test.ts`, and under `modules/sheriffSale/`: `handler.test.ts`, `pipeline.test.ts`, `ingest/syncListing.test.ts`, `parse/parseListingSnapshot.test.ts`, `replay/replay.test.ts`, `scrape/saveHtmlToS3.test.ts`, `scrape/getListingDetailsHtml.test.ts`, `scrape/newJerseySheriffSaleHttpClient.test.ts`): `jest.*` → `vi.*`, `jest.Mock` → `Mock`, hoisting-safe `vi.mock` factories
+- [x] 3.3 Add explicit test-API imports (`describe`, `it`, `expect`, …) to every backend `*.test.ts`, with no `globals: true`
+- [x] 3.4 Audit the `restoreAllMocks` calls in `parse/parseListingSnapshot.test.ts`, `scrape/getListingDetailsHtml.test.ts` and `scrape/newJerseySheriffSaleHttpClient.test.ts`, and add `vi.resetAllMocks()` where `vi.fn()` state would leak between tests
+- [x] 3.5 Set the backend `test` script to `vp test run`. Remove `jest`, `ts-jest`, `@types/jest` and `backend/jest.config.js`. Add a backend `vite.config.ts` only if Vitest's defaults (node environment, `**/*.test.ts`) are not enough
+- [x] 3.6 `tsc` can't resolve the `vite-plus/test` subpath export under `moduleResolution: "node"`, so move `lambda.json` to `module: "preserve"` / `moduleResolution: "bundler"` now (TS 5.5 supports both), with a temporary `customConditions: ["require"]` so node-html-parser 5.1.0 (whose `import` export has no types) still resolves to its typed CJS build until 4.4
+- [x] 3.7 Confirm `tsc --noEmit` in backend type-checks the tests, that the passing test count equals P1's, and that no `jest` reference remains in `backend/`. Run the gate and commit P2
 
 ## 4. P3 Backend majors (one commit each)
 
 - [ ] 4.1 luxon 2.5.2 → 3.7.2. Check the call sites in `parse/listingSchema.ts`, `scrape/saveHtmlToS3.ts` and `replay/args.ts` against the v3 changelog. Run the gate and commit
 - [ ] 4.2 dotenv → 18.0.8 in `backend` and `packages/database`. Pass `quiet: true` to every `config()` call (`modules/sheriffSale/handler.local.ts`, `modules/sheriffSale/replay/index.ts`, `packages/database/drizzle.config.ts`, `packages/database/src/client.ts`, `packages/database/src/migrate.ts`). Run the gate and commit
 - [ ] 4.3 esbuild 0.21.5 → 0.28.2. Rebuild the bundle and smoke-test that `require('./backend/dist/index.js').handler` is a function. Run the gate and commit
-- [ ] 4.4 node-html-parser 5.1.0 → 9.0.4. Check the call sites in `parse/` (`detailValueText.ts`, `parseListingDetails.ts`, `parseLegacyListingDetails.ts`, `parseStatusHistory.ts`, `parseListingSnapshot.ts`, `parseCountyPropertyIds.ts`) against the v6–v9 changelogs (v8 replaced `he` with `entities`). The fixture tests must pass with no expectation changes
+- [ ] 4.4 node-html-parser 5.1.0 → 9.0.4. Check the call sites in `parse/` (`detailValueText.ts`, `parseListingDetails.ts`, `parseLegacyListingDetails.ts`, `parseStatusHistory.ts`, `parseListingSnapshot.ts`, `parseCountyPropertyIds.ts`) against the v6–v9 changelogs (v8 replaced `he` with `entities`). Remove the temporary `customConditions` from `lambda.json` (9.x ships typed `exports`). The fixture tests must pass with no expectation changes
 - [ ] 4.5 If S3 credentials are available, compare parsed snapshots from a dry-run `replay:archive` before and after the node-html-parser bump. Otherwise skip it and say so in the summary
 - [ ] 4.6 Run the gate and commit the node-html-parser bump
 
@@ -43,7 +44,7 @@ Every phase ends with the gate: `vp check`, `npm run build` and `npm run test` a
 - [ ] 5.1 Pin `"typescript": "5.5.2"` in `frontend/package.json` devDependencies, and confirm `require('typescript').version` from `frontend/` is 5.5.2 after install
 - [ ] 5.2 Bump the root `typescript` to 6.0.3
 - [ ] 5.3 Move `moduleResolution: "node"` from `packages/tsconfig/base.json` into `nextjs.json`
-- [ ] 5.4 Set `module: "preserve"` and `moduleResolution: "bundler"` in `node24.json` and `lambda.json`. Remove `experimentalDecorators` and `emitDecoratorMetadata` from `lambda.json`
+- [ ] 5.4 Set `module: "preserve"` and `moduleResolution: "bundler"` in `node24.json` (`lambda.json` already has them from 3.6). Remove `experimentalDecorators` and `emitDecoratorMetadata` from `lambda.json`
 - [ ] 5.5 Fix any other TS 6 deprecation or default-change errors in the shared configs (no `ignoreDeprecations`)
 - [ ] 5.6 Confirm backend and database `tsc --noEmit` pass, and that `vp pack` emits `.d.cts`/`.d.mts` that the frontend's `next build` reads. Run the gate and commit P4
 

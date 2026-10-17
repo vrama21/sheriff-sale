@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { readFixture } from '../__fixtures__/stubClientAdapter';
 import { ListingSnapshot } from '../ingest/buildListingSnapshot';
 import type { ListingSyncResult } from '../ingest/syncListing';
@@ -6,7 +7,7 @@ import { countyPageKey, listingPageKey } from './plan';
 import { formatReplaySummary, replayArchive, ReplayCounts } from './replay';
 
 // A dry run must not load the database client, which connects to DATABASE_URL; replay.ts must never import it.
-jest.mock('@sheriff-sale/database', () => {
+vi.mock('@sheriff-sale/database', () => {
   throw new Error('replay.ts loaded @sheriff-sale/database');
 });
 
@@ -27,7 +28,7 @@ const HOME = readFixture('home.html');
 
 // An in-memory archive: a key maps to its page, to an Error that reading it rejects with, or is missing.
 let archive: Map<string, string | Error>;
-const readText = jest.fn(async (key: string) => {
+const readText = vi.fn(async (key: string) => {
   const page = archive.get(key);
 
   if (page instanceof Error) {
@@ -41,7 +42,7 @@ const readText = jest.fn(async (key: string) => {
 // status row already seen on that date neither inserts nor extends.
 let stored: Map<string, string>;
 let seenStatusRows: Set<string>;
-const syncListing = jest.fn(async (snapshot: ListingSnapshot): Promise<ListingSyncResult> => {
+const syncListing = vi.fn(async (snapshot: ListingSnapshot): Promise<ListingSyncResult> => {
   const key = `${snapshot.listing.county}|${snapshot.listing.sheriffId}`;
   const previousHash = stored.get(key);
   stored.set(key, snapshot.contentHash);
@@ -88,10 +89,10 @@ const counts = (overrides: Partial<ReplayCounts>): ReplayCounts => ({
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
-  jest.spyOn(console, 'error').mockImplementation(() => undefined);
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.clearAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
   stored = new Map();
   seenStatusRows = new Set();

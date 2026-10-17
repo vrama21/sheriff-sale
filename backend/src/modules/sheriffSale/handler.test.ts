@@ -1,13 +1,14 @@
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { sql } from '@sheriff-sale/database';
 import { NJ_COUNTIES, NJCounty } from '../../shared/nj';
 import { handler } from './handler';
 import { newJerseySheriffSaleCountyParser } from './pipeline';
 
-jest.mock('@sheriff-sale/database', () => ({ sql: jest.fn() }));
-jest.mock('./pipeline', () => ({ newJerseySheriffSaleCountyParser: jest.fn() }));
+vi.mock('@sheriff-sale/database', () => ({ sql: vi.fn() }));
+vi.mock('./pipeline', () => ({ newJerseySheriffSaleCountyParser: vi.fn() }));
 
-const mockedSql = sql as unknown as jest.Mock;
-const countyParser = jest.mocked(newJerseySheriffSaleCountyParser);
+const mockedSql = sql as unknown as Mock;
+const countyParser = vi.mocked(newJerseySheriffSaleCountyParser);
 
 const summaryFor = (county: NJCounty) => ({
   county,
@@ -22,9 +23,9 @@ const summaryFor = (county: NJCounty) => ({
 });
 
 beforeEach(() => {
-  jest.resetAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
-  jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  vi.resetAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
   mockedSql.mockResolvedValue([{ '?column?': 1 }]);
   countyParser.mockImplementation(async (county) => summaryFor(county));

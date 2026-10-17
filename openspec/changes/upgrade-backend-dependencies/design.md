@@ -93,6 +93,14 @@ TS 7.0 (the native port) ships without the JS compiler API, which is expected in
 
 _To be filled in during P5._
 
+## Implementation notes
+
+Things the plan did not anticipate, recorded as each phase landed.
+
+- **P0.** `cleanPropertyKey`'s local `camelCase` tokenizes with `/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g`, the same word split lodash uses for ASCII input. The new test has 28 cases (every fixture label, the already-camelCased keys, and a few edge cases), and it passed both before and after lodash was removed.
+- **P1.** Two typing changes surfaced. axios 1.20 types instance methods as `Promise<AxiosResponseResult<T, R, …>>`, a conditional type that TS cannot narrow to the wrapper's generic `R`. So `shared/http/httpClient.ts` passes `<T, R>` (or `<T, R, B>`) through and asserts `as Promise<R>`; runtime behavior is unchanged. `@types/luxon` 3.7 types `toISODate()` as `string | null` on a `DateTime` that may be invalid, so `replay/args.ts`'s `parseDate` returns `DateTime<true>`, which it already guarantees by throwing on invalid input.
+- **P2.** No backend Vitest config was needed: the defaults (node environment, `**/*.test.ts`) find the same 23 files, and every test passed unchanged after the mechanical `jest.*` → `vi.*` rewrite. None of the three `restoreAllMocks` files needed `vi.resetAllMocks()`. Two of them already call `mockReset()` on their only `vi.fn()` (the mocked `saveHtmlToS3`), and `parseListingSnapshot.test.ts` uses only a `console` spy. Part of P4 had to move forward: TS can't resolve the `vite-plus/test` subpath export under `moduleResolution: "node"` (node10 ignores `exports`), so `lambda.json` moved to `module: "preserve"` / `moduleResolution: "bundler"` in P2. TS 5.5 supports both. node-html-parser 5.1.0's `exports` map gives its `import` condition no types, so `lambda.json` also gets a temporary `customConditions: ["require"]` until P3 moves it to 9.x, which ships typed `exports`. `node16` resolution was rejected, because it would need a `.js` extension on `replay/index.ts`'s dynamic import. The esbuild bundle is byte-identical with the old and new tsconfig.
+
 ## Risks / Trade-offs
 
 - [node-html-parser 9 decodes entities differently (`entities` instead of `he`)] → Fixture tests cover the current and legacy detail layouts and county listings. If a fixture shifts, compare the decoded text and fix it in `parse/detailValueText.ts` rather than updating the expectation blindly. The `replay:archive` comparison is optional and needs S3.

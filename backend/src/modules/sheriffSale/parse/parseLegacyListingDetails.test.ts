@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { parseAddress } from '../../../shared/address';
 import { validateListingDetails } from './listingSchema';
 import { parseLegacyListingDetails } from './parseLegacyListingDetails';

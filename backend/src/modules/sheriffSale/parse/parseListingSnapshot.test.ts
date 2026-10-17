@@ -1,9 +1,10 @@
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { detectListingLayout, parseListingSnapshot } from './parseListingSnapshot';
 import { readFixture } from '../__fixtures__/stubClientAdapter';
 
 beforeEach(() => {
-  jest.restoreAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.restoreAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
 });
 
 describe('detectListingLayout', () => {

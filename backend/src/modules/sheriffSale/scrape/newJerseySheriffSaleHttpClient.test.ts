@@ -1,12 +1,13 @@
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { getCountyListingsHtml } from './getCountyListingsHtml';
 import { getListingDetailsHtml } from './getListingDetailsHtml';
 import { NewJerseySheriffSaleHttpClient } from './newJerseySheriffSaleHttpClient';
 import { saveHtmlToS3 } from './saveHtmlToS3';
 import { StubRequest, StubResponse, stubClientAdapter } from '../__fixtures__/stubClientAdapter';
 
-jest.mock('./saveHtmlToS3', () => ({ saveHtmlToS3: jest.fn() }));
+vi.mock('./saveHtmlToS3', () => ({ saveHtmlToS3: vi.fn() }));
 
-const mockedSaveHtmlToS3 = jest.mocked(saveHtmlToS3);
+const mockedSaveHtmlToS3 = vi.mocked(saveHtmlToS3);
 
 /** Plays the site: a county search sets that county's session cookie, and details pages need a session. */
 const civilview =
@@ -30,9 +31,9 @@ const civilview =
   };
 
 beforeEach(() => {
-  jest.restoreAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
-  jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  vi.restoreAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.spyOn(console, 'error').mockImplementation(() => undefined);
   mockedSaveHtmlToS3.mockReset();
   mockedSaveHtmlToS3.mockResolvedValue(undefined);
 });

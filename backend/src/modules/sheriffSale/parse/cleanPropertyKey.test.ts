@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { cleanPropertyKey } from './cleanPropertyKey';
 
 describe('cleanPropertyKey', () => {
