@@ -1,10 +1,13 @@
-import { HttpClient, CreateHttpClientConfig } from '../http/httpClient';
+import { HttpClient } from '../http/httpClient';
 
+/**
+ * A salesweb.civilview.com client with its own ASP.NET session.
+ *
+ * The site scopes a session to the county it last searched, so each county run creates its own client:
+ * the county search sets the session cookie, and the client sends it on that county's details requests.
+ */
 export class NewJerseySheriffSaleHttpClient extends HttpClient {
-  private static instance: NewJerseySheriffSaleHttpClient;
-
   public aspSessionId: string;
-  public clientConfig: CreateHttpClientConfig;
 
   public constructor() {
     super({
@@ -28,43 +31,20 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
     );
 
     this.axiosInstance.interceptors.response.use(
-      (req) => {
-        if (!this.aspSessionId) {
-          const cookies = req.headers['set-cookie'];
+      (res) => {
+        const cookies: string[] | undefined = res.headers['set-cookie'];
+        const aspSessionIdCookie = cookies?.find((cookie) => cookie.trim().startsWith('ASP.NET_SessionId='));
+        const aspSessionId = aspSessionIdCookie?.split(';')[0].split('=')[1];
 
-          if (cookies) {
-            const aspSessionsIdCookie = cookies.find((cookie) => cookie.includes('ASP.NET_SessionId'));
-            const aspSessionId = aspSessionsIdCookie?.split(';')[0].split('=')[1];
-
-            if (aspSessionId) {
-              this.aspSessionId = aspSessionId;
-            }
-          }
+        if (aspSessionId) {
+          this.aspSessionId = aspSessionId;
         }
 
-        return req;
+        return res;
       },
       (error) => {
         throw error;
       },
     );
-
-    this.aspSessionId;
-  }
-
-  public static createClient() {
-    if (NewJerseySheriffSaleHttpClient.instance) {
-      return this.instance;
-    }
-
-    this.instance = new NewJerseySheriffSaleHttpClient();
-
-    return this.instance;
-  }
-
-  public static getClient() {
-    const client = NewJerseySheriffSaleHttpClient.createClient();
-
-    return client;
   }
 }

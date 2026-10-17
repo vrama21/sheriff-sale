@@ -1,5 +1,5 @@
 import { db, listings, statusHistories } from '@sheriff-sale/database';
-import { newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
+import { NewJerseySheriffSaleHttpClient, newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
 import { ListingParse } from '../types';
 import {
   LISTING_CONCURRENCY,
@@ -15,6 +15,7 @@ jest.mock('@sheriff-sale/database', () => ({
 }));
 
 jest.mock('../services/newJerseySheriffSale', () => ({
+  NewJerseySheriffSaleHttpClient: jest.fn(),
   newJerseySheriffSaleService: {
     cleanAddress: jest.fn(),
     getCountyListingsHtml: jest.fn(),
@@ -102,7 +103,7 @@ beforeEach(() => {
 
   service.cleanAddress.mockReturnValue({} as ReturnType<typeof service.cleanAddress>);
   service.getCountyListingsHtml.mockResolvedValue('county-html');
-  service.getListingDetailsHtml.mockImplementation(async ({ propertyId }) => `listing-${propertyId}`);
+  service.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => `listing-${propertyId}`);
   service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET' } as ListingParse);
   service.parseStatusHistory.mockReturnValue([{ status: 'Scheduled', date: '1/1/2026' }]);
 
@@ -293,7 +294,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
     let maxActive = 0;
 
     service.parseCountyProperyIds.mockResolvedValueOnce(range(1, 20)).mockResolvedValueOnce(range(101, 20));
-    service.getListingDetailsHtml.mockImplementation(async ({ propertyId }) => {
+    service.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => {
       active++;
       maxActive = Math.max(maxActive, active);
       await new Promise((resolve) => setTimeout(resolve, 1));
@@ -310,5 +311,46 @@ describe('newJerseySheriffSaleCountyParser', () => {
     expect(maxActive).toBe(LISTING_CONCURRENCY);
     expect(service.getListingDetailsHtml).toHaveBeenCalledTimes(40);
     expect(morris.parsed + passaic.parsed).toBe(40);
+  });
+
+  it('gives each county its own client and fetches its details with that client', async () => {
+    service.parseCountyProperyIds.mockResolvedValueOnce([1, 2]).mockResolvedValueOnce([101, 102]);
+
+    await Promise.all([newJerseySheriffSaleCountyParser('Gloucester'), newJerseySheriffSaleCountyParser('Passaic')]);
+
+    expect(NewJerseySheriffSaleHttpClient).toHaveBeenCalledTimes(2);
+
+    const [gloucesterClient, passaicClient] = service.getCountyListingsHtml.mock.calls.map(([client]) => client);
+    const detailsClientsByPropertyId = new Map(
+      service.getListingDetailsHtml.mock.calls.map(([client, { propertyId }]) => [propertyId, client]),
+    );
+
+    expect(gloucesterClient).not.toBe(passaicClient);
+    expect(service.getCountyListingsHtml.mock.calls.map(([, county]) => county)).toEqual(['Gloucester', 'Passaic']);
+    expect(detailsClientsByPropertyId.get(1)).toBe(gloucesterClient);
+    expect(detailsClientsByPropertyId.get(2)).toBe(gloucesterClient);
+    expect(detailsClientsByPropertyId.get(101)).toBe(passaicClient);
+    expect(detailsClientsByPropertyId.get(102)).toBe(passaicClient);
+  });
+
+  it('does not parse a listing whose session was rejected', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1, 2]);
+    service.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => {
+      if (propertyId === 2) {
+        throw new Error('Session rejected for propertyId 2: redirected to /');
+      }
+
+      return `listing-${propertyId}`;
+    });
+
+    const summary = await newJerseySheriffSaleCountyParser('Passaic');
+
+    expect(summary.failedListings).toBe(1);
+    expect(service.parseListingDetails).toHaveBeenCalledTimes(1);
+    expect(service.parseListingDetails).toHaveBeenCalledWith('listing-1');
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to parse listing propertyId 2 in Passaic County',
+      expect.objectContaining({ message: 'Session rejected for propertyId 2: redirected to /' }),
+    );
   });
 });

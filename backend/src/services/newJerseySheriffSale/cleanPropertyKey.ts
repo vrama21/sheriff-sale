@@ -18,9 +18,10 @@ const acceptedKeys = [
   'upsetAmount',
 ] as const;
 
-type PropertyKey = (typeof acceptedKeys)[number];
+export type PropertyKey = (typeof acceptedKeys)[number];
 
-export const cleanPropertyKey = (key: string): PropertyKey => {
+/** Maps a details-page label to its listing field, or undefined when the label isn't a listing field. */
+export const cleanPropertyKey = (key: string): PropertyKey | undefined => {
   let cleanKey = key.replace(/#?:?/g, '').trim();
 
   if (cleanKey.toLowerCase().match(/sheriff/)) {
@@ -42,7 +43,7 @@ export const cleanPropertyKey = (key: string): PropertyKey => {
   cleanKey = camelCase(cleanKey);
 
   if (!acceptedKeys.includes(cleanKey as PropertyKey)) {
-    console.error(`Missing key ${cleanKey}`);
+    return undefined;
   }
 
   return cleanKey as PropertyKey;
