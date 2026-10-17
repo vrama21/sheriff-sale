@@ -1,0 +1,31 @@
+backend/src/modules/sheriffSale/parse/cleanPropertyKey.ts
+  s_164a755b9134ff::t_9cec014792f368 1-10
+backend/jest.config.js
+  s_164a755b9134ff::t_0e06692f8a19ed 3
+package-lock.json
+  ai_agent 39-40,43-44,7049-7050,7052,7054,7057-7058,7061-7062,9306,9310,9313-9316,9318-9321,9323,9326-9331,9335-9336,9339,9342,10560,10567
+backend/package.json
+  s_164a755b9134ff::t_0e06692f8a19ed 13-14,21-22,25-26
+packages/database/package.json
+  s_164a755b9134ff::t_0e06692f8a19ed 13,25,32
+backend/src/modules/sheriffSale/parse/cleanPropertyKey.test.ts
+  s_164a755b9134ff::t_ffb8d2610c2126 1-45
+openspec/changes/upgrade-backend-dependencies/tasks.md
+  ai_agent 5-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6988f512cd8527181ab5cea69d643d85bae3bae5",
+  "prompts": {},
+  "sessions": {
+    "s_164a755b9134ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2fa98df6-30a4-4521-bdf3-a51db4da49f5",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
