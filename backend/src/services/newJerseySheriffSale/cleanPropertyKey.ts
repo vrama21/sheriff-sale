@@ -1,27 +1,7 @@
 import { camelCase } from 'lodash';
 
-const acceptedKeys = [
-  'address',
-  'attorney',
-  'attorneyPhone',
-  'courtCase',
-  'deed',
-  'deedAddress',
-  'defendant',
-  'description',
-  'judgment',
-  'parcel',
-  'plaintiff',
-  'priors',
-  'saleDate',
-  'sheriffId',
-  'upsetAmount',
-] as const;
-
-export type PropertyKey = (typeof acceptedKeys)[number];
-
-/** Maps a details-page label to its listing field, or undefined when the label isn't a listing field. */
-export const cleanPropertyKey = (key: string): PropertyKey | undefined => {
+/** Maps a details-page label to its listing field's name; listingSchema decides whether that field is known. */
+export const cleanPropertyKey = (key: string): string => {
   let cleanKey = key.replace(/#?:?/g, '').trim();
 
   if (cleanKey.toLowerCase().match(/sheriff/)) {
@@ -40,11 +20,5 @@ export const cleanPropertyKey = (key: string): PropertyKey | undefined => {
     return 'saleDate';
   }
 
-  cleanKey = camelCase(cleanKey);
-
-  if (!acceptedKeys.includes(cleanKey as PropertyKey)) {
-    return undefined;
-  }
-
-  return cleanKey as PropertyKey;
+  return camelCase(cleanKey);
 };

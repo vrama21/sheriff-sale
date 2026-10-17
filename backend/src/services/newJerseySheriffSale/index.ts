@@ -1,6 +1,7 @@
 import { cleanAddress } from './cleanAddress';
 import { getCountyListingsHtml } from './getCountyListingsHtml';
 import { getListingDetailsHtml } from './getListingDetailsHtml';
+import { validateListingDetails, validateStatusHistory } from './listingSchema';
 import { parseCountyProperyIds } from './parseCountyProperyIds';
 import { parseListingDetails } from './parseListingDetails';
 import { parseStatusHistory } from './parseStatusHistory';
@@ -14,6 +15,9 @@ export const newJerseySheriffSaleService = {
   parseListingDetails,
   parseStatusHistory,
   saveHtmlToS3,
+  validateListingDetails,
+  validateStatusHistory,
 };
 
+export type { FieldWarning } from './listingSchema';
 export * from './newJerseySheriffSaleHttpClient';

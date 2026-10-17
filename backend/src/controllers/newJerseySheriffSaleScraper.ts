@@ -1,6 +1,10 @@
 import { ListingParse, NJCounty, StatusHistoryParse } from '../types';
 import { db, listings, statusHistories } from '@sheriff-sale/database';
-import { NewJerseySheriffSaleHttpClient, newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
+import {
+  FieldWarning,
+  NewJerseySheriffSaleHttpClient,
+  newJerseySheriffSaleService,
+} from '../services/newJerseySheriffSale';
 import { createConcurrencyLimiter } from '../utils';
 
 // Module-level so every county in the run shares one cap on in-flight listing fetches.
@@ -12,6 +16,10 @@ export type ScrapedListing = {
   statusHistory: StatusHistoryParse[];
 };
 
+export type ListingFieldWarning = FieldWarning & { county: NJCounty; propertyId: number };
+
+export type ScrapeListingResult = ScrapedListing & { warnings: ListingFieldWarning[] };
+
 export type CountyParseSummary = {
   county: NJCounty;
   found: number;
@@ -19,28 +27,39 @@ export type CountyParseSummary = {
   failedListings: number;
   inserted: number;
   failedWrites: number;
+  fieldWarnings: number;
 };
 
 export const scrapeListing = async (
   client: NewJerseySheriffSaleHttpClient,
   county: NJCounty,
   propertyId: number,
-): Promise<ScrapedListing> => {
+): Promise<ScrapeListingResult> => {
   const listingDetailsHtml = await newJerseySheriffSaleService.getListingDetailsHtml(client, { propertyId });
 
-  const listingDetails = newJerseySheriffSaleService.parseListingDetails(listingDetailsHtml);
-  const statusHistory = newJerseySheriffSaleService.parseStatusHistory(listingDetailsHtml);
-  const cleanedAddress = newJerseySheriffSaleService.cleanAddress(listingDetails.address as string);
+  // Throws when the address is missing, which fails just this listing; any other bad field is a warning.
+  const { details, warnings: detailWarnings } = newJerseySheriffSaleService.validateListingDetails(
+    newJerseySheriffSaleService.parseListingDetails(listingDetailsHtml),
+  );
+  const { rows: statusHistory, warnings: historyWarnings } = newJerseySheriffSaleService.validateStatusHistory(
+    newJerseySheriffSaleService.parseStatusHistory(listingDetailsHtml),
+  );
+  const cleanedAddress = newJerseySheriffSaleService.cleanAddress(details.address);
 
   const listing: ListingParse = {
-    ...listingDetails,
+    ...details,
     ...cleanedAddress,
     county,
+    latitude: null,
+    longitude: null,
+    mapsUrl: null,
     propertyId,
     state: 'NJ',
   };
 
-  return { listing, statusHistory };
+  const warnings = [...detailWarnings, ...historyWarnings].map((warning) => ({ ...warning, county, propertyId }));
+
+  return { listing, statusHistory, warnings };
 };
 
 /**
@@ -97,10 +116,20 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
   );
 
   const scrapedListings: ScrapedListing[] = [];
+  let fieldWarnings = 0;
 
   scrapeResults.forEach((result, index) => {
     if (result.status === 'fulfilled') {
-      scrapedListings.push(result.value);
+      const { warnings, ...scrapedListing } = result.value;
+
+      warnings.forEach(({ field, value, reason }) =>
+        console.warn(
+          `Field warning for listing propertyId ${propertyIds[index]} in ${county} County: ` +
+            `${field} ${JSON.stringify(value)} is ${reason}`,
+        ),
+      );
+      fieldWarnings += warnings.length;
+      scrapedListings.push(scrapedListing);
     } else {
       console.error(`Failed to parse listing propertyId ${propertyIds[index]} in ${county} County`, result.reason);
     }
@@ -140,12 +169,13 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
     failedListings: propertyIds.length - scrapedListings.length,
     inserted,
     failedWrites,
+    fieldWarnings,
   };
 
   console.log(
     `Parsed ${inserted} new listings for ${county} County successfully! ` +
       `(found ${summary.found}, parsed ${summary.parsed}, failed ${summary.failedListings}, ` +
-      `inserted ${summary.inserted}, failed writes ${summary.failedWrites})`,
+      `inserted ${summary.inserted}, failed writes ${summary.failedWrites}, field warnings ${summary.fieldWarnings})`,
   );
 
   return summary;

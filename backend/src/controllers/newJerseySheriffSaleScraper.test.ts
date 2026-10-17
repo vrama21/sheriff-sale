@@ -23,6 +23,9 @@ jest.mock('../services/newJerseySheriffSale', () => ({
     parseCountyProperyIds: jest.fn(),
     parseListingDetails: jest.fn(),
     parseStatusHistory: jest.fn(),
+    // The real schema, so these tests cover what validation does to the parsed values.
+    validateListingDetails: jest.requireActual('../services/newJerseySheriffSale/listingSchema').validateListingDetails,
+    validateStatusHistory: jest.requireActual('../services/newJerseySheriffSale/listingSchema').validateStatusHistory,
   },
 }));
 
@@ -100,11 +103,12 @@ beforeEach(() => {
   jest.resetAllMocks();
   jest.spyOn(console, 'log').mockImplementation(() => undefined);
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 
   service.cleanAddress.mockReturnValue({} as ReturnType<typeof service.cleanAddress>);
   service.getCountyListingsHtml.mockResolvedValue('county-html');
   service.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => `listing-${propertyId}`);
-  service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET' } as ListingParse);
+  service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET' });
   service.parseStatusHistory.mockReturnValue([{ status: 'Scheduled', date: '1/1/2026' }]);
 
   committed = [];
@@ -189,7 +193,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
         throw new TypeError("Cannot read properties of undefined (reading 'querySelectorAll')");
       }
 
-      return { address: '1 MAIN STREET' } as ListingParse;
+      return { address: '1 MAIN STREET' };
     });
 
     const summary = await newJerseySheriffSaleCountyParser('Atlantic');
@@ -201,6 +205,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
       failedListings: 1,
       inserted: 2,
       failedWrites: 0,
+      fieldWarnings: 0,
     });
     expect(transaction).toHaveBeenCalledTimes(2);
     expect(console.error).toHaveBeenCalledWith(
@@ -279,6 +284,7 @@ describe('newJerseySheriffSaleCountyParser', () => {
       failedListings: 0,
       inserted: 0,
       failedWrites: 0,
+      fieldWarnings: 0,
     });
     expect(service.getListingDetailsHtml).not.toHaveBeenCalled();
   });
@@ -352,5 +358,118 @@ describe('newJerseySheriffSaleCountyParser', () => {
       'Failed to parse listing propertyId 2 in Passaic County',
       expect.objectContaining({ message: 'Session rejected for propertyId 2: redirected to /' }),
     );
+  });
+
+  it('saves the validated listing, with the amount as a number and the dates as ISO dates', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1]);
+    service.parseListingDetails.mockReturnValue({
+      address: '1 MAIN STREET\nTRENTON NJ 08608',
+      upsetAmount: '$1,585.95',
+      saleDate: '08/12/2024 02:00 PM',
+      plaintiff: '\r U.S. BANK NATIONAL ASSOCIATION   ',
+      propertyNote: '',
+    });
+    service.cleanAddress.mockReturnValue({
+      address: '1 MAIN STREET TRENTON NJ 08608',
+      city: 'Trenton',
+      street: '1 Main Street',
+      zipcode: '08608',
+      unit: '',
+      secondaryUnit: '',
+    });
+
+    await newJerseySheriffSaleCountyParser('Passaic');
+
+    expect(service.cleanAddress).toHaveBeenCalledWith('1 MAIN STREET\nTRENTON NJ 08608');
+    expect(committed).toEqual([
+      {
+        table: 'Listing',
+        values: expect.objectContaining({
+          address: '1 MAIN STREET TRENTON NJ 08608',
+          upsetAmount: 1585.95,
+          judgment: null,
+          saleDate: '2024-08-12',
+          plaintiff: 'U.S. BANK NATIONAL ASSOCIATION',
+          propertyId: 1,
+        }),
+      },
+      { table: 'StatusHistory', values: [{ status: 'Scheduled', date: '2026-01-01', listingId: 'listing-1' }] },
+    ]);
+    expect(committed[0].values).not.toHaveProperty('propertyNote');
+  });
+
+  it.each([
+    ['has no address', {}],
+    ['has a whitespace-only address', { address: ' \n ' }],
+  ])('does not save a listing that %s, and counts it as a failed listing', async (_case, details) => {
+    service.parseCountyProperyIds.mockResolvedValue([1, 2]);
+    service.parseListingDetails.mockImplementation((html) =>
+      html === 'listing-2' ? { plaintiff: 'BANK', ...details } : { address: '1 MAIN STREET' },
+    );
+
+    const summary = await newJerseySheriffSaleCountyParser('Atlantic');
+
+    expect(summary).toMatchObject({ found: 2, parsed: 1, failedListings: 1, inserted: 1 });
+    expect(committed.filter((write) => write.table === 'Listing')).toEqual([
+      { table: 'Listing', values: expect.objectContaining({ propertyId: 1 }) },
+    ]);
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to parse listing propertyId 2 in Atlantic County',
+      expect.objectContaining({ message: expect.stringContaining('Listing has no address') }),
+    );
+  });
+
+  it('saves a listing with a field coerced to null, and counts and logs the warning', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([7]);
+    service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET', upsetAmount: 'TBD' });
+
+    const summary = await newJerseySheriffSaleCountyParser('Bergen');
+
+    expect(summary).toMatchObject({ inserted: 1, fieldWarnings: 1 });
+    expect(committed[0]).toEqual({ table: 'Listing', values: expect.objectContaining({ upsetAmount: null }) });
+    expect(console.warn).toHaveBeenCalledWith(
+      'Field warning for listing propertyId 7 in Bergen County: upsetAmount "TBD" is not a dollar amount',
+    );
+  });
+
+  it('saves the valid status-history rows and warns about the one it skips', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1]);
+    service.parseStatusHistory.mockReturnValue([
+      { status: 'Scheduled', date: '3/2/2021' },
+      { status: 'Adjourned', date: '4/30/3021' },
+      { status: 'Sold', date: '5/4/2021' },
+    ]);
+
+    const summary = await newJerseySheriffSaleCountyParser('Hunterdon');
+
+    expect(summary.fieldWarnings).toBe(1);
+    expect(committed[1]).toEqual({
+      table: 'StatusHistory',
+      values: [
+        { status: 'Scheduled', date: '2021-03-02', listingId: 'listing-1' },
+        { status: 'Sold', date: '2021-05-04', listingId: 'listing-1' },
+      ],
+    });
+  });
+
+  it('sums the field warnings of every listing in the county, without failing the run', async () => {
+    service.parseCountyProperyIds.mockResolvedValue(range(1, 10));
+    service.parseListingDetails.mockImplementation((html) => ({
+      address: '1 MAIN STREET',
+      ...(['listing-2', 'listing-5', 'listing-9'].includes(html) && { saleDate: '2/30/2024' }),
+    }));
+
+    const summary = await newJerseySheriffSaleCountyParser('Camden');
+
+    expect(summary).toEqual({
+      county: 'Camden',
+      found: 10,
+      parsed: 10,
+      failedListings: 0,
+      inserted: 10,
+      failedWrites: 0,
+      fieldWarnings: 3,
+    });
+    expect(console.warn).toHaveBeenCalledTimes(3);
   });
 });

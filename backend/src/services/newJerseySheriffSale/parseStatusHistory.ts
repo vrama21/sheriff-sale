@@ -1,5 +1,5 @@
 import { HTMLElement, parse } from 'node-html-parser';
-import { StatusHistoryParse } from '../../types';
+import { RawStatusRow } from './listingSchema';
 
 const cellText = (cell: HTMLElement) => cell.text.replace(/\s+/g, ' ').trim();
 
@@ -17,7 +17,8 @@ const findStatusHistoryTable = (root: HTMLElement): HTMLElement | undefined => {
   });
 };
 
-export const parseStatusHistory = (listingDetailHtml: string): StatusHistoryParse[] => {
+/** The history rows' cell text, unvalidated: listingSchema checks the status and coerces the date. */
+export const parseStatusHistory = (listingDetailHtml: string): RawStatusRow[] => {
   const root = parse(listingDetailHtml);
 
   const statusHistoryTable = findStatusHistoryTable(root);

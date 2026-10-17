@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { bigint, pgTable, text, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
+import { bigint, date, numeric, pgTable, text, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { statusHistories } from './statusHistory';
 import { randomUUID } from 'crypto';
 
@@ -20,7 +20,7 @@ export const listings = pgTable(
     deedAddress: text('deedAddress'),
     defendant: text('defendant'),
     description: text('description'),
-    judgment: text('judgment'),
+    judgment: numeric('judgment', { precision: 12, scale: 2, mode: 'number' }),
     latitude: varchar('latitude', { length: 256 }),
     longitude: varchar('longitude', { length: 256 }),
     mapsUrl: varchar('mapsUrl', { length: 256 }),
@@ -28,14 +28,14 @@ export const listings = pgTable(
     plaintiff: text('plaintiff'),
     propertyId: bigint('propertyId', { mode: 'number' }),
     priors: text('priors'),
-    saleDate: varchar('saleDate', { length: 256 }),
+    saleDate: date('saleDate', { mode: 'string' }),
     secondaryUnit: varchar('secondaryUnit', { length: 256 }),
     sheriffId: text('sheriffId'),
     state: varchar('state', { length: 256 }),
     street: varchar('street', { length: 256 }),
     unit: varchar('unit', { length: 256 }),
     updatedAt: timestamp('updatedAt').defaultNow(),
-    upsetAmount: text('upsetAmount'),
+    upsetAmount: numeric('upsetAmount', { precision: 12, scale: 2, mode: 'number' }),
     zipcode: varchar('zipcode', { length: 256 }),
   },
   (table) => [uniqueIndex('Listing_propertyId_key').on(table.propertyId)],

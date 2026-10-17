@@ -50,6 +50,20 @@
       "when": 1792220390726,
       "tag": "0006_backfill_listing_addresses",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792223261470,
+      "tag": "0007_normalize_listing_values",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792223336033,
+      "tag": "0008_peaceful_omega_flight",
+      "breakpoints": true
     }
   ]
 }

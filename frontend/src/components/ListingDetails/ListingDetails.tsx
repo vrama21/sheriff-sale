@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { formatToCurrency } from '../../helpers';
+import { formatSaleDate, formatToCurrency } from '../../helpers';
 import { ListingMap } from '../../components';
 import { useClasses } from './ListingDetails.style';
 import { Listing } from '@sheriff-sale/database';
@@ -31,15 +31,15 @@ const ListingDetails: React.FC<ListingProps> = ({ listing }) => {
           </div>
           <div>
             <span className={classes.listingLabel}>Sale Date: </span>
-            <span className={classes.listingValue}>{listing.saleDate}</span>
+            <span className={classes.listingValue}>{formatSaleDate(listing.saleDate)}</span>
           </div>
-          {listing.judgment && (
+          {listing.judgment != null && (
             <div>
               <span className={classes.listingLabel}>Judgment: </span>
               <span className={classes.listingValue}>{formatToCurrency(listing.judgment)}</span>
             </div>
           )}
-          {listing.upsetAmount && (
+          {listing.upsetAmount != null && (
             <div>
               <span className={classes.listingLabel}>Upset Amount: </span>
               <span className={classes.listingValue}>{formatToCurrency(listing.upsetAmount)}</span>
