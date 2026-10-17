@@ -1,0 +1,35 @@
+openspec/changes/upgrade-backend-dependencies/tasks.md
+  ai_agent 36
+backend/src/modules/sheriffSale/replay/index.ts
+  s_164a755b9134ff::t_b026837d890e58 31
+packages/database/src/client.ts
+  s_164a755b9134ff::t_b026837d890e58 6
+packages/database/package.json
+  s_164a755b9134ff::t_b026837d890e58 25
+packages/database/src/migrate.ts
+  s_164a755b9134ff::t_b026837d890e58 2
+backend/src/modules/sheriffSale/handler.local.ts
+  s_164a755b9134ff::t_b026837d890e58 5
+package-lock.json
+  ai_agent 38,489-504,5099,7795,8201-8214
+packages/database/drizzle.config.ts
+  s_164a755b9134ff::t_b026837d890e58 4
+backend/package.json
+  s_164a755b9134ff::t_b026837d890e58 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fc75052061faf6ee64155c7f719dc7290cef0945",
+  "prompts": {},
+  "sessions": {
+    "s_164a755b9134ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2fa98df6-30a4-4521-bdf3-a51db4da49f5",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
