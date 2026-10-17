@@ -1,0 +1,20 @@
+openspec/specs/node-toolchain/spec.md
+  s_74f79274124f67::t_71da9c7c5baef3 4
+  s_74f79274124f67::t_2574d25e62d030 1-3,5-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f49e7646614f7aaec3aecab4069025448e7fad6a",
+  "prompts": {},
+  "sessions": {
+    "s_74f79274124f67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "db313350-6df1-4efc-81f8-84fd1989ec05",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
