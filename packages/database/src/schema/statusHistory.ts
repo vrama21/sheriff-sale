@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { date, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { date, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { listings } from './listing';
 import { randomUUID } from 'crypto';
 
@@ -10,8 +10,10 @@ export const statusHistories = pgTable('StatusHistory', {
   listingId: text('listingId'),
   createdAt: timestamp('createdAt').defaultNow(),
   updatedAt: timestamp('updatedAt').defaultNow(),
-  date: date('date', { mode: 'string' }),
-  status: varchar('status', { length: 256 }),
+  date: date('date', { mode: 'string' }).notNull(),
+  status: text('status').notNull(),
+  firstSeenOn: date('firstSeenOn', { mode: 'string' }),
+  lastSeenOn: date('lastSeenOn', { mode: 'string' }),
 });
 
 export const statusHistoryRelations = relations(statusHistories, ({ one }) => ({

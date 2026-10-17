@@ -2,13 +2,15 @@
 
 ## 1. Schema
 
-- [ ] 1.1 In `packages/database/src/schema/listing.ts`: add `snapshotDate: date('snapshotDate', { mode: 'string' })` and `contentHash: text('contentHash')`, remove `Listing_propertyId_key`, and make `sheriffId` and `county` `.notNull()` to match prod. Don't add the new unique index yet (task 2.3).
-- [ ] 1.2 In `packages/database/src/schema/statusHistory.ts`: change `date` to `text('date').notNull()`, make `status` `text('status').notNull()` to match prod, and add `firstSeenOn` and `lastSeenOn` as `date(..., { mode: 'string' })`, nullable for now.
-- [ ] 1.3 Check the frontend and backend type-check with the stricter types (`npm run build` in `backend/` and `packages/database/`, and the frontend type-check). Fix only what these changes break.
+- [x] 1.1 In `packages/database/src/schema/listing.ts`: add `snapshotDate: date('snapshotDate', { mode: 'string' })` and `contentHash: text('contentHash')`, remove `Listing_propertyId_key`, and make `sheriffId` and `county` `.notNull()` to match prod. Don't add the new unique index yet (task 2.3).
+- [x] 1.2 In `packages/database/src/schema/statusHistory.ts`: change `date` to `text('date').notNull()`, make `status` `text('status').notNull()` to match prod, and add `firstSeenOn` and `lastSeenOn` as `date(..., { mode: 'string' })`, nullable for now.
+- [x] 1.3 Check the frontend and backend type-check with the stricter types (`npm run build` in `backend/` and `packages/database/`, and the frontend type-check). Fix only what these changes break.
+  - Done: backend, database and frontend type-check clean. The only break was `StatusHistoryParse`, which now also omits `firstSeenOn` and `lastSeenOn` (the parser doesn't produce them; the sync sets them).
 
 ## 2. Migrations (design Decision 9)
 
-- [ ] 2.1 Run `npm run db:generate` in `packages/database` (with `DATABASE_URL=postgres://localhost/unused` if needed) for tasks 1.1–1.2. Check that the SQL adds the four columns, drops `Listing_propertyId_key`, sets the types and NOT NULLs, and doesn't drop or recreate any column. Quote identifiers by hand if drizzle-kit leaves them unquoted (it did in `0005`).
+- [x] 2.1 Run `npm run db:generate` in `packages/database` (with `DATABASE_URL=postgres://localhost/unused` if needed) for tasks 1.1–1.2. Check that the SQL adds the four columns, drops `Listing_propertyId_key`, sets the types and NOT NULLs, and doesn't drop or recreate any column. Quote identifiers by hand if drizzle-kit leaves them unquoted (it did in `0005`).
+  - Done: `0007_material_cammi.sql`. Every identifier is quoted. The type/NOT NULL changes are no-ops on prod, which already has them.
 - [ ] 2.2 Generate the custom migration (`npx drizzle-kit generate --custom --name repair_listing_identity`) and write its SQL in this order:
   - Remove all whitespace from `"Listing"."sheriffId"`.
   - Normalize `"StatusHistory"."status"` (collapse whitespace, trim) and `"date"` per design Decision 5: rewrite only values matching `M/D/YYYY` → `YYYY-MM-DD` or `M/D/YYYY h:mm AM|PM` → `YYYY-MM-DD HH24:MI`, and collapse and trim the rest.
