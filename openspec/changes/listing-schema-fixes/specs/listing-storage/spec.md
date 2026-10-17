@@ -47,7 +47,7 @@ A listing and all of its status-history rows SHALL be written in one transaction
 - **WHEN** a new listing has no status-history rows
 - **THEN** the listing is stored and the save reports "inserted"
 
-### Requirement: Repair of Passaic and Gloucester duplicates
+### Requirement: Repair of duplicate and mislabelled listings
 
 Before the unique index is created, a migration SHALL relabel every listing whose county is `Passaic` to `Gloucester`. It SHALL then keep only the oldest listing per `propertyId` (by `createdAt`, then `id`), deleting the others and their status-history rows. The repair and the index SHALL be applied in the same migration run, so a failure leaves the database unchanged.
 
@@ -55,6 +55,11 @@ Before the unique index is created, a migration SHALL relabel every listing whos
 
 - **WHEN** `propertyId` 2195453969 has a Gloucester row created first and a Passaic row created later
 - **THEN** after migration, only the Gloucester row and its status history remain
+
+#### Scenario: Re-run copy
+
+- **WHEN** a `propertyId` has a row created first and a later copy of it within the same county
+- **THEN** after migration, only the first row and its status history remain
 
 #### Scenario: Mislabelled single row
 

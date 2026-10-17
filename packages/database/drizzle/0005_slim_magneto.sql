@@ -8,7 +8,7 @@ ALTER TABLE "Listing" ALTER COLUMN "description" SET DATA TYPE text;--> statemen
 ALTER TABLE "Listing" ALTER COLUMN "judgment" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "parcel" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "plaintiff" SET DATA TYPE text;--> statement-breakpoint
-ALTER TABLE "Listing" ALTER COLUMN "propertyId" SET DATA TYPE bigint;--> statement-breakpoint
+ALTER TABLE "Listing" ALTER COLUMN "propertyId" SET DATA TYPE bigint USING "propertyId"::bigint;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "priors" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "sheriffId" SET DATA TYPE text;--> statement-breakpoint
 ALTER TABLE "Listing" ALTER COLUMN "upsetAmount" SET DATA TYPE text;--> statement-breakpoint

@@ -1,8 +1,9 @@
--- Repairs the Passaic/Gloucester duplicates so the unique index on "propertyId" (next migration) can be created.
+-- Repairs duplicate and mislabelled listings so the unique index on "propertyId" (next migration) can be created.
 -- Passaic used Gloucester's county ID (19) until adapt-scraper-to-civilview, so every Passaic row is a Gloucester listing.
 UPDATE "Listing" SET "county" = 'Gloucester' WHERE "county" = 'Passaic';
 --> statement-breakpoint
 -- Keep the oldest listing per "propertyId"; delete the status histories of the rest, then the rest.
+-- Most duplicates are re-run copies (2023-01, 2024-03) whose fields carry a leading "\r ", so the oldest is the clean one.
 DELETE FROM "StatusHistory"
 WHERE "listingId" IN (
   SELECT "id"
