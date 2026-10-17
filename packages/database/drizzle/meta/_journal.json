@@ -43,6 +43,13 @@
       "when": 1792216379749,
       "tag": "0005_slim_magneto",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792220390726,
+      "tag": "0006_backfill_listing_addresses",
+      "breakpoints": true
     }
   ]
 }

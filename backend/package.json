@@ -8,8 +8,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "watch": "tsc -w",
     "test": "jest",
-    "lint": "eslint --ext .ts ./src",
-    "lint:fix": "eslint --fix --ext .ts ./src",
+    "lint": "eslint --ext .ts ./src ./scripts",
+    "lint:fix": "eslint --fix --ext .ts ./src ./scripts",
     "start:newJerseyScraper": "ts-node src/handlers/local/newJerseySheriffSaleScraperHandler.local.ts"
   },
   "devDependencies": {
