@@ -1,5 +1,5 @@
 # Scrape archive; holds every scraped page, so it must never be destroyed or replaced. The name has
-# no env suffix and is also hardcoded in backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts.
+# no env suffix and is also hardcoded in backend/src/modules/sheriffSale/scrape/saveHtmlToS3.ts.
 resource "aws_s3_bucket" "archive" {
   bucket = "nj-sheriff-sale"
 

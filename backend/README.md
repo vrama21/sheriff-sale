@@ -4,8 +4,11 @@ Sources for the New Jersey sheriff sale scraper, an AWS Lambda (`new-jersey-sher
 runs daily at 00:00 UTC. It scrapes each county's listings, stores the raw HTML in the `nj-sheriff-sale` S3 bucket, and
 writes parsed sales to the database.
 
-The handler is `src/handlers/newJerseySheriffSaleScraperHandler.ts`. The Lambda and the rest of its AWS resources are
-defined in [`../infra`](../infra/README.md).
+The handler is `src/modules/sheriffSale/handler.ts`. The Lambda and the rest of its AWS resources are defined in
+[`../infra`](../infra/README.md).
+
+`src/modules/<module>/` holds one domain pipeline each, in `scrape/`, `parse/` and `ingest/` stage folders, with its
+`index.ts` as its only public surface. `src/shared/` holds code any module may use, and imports nothing from a module.
 
 ## Commands
 
