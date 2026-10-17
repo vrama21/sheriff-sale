@@ -17,9 +17,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "dev": "vp pack --watch",
-    "lint": "vp lint src",
-    "prebuild": "npm run db:generate",
-    "predev": "npm run db:generate"
+    "lint": "vp lint src"
   },
   "dependencies": {
     "drizzle-orm": "0.45.3",
@@ -29,7 +27,6 @@
     "@sheriff-sale/tsconfig": "*",
     "dotenv": "16.4.5",
     "drizzle-kit": "0.31.11",
-    "pg": "8.12.0",
     "rimraf": "5.0.7",
     "vite-plus": "1.3.0"
   }

@@ -14,7 +14,8 @@ export default defineConfig({
     overrides: [
       {
         // eslint-config-next. turbo/no-undeclared-env-vars is dropped: Oxlint has no equivalent, and
-        // every env var the frontend reads is declared in turbo.json globalEnv.
+        // every env var the frontend reads (NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, VERCEL_URL, PORT, NODE_ENV,
+        // DATABASE_URL) is declared in turbo.json globalEnv.
         files: ['frontend/**'],
         plugins: ['react', 'nextjs', 'jsx-a11y'],
         rules: {

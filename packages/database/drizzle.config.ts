@@ -1,7 +1,8 @@
 import { defineConfig } from 'drizzle-kit';
 import { config } from 'dotenv';
+import { resolve } from 'path';
 
-config({ path: __dirname + '/../../.env' });
+config({ path: resolve(__dirname, '../../.env') });
 
 const { DATABASE_URL } = process.env;
 

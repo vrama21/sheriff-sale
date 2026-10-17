@@ -1,10 +1,9 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
-import { config } from 'dotenv';
 
-config({ path: __dirname + '/../../../.env' });
-
+// Reads the environment only. Local entry points (migrate.ts, drizzle.config.ts, the backend's local scripts) load the
+// repo-root .env before importing this module.
 const { DATABASE_URL } = process.env;
 
 if (!DATABASE_URL) {
