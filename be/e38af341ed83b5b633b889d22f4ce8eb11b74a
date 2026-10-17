@@ -1,0 +1,13 @@
+.claude/skills/db-query/scripts/query.sh
+  ai_agent 7-9,56-59
+docker-compose.yml
+  ai_agent 1-4,7-9,13,15-21
+.claude/skills/db-query/SKILL.md
+  ai_agent 27,34-37,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bee38af341ed83b5b633b889d22f4ce8eb11b74a",
+  "prompts": {}
+}

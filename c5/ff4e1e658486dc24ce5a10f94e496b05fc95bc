@@ -1,0 +1,31 @@
+packages/database/src/client.ts
+  ai_agent 5-6
+packages/database/package.json
+  ai_agent 20
+packages/database/src/migrate.ts
+  ai_agent 2,4-5,8-9,11-15,18-21
+packages/database/tsconfig.json
+  ai_agent 3
+turbo.json
+  ai_agent 3-4,11-25
+frontend/src/pages/_app.tsx
+  ai_agent 37
+.gitignore
+  ai_agent 31
+vite.config.ts
+  ai_agent 17-18
+frontend/package.json
+  ai_agent 6
+packages/database/drizzle.config.ts
+  ai_agent 3,5
+backend/src/modules/sheriffSale/handler.local.ts
+  ai_agent 2,5-8
+.env.example
+  ai_agent 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c5ff4e1e658486dc24ce5a10f94e496b05fc95bc",
+  "prompts": {}
+}

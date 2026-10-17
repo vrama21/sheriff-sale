@@ -1,0 +1,15 @@
+backend/README.md
+  ai_agent 22-24
+openspec/changes/harden-ci-env-and-ops/tasks.md
+  ai_agent 5-15,19-23,27-34,38-45,49-51,55-57,61-62,66-69,78
+openspec/changes/harden-ci-env-and-ops/design.md
+  ai_agent 48-56,132-138,141,207
+README.md
+  ai_agent 8,53-84,95,104-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c3782075d52a9158a496567271f5bcf041bf2ee8",
+  "prompts": {}
+}
