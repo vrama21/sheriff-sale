@@ -1,0 +1,27 @@
+packages/database/src/schema/listing.ts
+  s_e18dc4cea1da84::t_cc59c926847e0c 19
+openspec/changes/listing-schema-fixes/specs/listing-storage/spec.md
+  s_e18dc4cea1da84::t_cc59c926847e0c 5
+openspec/changes/listing-schema-fixes/proposal.md
+  s_e18dc4cea1da84::t_cc59c926847e0c 14
+packages/database/drizzle/0005_slim_magneto.sql
+  s_e18dc4cea1da84::t_cc59c926847e0c 4
+openspec/changes/listing-schema-fixes/design.md
+  s_e18dc4cea1da84::t_cc59c926847e0c 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7305cf1034808f0fb793ecf11eb4c9f91f70da51",
+  "prompts": {},
+  "sessions": {
+    "s_e18dc4cea1da84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bcad48f7-d68f-4ee7-989c-c8752d04c0b1",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
