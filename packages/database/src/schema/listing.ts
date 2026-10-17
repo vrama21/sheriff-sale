@@ -38,9 +38,7 @@ export const listings = pgTable(
     upsetAmount: text('upsetAmount'),
     zipcode: varchar('zipcode', { length: 256 }),
   },
-  (table) => ({
-    propertyIdKey: uniqueIndex('Listing_propertyId_key').on(table.propertyId),
-  }),
+  (table) => [uniqueIndex('Listing_propertyId_key').on(table.propertyId)],
 );
 
 export const listingRelations = relations(listings, ({ many }) => ({
