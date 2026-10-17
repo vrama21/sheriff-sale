@@ -1,0 +1,29 @@
+openspec/changes/replay-archived-listings/specs/archive-replay/spec.md
+  s_4243d67b3abe9e::t_38b910648ad185 62,81,95,99
+openspec/changes/replay-archived-listings/proposal.md
+  s_4243d67b3abe9e::t_40cdec8bd9d7fb 12-13,15-16,36,38-39
+openspec/changes/replay-archived-listings/tasks.md
+  s_4243d67b3abe9e::t_cbe476bbfe0f2c 5-8,10,14-15,17-18,20,23-25,28-29,33-34,36-37,43-44,52,56-58,60-61,70,79-80
+  s_4243d67b3abe9e::t_9c16da90e3990a 85-91,95
+openspec/changes/replay-archived-listings/design.md
+  s_4243d67b3abe9e::t_ea63e272ed875f 21-22,24,46,48,50-52,66,68-70,83,92,119,121,123-126,147,153,155-157,166,171,176
+openspec/changes/replay-archived-listings/specs/listing-sync/spec.md
+  s_4243d67b3abe9e::t_ea377579559124 5,29,58,83-87,115,131-132,134,137,151-152
+  s_4243d67b3abe9e::t_38b910648ad185 88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5109cc47fa5091bd127196caa578b79111c8a5cf",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
