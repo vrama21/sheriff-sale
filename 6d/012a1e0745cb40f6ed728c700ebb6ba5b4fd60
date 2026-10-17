@@ -1,0 +1,35 @@
+openspec/changes/replay-archived-listings/tasks.md
+  ai_agent 31-34
+backend/src/services/listingSync/buildListingSnapshot.ts
+  s_4243d67b3abe9e::t_2edf4e52b3df0e 1-100
+backend/src/services/listingSync/contentHash.ts
+  s_4243d67b3abe9e::t_23fe0ab7884c4f 8
+  s_4243d67b3abe9e::t_7dbd22cc617e83 1-7,9-17
+backend/src/services/listingSync/buildListingSnapshot.test.ts
+  s_4243d67b3abe9e::t_8f5f2722c7b388 1-72
+backend/src/services/listingSync/normalize.test.ts
+  s_4243d67b3abe9e::t_13f3522b31327e 1-59
+backend/src/services/listingSync/contentHash.test.ts
+  s_4243d67b3abe9e::t_16d309588ecb22 1-36,38-48
+  s_4243d67b3abe9e::t_23fe0ab7884c4f 37
+packages/database/drizzle/0008_repair_listing_identity.sql
+  s_4243d67b3abe9e::t_674ebc8f708f21 14
+backend/src/services/listingSync/normalize.ts
+  s_4243d67b3abe9e::t_41a28c5e4a0c6c 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "6d012a1e0745cb40f6ed728c700ebb6ba5b4fd60",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
