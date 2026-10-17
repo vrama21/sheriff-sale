@@ -5,6 +5,7 @@
 # AWS_PROFILE = "<aws profile for this account>"
 # GH_TOKEN = "{{ exec(command='gh auth token --user <github user>') }}"
 # TF_VAR_database_url = "<prod DATABASE_URL, for tofu plan/apply in infra/>"
+# PROD_DATABASE_URL = "<prod DATABASE_URL, for the db-query skill>"
 [tools]
 node = "24"
 opentofu = "1.13"
