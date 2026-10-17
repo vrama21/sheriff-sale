@@ -6,7 +6,8 @@
     "sheriff-sale": "bin/sheriff-sale.js"
   },
   "scripts": {
-    "build": "tsc && cdk synth",
+    "build": "tsc --noEmit && npm run bundle",
+    "bundle": "esbuild src/handlers/newJerseySheriffSaleScraperHandler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js",
     "deploy": "cdk bootstrap && cdk deploy",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf cdk.out",
     "watch": "tsc -w",
