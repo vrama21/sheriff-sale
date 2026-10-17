@@ -23,7 +23,7 @@ The CI workflow SHALL run `tofu init` and `tofu apply -auto-approve` in `infra/`
 - **THEN** no OpenTofu command runs and no AWS credentials are used
 
 ### Requirement: Single prod GitHub environment
-CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the GitHub environment `prod`. It SHALL hold the secrets `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`, and the variable `ENV=prod`. The `dev` GitHub environment SHALL be deleted once `prod` is in use.
+CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the GitHub environment `prod`. It SHALL hold the secrets `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`, and the variable `ENV=prod`. It SHALL NOT hold AWS credentials. The `dev` GitHub environment SHALL be deleted once `prod` is in use.
 
 #### Scenario: Deploy jobs use prod
 - **WHEN** the workflow runs on `main`
@@ -32,6 +32,21 @@ CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the Gi
 #### Scenario: No dev environment remains
 - **WHEN** the repository's GitHub environments are listed after cutover
 - **THEN** `dev` is not among them
+
+### Requirement: CI authenticates to AWS with OIDC
+CI SHALL get AWS credentials only by assuming the IAM role `sheriff-sale-github-actions` through GitHub's OIDC provider. The role SHALL trust only tokens with audience `sts.amazonaws.com` and subject `repo:vrama21/sheriff-sale:environment:prod`. Its permissions SHALL be limited to this project's resource ARNs: the state bucket and its objects, the archive bucket's configuration (no object access), the scraper function, the scraper and CI roles, the OIDC provider, the DLQ, the schedule rule, and the scraper log group. No long-lived AWS access keys SHALL be stored in GitHub, and the `cicd-pipeline-deployer` IAM user SHALL be deleted.
+
+#### Scenario: Deploy job assumes the role
+- **WHEN** `deploy-backend` runs on `main`
+- **THEN** its AWS identity is `assumed-role/sheriff-sale-github-actions/…`, and `tofu apply` completes without access errors
+
+#### Scenario: Other contexts cannot assume the role
+- **WHEN** a job outside the repo's `prod` environment (e.g. a feature-branch job with no environment) requests credentials for the role
+- **THEN** `AssumeRoleWithWebIdentity` is denied
+
+#### Scenario: No AWS keys remain
+- **WHEN** the repository's secrets (repository and environment level) and the account's IAM users are listed after handover
+- **THEN** no `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` secrets exist and `cicd-pipeline-deployer` does not exist
 
 ### Requirement: Manual cutover before CI takes over
 The cutover from CloudFormation to OpenTofu SHALL be run by hand from a developer machine, in this order:

@@ -67,10 +67,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' # Only runs on the main branch
     environment: prod
+    permissions:
+      contents: read
+      id-token: write # OIDC token for assuming the AWS role
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: us-east-2
       TF_VAR_database_url: ${{ secrets.DATABASE_URL }}
     steps:
       - uses: actions/checkout@v4
@@ -79,6 +79,12 @@ jobs:
         with:
           name: lambda-bundle
           path: ./backend/dist
+      # Role is managed in infra/github-actions.tf and only trusts this repo's prod environment.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::590184139982:role/sheriff-sale-github-actions
+          aws-region: us-east-2
       - name: Install OpenTofu (version from mise.toml)
         uses: jdx/mise-action@v5
       - name: OpenTofu Apply

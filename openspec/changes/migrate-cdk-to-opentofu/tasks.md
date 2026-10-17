@@ -55,12 +55,16 @@
 ## 7. Hand over to CI
 
 - [x] 7.1 Create the `prod` GitHub environment and set variable `ENV=prod`
-- [ ] 7.2 (User) Set the `prod` secrets: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`
+- [ ] 7.2 (User) Set the `prod` secrets: `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` (no AWS keys; see 7.8)
 - [x] 7.3 Upload `backend/dist` as an artifact from the `build` job
 - [x] 7.4 Add a `deploy-backend` job (main only, `needs: migrate`) that downloads the bundle, installs OpenTofu from `mise.toml` with `jdx/mise-action`, and runs `tofu init` + `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets
 - [x] 7.5 Switch `migrate`, `deploy-backend`, and `deploy-frontend` to `environment: prod`
 - [ ] 7.6 Merge and confirm the first `main` run's `migrate` and `deploy-backend` succeed (apply shows no changes)
 - [ ] 7.7 Delete the `dev` GitHub environment
+- [x] 7.8 Add `infra/github-actions.tf` (GitHub OIDC provider, `sheriff-sale-github-actions` role trusting only `repo:vrama21/sheriff-sale:environment:prod`, scoped `tofu-apply` policy) and apply it locally
+- [x] 7.9 Switch `deploy-backend` to OIDC (`id-token: write`, `aws-actions/configure-aws-credentials@v6`) and drop the AWS key env vars
+- [x] 7.10 Verify from a temporary `cicd-oidc-check` branch that CI assumes the role and a full `tofu plan` refreshes with no access errors; delete the branch
+- [ ] 7.11 After 7.6 passes: deactivate, then delete, both `cicd-pipeline-deployer` access keys and the user; delete the repo-level `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCOUNT_ID`, `AWS_DEFAULT_REGION` secrets
 
 ## 8. Remove CDK and dev leftovers
 

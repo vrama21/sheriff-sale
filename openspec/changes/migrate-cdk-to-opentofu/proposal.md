@@ -13,7 +13,8 @@ It is also the point to settle the environment model: AWS hosts exactly one depl
 - **BREAKING** (infra only): Delete `SheriffSaleStack` and recreate the scraper Lambda, its IAM role and policies, the SQS dead-letter queue, the EventBridge schedule rule and target, the Lambda invoke permission, and the log group with OpenTofu, under readable names with no environment in them (e.g. `new-jersey-sheriff-sale-scraper`). CDK-generated names are dropped. The old `-dev` log group is deleted at cleanup.
 - Move the Lambda runtime from `nodejs20.x` to `nodejs24.x`. Bundle the handler with esbuild (including `@aws-sdk/*`) instead of CDK's `NodejsFunction`. Drop `AWS_NODEJS_CONNECTION_REUSE_ENABLED`.
 - Replace the CI `deploy-backend` CDK step with `tofu apply` on `main`, fed by an esbuild bundle built in the `build` job.
-- **BREAKING** (CI): Replace the GitHub environment `dev` with `prod` (same secrets, `ENV=prod`), and delete `dev`.
+- **BREAKING** (CI): Replace the GitHub environment `dev` with `prod` (`ENV=prod`), and delete `dev`.
+- CI authenticates to AWS with GitHub OIDC, assuming an IAM role (`sheriff-sale-github-actions`) scoped to this project's resources. The long-lived `AdministratorAccess` keys of the `cicd-pipeline-deployer` IAM user are retired, along with the user and the AWS key secrets in GitHub.
 - Pin OpenTofu with mise.
 - **BREAKING** (tooling): Remove the CDK app (`backend/bin`, `backend/lib`, `cdk.json`, `aws-cdk`/`aws-cdk-lib`/`constructs` dependencies, CDK turbo outputs and env) and delete the `CDKToolkit` bootstrap stack.
 
@@ -43,7 +44,8 @@ It is also the point to settle the environment model: AWS hosts exactly one depl
 - **CI**: `.github/workflows/cicd.yml`:
   - The `build` job also uploads the Lambda bundle.
   - `deploy-backend` runs OpenTofu.
-  - Jobs use `environment: prod`. The `prod` GitHub environment needs `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` re-entered, because GitHub can't copy secret values.
+  - Jobs use `environment: prod`. The `prod` GitHub environment needs `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` re-entered, because GitHub can't copy secret values. It holds no AWS keys.
+  - `deploy-backend` gets AWS credentials through OIDC (`id-token: write`, `aws-actions/configure-aws-credentials`).
 - **Local development**: local scraper runs write to `nj-sheriff-sale`, the prod bucket, just as they already use the hosted Railway database. Isolating local runs is out of scope.
 - **Dependencies**: removes `aws-cdk`, `aws-cdk-lib`, `constructs`, and `source-map-support` (if unused elsewhere). Uses the existing root `esbuild`. Adds OpenTofu (via mise) and the `hashicorp/aws` and `hashicorp/archive` providers.
 - **Secrets**: `DATABASE_URL` moves from the CloudFormation template into the OpenTofu state, stored in a private, versioned S3 bucket.
