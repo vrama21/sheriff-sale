@@ -130,7 +130,7 @@ const snapshot = (
     county: 'Gloucester',
     propertyId,
     snapshotDate,
-  });
+  }).snapshot;
 
 beforeEach(() => {
   jest.clearAllMocks();

@@ -76,6 +76,7 @@ const counts = (overrides: Partial<ReplayCounts>): ReplayCounts => ({
   unrecognised: 0,
   parseFailures: 0,
   noSheriffId: 0,
+  fieldWarnings: 0,
   parsed: 0,
   inserted: 0,
   updated: 0,
@@ -90,6 +91,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(console, 'log').mockImplementation(() => undefined);
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 
   stored = new Map();
   seenStatusRows = new Set();
@@ -178,6 +180,18 @@ describe('replayArchive', () => {
     expect(console.error).toHaveBeenCalledWith(
       'Failed to parse listing-html-files/2024-07-02/property-id-2.html',
       expect.any(Error),
+    );
+  });
+
+  it('counts and logs field warnings, and still syncs the page', async () => {
+    archive.set(listingPageKey('2024-07-02', 2), LEGACY.replace('$275,983.46', 'TBD'));
+
+    const summary = await replayArchive(args(), { readText, syncListing });
+
+    expect(summary.total).toMatchObject({ fieldWarnings: 1, parsed: 2, inserted: 2 });
+    expect(summary.failed).toBe(false);
+    expect(console.warn).toHaveBeenCalledWith(
+      'Field warning for listing-html-files/2024-07-02/property-id-2.html: upsetAmount "TBD" is not a dollar amount',
     );
   });
 

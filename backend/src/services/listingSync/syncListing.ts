@@ -31,7 +31,10 @@ const listingUpdateSet = {
 export const syncListing = async (snapshot: ListingSnapshot): Promise<ListingSyncResult> => {
   const { listing, statusHistory, snapshotDate, contentHash } = snapshot;
 
-  if (!listing.sheriffId) {
+  const { sheriffId } = listing;
+
+  // NULL never conflicts in the unique index, so a listing without a sheriff number could only ever be inserted.
+  if (!sheriffId) {
     throw new Error(`Listing propertyId ${listing.propertyId} in ${listing.county} County has no sheriff number`);
   }
 
@@ -41,7 +44,6 @@ export const syncListing = async (snapshot: ListingSnapshot): Promise<ListingSyn
       .values({ ...listing, snapshotDate, contentHash })
       .onConflictDoUpdate({
         target: [listings.county, listings.sheriffId],
-        targetWhere: sql`"sheriffId" <> ''`,
         set: listingUpdateSet,
         setWhere: sql`${listings.contentHash} IS DISTINCT FROM excluded."contentHash"
           AND (${listings.snapshotDate} IS NULL OR excluded."snapshotDate" >= ${listings.snapshotDate})`,
@@ -60,13 +62,13 @@ export const syncListing = async (snapshot: ListingSnapshot): Promise<ListingSyn
       const [stored] = await tx
         .select({ id: listings.id })
         .from(listings)
-        .where(and(eq(listings.county, listing.county), eq(listings.sheriffId, listing.sheriffId)));
+        .where(and(eq(listings.county, listing.county), eq(listings.sheriffId, sheriffId)));
 
       listingId = stored?.id;
     }
 
     if (!listingId) {
-      throw new Error(`Listing ${listing.sheriffId} in ${listing.county} County was neither written nor found`);
+      throw new Error(`Listing ${sheriffId} in ${listing.county} County was neither written nor found`);
     }
 
     if (statusHistory.length === 0) {

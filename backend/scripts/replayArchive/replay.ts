@@ -33,6 +33,8 @@ export interface ReplayCounts {
   unrecognised: number;
   parseFailures: number;
   noSheriffId: number;
+  /** Values listingSchema coerced to null or dropped, and status rows it skipped, on parsed pages. */
+  fieldWarnings: number;
   /** Detail pages that parsed into a snapshot with a sheriff number, ready to sync. */
   parsed: number;
   inserted: number;
@@ -61,6 +63,7 @@ const emptyCounts = (): ReplayCounts => ({
   unrecognised: 0,
   parseFailures: 0,
   noSheriffId: 0,
+  fieldWarnings: 0,
   parsed: 0,
   inserted: 0,
   updated: 0,
@@ -111,7 +114,13 @@ const replayDetailPage = async ({ date, county, propertyId, counts, deps, dryRun
       return;
     }
 
-    snapshot = buildListingSnapshot({ page, county, propertyId, snapshotDate: date });
+    const built = buildListingSnapshot({ page, county, propertyId, snapshotDate: date });
+
+    snapshot = built.snapshot;
+    counts.fieldWarnings += built.warnings.length;
+    built.warnings.forEach(({ field, value, reason }) =>
+      console.warn(`Field warning for ${key}: ${field} ${JSON.stringify(value)} is ${reason}`),
+    );
   } catch (error) {
     counts.parseFailures++;
     console.error(`Failed to parse ${key}`, error);
@@ -236,7 +245,8 @@ const formatCounts = (counts: ReplayCounts, dryRun: boolean): string[] => [
     (counts.preFixDaysSkipped > 0 ? `; ${counts.preFixDaysSkipped} days skipped as pre-fix (Gloucester's pages)` : ''),
   `detail pages ${counts.detailPagesFound} found, ${counts.detailPagesMissing} missing, ` +
     `${counts.detailPagesFailed} failed to read, ${counts.unrecognised} unrecognised, ` +
-    `${counts.parseFailures} failed to parse, ${counts.noSheriffId} without a sheriff number, ${counts.parsed} parsed`,
+    `${counts.parseFailures} failed to parse, ${counts.noSheriffId} without a sheriff number, ${counts.parsed} parsed ` +
+    `(${counts.fieldWarnings} field warnings)`,
   dryRun
     ? 'listings not synced (dry run)'
     : `listings ${counts.inserted} inserted, ${counts.updated} updated, ${counts.unchanged} unchanged, ` +
