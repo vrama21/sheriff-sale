@@ -1,0 +1,56 @@
+openspec/changes/fix-scraper-db-pipeline/design.md
+  s_3fcb62190b98e6::t_c0b54137595986 88-90
+  s_c395cbc7468c3a::t_24c67f2ea0ab86 64-65,103
+  s_3fcb62190b98e6::t_5cd43a3f829e95 76,80-82
+  s_3fcb62190b98e6::t_2e63d4cf977dd6 104-105,109-115
+  s_3fcb62190b98e6::t_c340433d45f296 39
+  s_3fcb62190b98e6::t_1788623a4f2c4f 9
+  s_3fcb62190b98e6::t_15f1c473f943da 28
+  s_3fcb62190b98e6::t_268f93982e02b0 70
+  s_3fcb62190b98e6::t_d150e0a68e56e7 17-21
+openspec/changes/fix-scraper-db-pipeline/proposal.md
+  s_3fcb62190b98e6::t_3871cfd27acc01 32
+  s_3fcb62190b98e6::t_4d58b3afc5494a 10-11
+backend/src/services/newJerseySheriffSale/getListingDetailsHtml.test.ts
+  s_c395cbc7468c3a::t_5eaf33a16dd7d0 69
+  s_c395cbc7468c3a::t_4c4db4296f40c8 63-68,70-79
+openspec/changes/fix-scraper-db-pipeline/tasks.md
+  s_c395cbc7468c3a::t_24c67f2ea0ab86 12,17,26
+backend/src/controllers/newJerseySheriffSaleScraper.ts
+  s_c395cbc7468c3a::t_214fd27ec496ec 58-69,71,80-81
+backend/src/controllers/newJerseySheriffSaleScraper.test.ts
+  s_c395cbc7468c3a::t_300aef6a1ec30b 10,32-33,52,55,115-129
+openspec/changes/fix-scraper-db-pipeline/specs/scraper-pipeline/spec.md
+  s_3fcb62190b98e6::t_60cfbce3edc02f 36-40
+  s_3fcb62190b98e6::t_3aad961c7512f6 43,52-53
+backend/src/services/newJerseySheriffSale/saveHtmlToS3.test.ts
+  s_c395cbc7468c3a::t_add096978a6da7 1-23
+backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts
+  s_c395cbc7468c3a::t_d51e7f6c949caf 2,18-19
+backend/src/services/newJerseySheriffSale/newJerseySheriffSaleHttpClient.ts
+  s_c395cbc7468c3a::t_7c553573fac2be 12-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8150ef6571c3ea82ae9c293b56a475e08d68d830",
+  "prompts": {},
+  "sessions": {
+    "s_3fcb62190b98e6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5549906-ffe8-4a92-87cc-5d1d0a79dd86",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    },
+    "s_c395cbc7468c3a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3441d462-d2aa-4363-bc53-29dc9acef513",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
