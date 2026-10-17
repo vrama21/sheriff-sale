@@ -1,8 +1,11 @@
 # listing-validation Specification
 
 ## Purpose
+
 TBD - created by archiving change validate-scraped-listings. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Scraped listings are validated before storage
 
 Every listing the scraper parses SHALL pass through a Zod 4 schema before it's enriched and saved. The schema's output type SHALL be the TypeScript type the rest of the pipeline uses, so no `as` cast stands between the parsed HTML and the database insert.
@@ -128,4 +131,3 @@ Each field warning SHALL be logged with the county, `propertyId`, field name and
 
 - **WHEN** a county run parses 10 listings and 3 of them have one coerced-to-NULL field each
 - **THEN** the county summary has `fieldWarnings: 3`, and the run does not fail because of them
-

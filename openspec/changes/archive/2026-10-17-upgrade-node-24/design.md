@@ -2,26 +2,28 @@
 
 The production runtimes are already on Node 24, or partly so:
 
-| Where | Today | Source |
-|---|---|---|
-| Scraper Lambda | `nodejs24.x` | `infra/scraper.tf` |
-| Lambda bundle | esbuild `--target=node24` | `backend/package.json` |
+| Where                  | Today                                        | Source                                                                                            |
+| ---------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Scraper Lambda         | `nodejs24.x`                                 | `infra/scraper.tf`                                                                                |
+| Lambda bundle          | esbuild `--target=node24`                    | `backend/package.json`                                                                            |
 | Vercel build/functions | 18.x (discontinued) → **every deploy fails** | dashboard setting. `frontend/package.json` has no `engines`, and the root's `>=20.0.0` isn't read |
-| CI `build`, `migrate` | Node 20 | `setup-node` `node-version: '20'` |
-| CI `deploy-frontend` | runner default (22.23.3) | no `setup-node`; `vercel build` runs on the runner |
-| Local dev | Node 20 | `.nvmrc` `lts/iron`, read by mise only with `idiomatic_version_file_enable_tools` |
-| Types | `@types/node` 20.14.9 ×3 | root, `backend`, `frontend` |
+| CI `build`, `migrate`  | Node 20                                      | `setup-node` `node-version: '20'`                                                                 |
+| CI `deploy-frontend`   | runner default (22.23.3)                     | no `setup-node`; `vercel build` runs on the runner                                                |
+| Local dev              | Node 20                                      | `.nvmrc` `lts/iron`, read by mise only with `idiomatic_version_file_enable_tools`                 |
+| Types                  | `@types/node` 20.14.9 ×3                     | root, `backend`, `frontend`                                                                       |
 
 The repo already uses mise for OpenTofu (`mise.toml`, plus `jdx/mise-action@v5` in `deploy-backend`). The Vercel project's Root Directory is `frontend/`. All five `main` runs in the CI history failed in `deploy-frontend` with `BUILD_UTILS_NODE_VERSION_DISCONTINUED`, so no CI run has ever deployed the frontend.
 
 ## Goals / Non-Goals
 
 **Goals:**
+
 - One Node pin (`mise.toml`) for local dev and every CI job, matching the Lambda's major.
 - Vercel builds and runs on 24.x, set explicitly instead of floating.
 - Remove version-related cruft: `.nvmrc`, the Node 16/20 tsconfig presets, `packageManager`, the dead `Dockerfile`, and the stray `frontend/package-lock.json`.
 
 **Non-Goals:**
+
 - Next 15, React 19, eslint 9, or any other major dependency upgrade.
 - Changing the Lambda runtime, the bundle format, or OpenTofu resources.
 - Moving the codebase to ESM.

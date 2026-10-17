@@ -16,9 +16,11 @@ Production frontend deploys are broken. Every `deploy-frontend` run on `main` fa
 ## Capabilities
 
 ### New Capabilities
+
 - `node-toolchain`: Which Node version the repo pins and where. Covers the `mise.toml` pin, CI jobs getting Node from it, `engines.node` and `@types/node` matching the Lambda runtime's major, and Vercel building and running on that same major.
 
 ### Modified Capabilities
+
 <!-- None: the Lambda runtime and bundle target (scraper-infrastructure, infra-delivery) already require Node 24. -->
 
 ## Impact

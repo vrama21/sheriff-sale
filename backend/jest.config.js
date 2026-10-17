@@ -3,6 +3,6 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ['**/*.test.ts'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
-  }
+    '^.+\\.tsx?$': 'ts-jest',
+  },
 };

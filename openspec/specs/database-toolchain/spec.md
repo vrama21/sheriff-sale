@@ -1,8 +1,11 @@
 # database-toolchain Specification
 
 ## Purpose
+
 TBD - created by archiving change upgrade-drizzle. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Pinned Drizzle versions
 
 `packages/database/package.json` SHALL pin `drizzle-orm` and `drizzle-kit` to exact versions, with no range operators. `drizzle-orm` SHALL be 0.41.0 or later, so that `numeric` columns support `mode: 'number'`. The two packages SHALL be a matched pair: when one is upgraded, the other SHALL be upgraded in the same change.
@@ -44,4 +47,3 @@ The `backend`, `frontend` and `packages/database` workspaces SHALL type-check, b
 
 - **WHEN** the backend's `saveListing` tests run with `@sheriff-sale/database` mocked
 - **THEN** they pass unchanged: one transaction, an insert with `onConflictDoNothing({ target: listings.propertyId })` and `returning`, and one multi-row status-history insert
-

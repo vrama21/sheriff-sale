@@ -2,13 +2,13 @@
 
 `packages/database` pins `drizzle-orm@0.31.2` and `drizzle-kit@0.22.1` (June 2024). The repo uses only a small part of Drizzle:
 
-| Where | API |
-|---|---|
-| `packages/database/src/client.ts` | `drizzle(sql, { schema })` on `postgres-js` |
-| `packages/database/src/migrate.ts` | `drizzle-orm/postgres-js/migrator` |
-| `schema/listing.ts`, `schema/statusHistory.ts` | `pgTable`, `relations`, `uniqueIndex`, column builders, `$inferSelect` / `$inferInsert` |
-| `backend/src/controllers/newJerseySheriffSaleScraper.ts` | `db.transaction`, `insert`, `onConflictDoNothing({ target })`, `returning` |
-| `frontend/src/server/routers/listing.ts` | `db.query.listings.findMany` (RQB v1) |
+| Where                                                    | API                                                                                     |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `packages/database/src/client.ts`                        | `drizzle(sql, { schema })` on `postgres-js`                                             |
+| `packages/database/src/migrate.ts`                       | `drizzle-orm/postgres-js/migrator`                                                      |
+| `schema/listing.ts`, `schema/statusHistory.ts`           | `pgTable`, `relations`, `uniqueIndex`, column builders, `$inferSelect` / `$inferInsert` |
+| `backend/src/controllers/newJerseySheriffSaleScraper.ts` | `db.transaction`, `insert`, `onConflictDoNothing({ target })`, `returning`              |
+| `frontend/src/server/routers/listing.ts`                 | `db.query.listings.findMany` (RQB v1)                                                   |
 
 The migrations folder holds `0000`–`0006`, and all 7 snapshots are format `"version": "7"`. Prod has `0004`–`0006` applied (`drizzle.__drizzle_migrations` ids 9–11). CI's `migrate` job runs `npm run db:generate && npm run db:migrate` on `main`. So whatever `generate` emits in CI is applied to prod without review.
 
@@ -17,11 +17,13 @@ The migrations folder holds `0000`–`0006`, and all 7 snapshots are format `"ve
 ## Goals / Non-Goals
 
 **Goals:**
+
 - `drizzle-orm` ≥ 0.41 so that `numeric({ mode: 'number' })` is available to `validate-scraped-listings`.
 - The upgrade adds no migration, changes no SQL, and changes no runtime behavior.
 - Remove the deprecation warnings that would otherwise show up in the next change's diff.
 
 **Non-Goals:**
+
 - drizzle-orm 1.0 (still in release candidates), RQB v2, `drizzle-zod`.
 - Any change to column types or data.
 - Upgrading `postgres` (3.4.4 satisfies 0.45's `postgres >=3` peer range).
@@ -31,12 +33,14 @@ The migrations folder holds `0000`–`0006`, and all 7 snapshots are format `"ve
 ### 1. Target `drizzle-orm@0.45.3` + `drizzle-kit@0.31.11`, pinned exactly
 
 Both were published on 2026-09-21 as a matched release. The newer `drizzle-orm@0.45.4` (2026-10-08) has no matching kit release and is under two weeks old.
-- *Alternative: 0.41.0, the minimum.* That release is older than 0.45 and has no kit pair as recent. Both releases would involve the same breaking-change review, so there's no reason to stop early.
-- *Alternative: 1.0 RC.* It changes the snapshot format and RQB, and it isn't stable.
+
+- _Alternative: 0.41.0, the minimum._ That release is older than 0.45 and has no kit pair as recent. Both releases would involve the same breaking-change review, so there's no reason to stop early.
+- _Alternative: 1.0 RC._ It changes the snapshot format and RQB, and it isn't stable.
 
 ### 2. The no-op `generate` is the acceptance gate, not just a check
 
 After the bump, with no schema edits, run `DATABASE_URL=postgres://localhost/unused npm run db:generate`. It must report no changes. If it emits a migration, the cause is a kit diffing or serialization change (column defaults, index or constraint naming, `IF NOT EXISTS`). **Don't commit that migration.** Find the cause, then do one of two things:
+
 - the snapshot metadata changes only cosmetically (drizzle-kit rewriting `_snapshot.json` fields without new SQL): commit the rewritten snapshots;
 - a real SQL diff appears: stop and report it. That's a schema drift question for the user, not something to paper over.
 

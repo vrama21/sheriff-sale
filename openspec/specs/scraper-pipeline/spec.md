@@ -1,8 +1,11 @@
 # scraper-pipeline Specification
 
 ## Purpose
+
 TBD - created by archiving change fix-scraper-db-pipeline. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Bounded listing concurrency
 
 The scraper SHALL process listing details (detail-page fetch, S3 archive, and parse) through a single concurrency limiter shared by all counties in a run. At most `LISTING_CONCURRENCY` (8) listings SHALL be in flight at any time across the whole run.
@@ -106,4 +109,3 @@ Before scraping any county, the scraper handler SHALL run a trivial database que
 
 - **WHEN** the health-check query succeeds
 - **THEN** the handler goes on to scrape the counties
-

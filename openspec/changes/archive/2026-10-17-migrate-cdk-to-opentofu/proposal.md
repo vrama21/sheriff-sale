@@ -21,11 +21,13 @@ It is also the point to settle the environment model: AWS hosts exactly one depl
 ## Capabilities
 
 ### New Capabilities
+
 - `infra-state`: Where OpenTofu state lives, how it is locked and protected, and how the state bucket is bootstrapped from the same config.
 - `scraper-infrastructure`: The AWS resources the scraper needs (the archive bucket and the migration of its data, Lambda, IAM, DLQ, daily schedule, log group), their `prod` names, and their protection rules.
 - `infra-delivery`: How the Lambda bundle is built and how infrastructure changes are applied (CI on `main` in the `prod` GitHub environment, manual cutover), replacing the CDK toolchain.
 
 ### Modified Capabilities
+
 <!-- None: openspec/specs/ is empty; this is the first change in the repo. -->
 
 ## Impact

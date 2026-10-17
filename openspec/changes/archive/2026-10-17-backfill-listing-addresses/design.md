@@ -6,13 +6,13 @@ The civilview details page shows an address as `<street>[<br/><unit or a.k.a. li
 
 A prototype of the method below ran against a read-only export of prod on 2026-10-17 (7,956 rows):
 
-| Outcome | Rows |
-|---|---|
-| Boundary found by known town | 5,843 |
+| Outcome                               | Rows  |
+| ------------------------------------- | ----- |
+| Boundary found by known town          | 5,843 |
 | Boundary found by glued street suffix | 1,249 |
-| Boundary found by case boundary | 238 |
-| Unresolved | 37 |
-| Blank or whitespace-only address | 589 |
+| Boundary found by case boundary       | 238   |
+| Unresolved                            | 37    |
+| Blank or whitespace-only address      | 589   |
 
 `cleanAddress` returned the recovered city unchanged for all 7,330 resolved rows. Compared with what's stored, the city would be filled in for 2,587 rows, corrected for 1,664, and unchanged for 3,079. 160 street parts had a unit glued on; with the re-separation step, 156 of them get a unit or building extracted, against 64 without it.
 
