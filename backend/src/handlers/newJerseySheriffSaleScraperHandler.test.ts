@@ -15,6 +15,8 @@ const summaryFor = (county: NJCounty) => ({
   parsed: 1,
   failedListings: 0,
   inserted: 1,
+  updated: 0,
+  unchanged: 0,
   failedWrites: 0,
   fieldWarnings: 0,
 });

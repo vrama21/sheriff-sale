@@ -55,7 +55,11 @@ const fakeTransaction = async <T>(callback: (tx: unknown) => Promise<T>): Promis
                 return [];
               }
 
-              pendingListings.set(key, { ...stored, contentHash: listing.contentHash, snapshotDate: listing.snapshotDate });
+              pendingListings.set(key, {
+                ...stored,
+                contentHash: listing.contentHash,
+                snapshotDate: listing.snapshotDate,
+              });
 
               return [{ id: stored.id, inserted: false }];
             }
@@ -111,7 +115,12 @@ const fakeTransaction = async <T>(callback: (tx: unknown) => Promise<T>): Promis
 
 const snapshot = (
   snapshotDate: string,
-  { upsetAmount = '$1.00', propertyId = 1319120858, sheriffId = 'F-24000056', rows = [['Scheduled', '7/20/2023']] } = {},
+  {
+    upsetAmount = '$1.00',
+    propertyId = 1319120858,
+    sheriffId = 'F-24000056',
+    rows = [['Scheduled', '7/20/2023']],
+  } = {},
 ) =>
   buildListingSnapshot({
     page: {

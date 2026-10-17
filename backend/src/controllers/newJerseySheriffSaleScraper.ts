@@ -1,24 +1,20 @@
-import { ListingParse, NJCounty, StatusHistoryParse } from '../types';
-import { db, listings, statusHistories } from '@sheriff-sale/database';
+import { NJCounty } from '../types';
+import { buildListingSnapshot, ListingSnapshot, ListingSyncResult, syncListing } from '../services/listingSync';
 import {
   FieldWarning,
   NewJerseySheriffSaleHttpClient,
   newJerseySheriffSaleService,
 } from '../services/newJerseySheriffSale';
+import { todaysArchiveDate } from '../services/newJerseySheriffSale/saveHtmlToS3';
 import { createConcurrencyLimiter } from '../utils';
 
 // Module-level so every county in the run shares one cap on in-flight listing fetches.
 export const LISTING_CONCURRENCY = 8;
 const limitListing = createConcurrencyLimiter(LISTING_CONCURRENCY);
 
-export type ScrapedListing = {
-  listing: ListingParse;
-  statusHistory: StatusHistoryParse[];
-};
-
 export type ListingFieldWarning = FieldWarning & { county: NJCounty; propertyId: number };
 
-export type ScrapeListingResult = ScrapedListing & { warnings: ListingFieldWarning[] };
+export type ScrapeListingResult = { snapshot: ListingSnapshot; warnings: ListingFieldWarning[] };
 
 export type CountyParseSummary = {
   county: NJCounty;
@@ -26,76 +22,53 @@ export type CountyParseSummary = {
   parsed: number;
   failedListings: number;
   inserted: number;
+  updated: number;
+  unchanged: number;
   failedWrites: number;
   fieldWarnings: number;
 };
 
+/**
+ * Fetches and parses a listing's details page into a snapshot dated with the day it's archived under, the same
+ * snapshot an archive replay of that page builds. Rejects a page with no recognised layout, no address or no sheriff
+ * number, which fails just this listing; any other bad field is a warning.
+ */
 export const scrapeListing = async (
   client: NewJerseySheriffSaleHttpClient,
   county: NJCounty,
   propertyId: number,
 ): Promise<ScrapeListingResult> => {
   const listingDetailsHtml = await newJerseySheriffSaleService.getListingDetailsHtml(client, { propertyId });
+  const snapshotDate = todaysArchiveDate();
 
-  // Throws when the address is missing, which fails just this listing; any other bad field is a warning.
-  const { details, warnings: detailWarnings } = newJerseySheriffSaleService.validateListingDetails(
-    newJerseySheriffSaleService.parseListingDetails(listingDetailsHtml),
-  );
-  const { rows: statusHistory, warnings: historyWarnings } = newJerseySheriffSaleService.validateStatusHistory(
-    newJerseySheriffSaleService.parseStatusHistory(listingDetailsHtml),
-  );
-  const cleanedAddress = newJerseySheriffSaleService.cleanAddress(details.address);
+  const page = newJerseySheriffSaleService.parseListingSnapshot(listingDetailsHtml);
 
-  const listing: ListingParse = {
-    ...details,
-    ...cleanedAddress,
-    county,
-    latitude: null,
-    longitude: null,
-    mapsUrl: null,
-    propertyId,
-    state: 'NJ',
-  };
+  if (page.layout === 'unrecognised') {
+    throw new Error(`Listing details layout not recognised for propertyId ${propertyId}`);
+  }
 
-  const warnings = [...detailWarnings, ...historyWarnings].map((warning) => ({ ...warning, county, propertyId }));
+  const { snapshot, warnings } = buildListingSnapshot({ page, county, propertyId, snapshotDate });
 
-  return { listing, statusHistory, warnings };
+  if (!snapshot.listing.sheriffId) {
+    throw new Error(`Listing propertyId ${propertyId} has no sheriff number`);
+  }
+
+  return { snapshot, warnings: warnings.map((warning) => ({ ...warning, county, propertyId })) };
 };
 
-/**
- * Inserts the listing and its status histories in one transaction unless the listing is already in the DB.
- * Resolves true when it inserted, false when the listing already existed.
- */
-export const saveListing = async ({
-  listing: parsedListing,
-  statusHistory: parsedStatusHistories,
-}: ScrapedListing): Promise<boolean> =>
-  db.transaction(async (tx) => {
-    console.log(`Inserting Listing propertyId ${parsedListing.propertyId} and address ${parsedListing.address} ...`);
-    // The unique index on propertyId answers "already stored?", so concurrent saves can't both insert.
-    const [newListing] = await tx
-      .insert(listings)
-      .values(parsedListing)
-      .onConflictDoNothing({ target: listings.propertyId })
-      .returning({ id: listings.id });
+/** Syncs the listing and its status history in one transaction; see syncListing. */
+export const saveListing = async (snapshot: ListingSnapshot): Promise<ListingSyncResult> => {
+  const { county, propertyId, sheriffId } = snapshot.listing;
 
-    if (!newListing) {
-      return false;
-    }
+  console.log(`Syncing Listing ${sheriffId} in ${county} County (propertyId ${propertyId}) ...`);
+  const result = await syncListing(snapshot);
+  console.log(
+    `Synced Listing ${sheriffId} in ${county} County: ${result.listing}, ` +
+      `${result.statusInserted} status rows inserted, ${result.statusExtended} extended`,
+  );
 
-    console.log(`Inserted Listing ${newListing.id}`);
-
-    if (parsedStatusHistories.length > 0) {
-      console.log(`Inserting ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
-      await tx
-        .insert(statusHistories)
-        .values(
-          parsedStatusHistories.map((parsedStatusHistory) => ({ ...parsedStatusHistory, listingId: newListing.id })),
-        );
-    }
-
-    return true;
-  });
+  return result;
+};
 
 export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promise<CountyParseSummary> => {
   console.log(`Parsing ${county} County...`);
@@ -115,12 +88,12 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
     propertyIds.map((propertyId) => limitListing(() => scrapeListing(client, county, propertyId))),
   );
 
-  const scrapedListings: ScrapedListing[] = [];
+  const scrapedListings: ListingSnapshot[] = [];
   let fieldWarnings = 0;
 
   scrapeResults.forEach((result, index) => {
     if (result.status === 'fulfilled') {
-      const { warnings, ...scrapedListing } = result.value;
+      const { snapshot, warnings } = result.value;
 
       warnings.forEach(({ field, value, reason }) =>
         console.warn(
@@ -129,7 +102,7 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
         ),
       );
       fieldWarnings += warnings.length;
-      scrapedListings.push(scrapedListing);
+      scrapedListings.push(snapshot);
     } else {
       console.error(`Failed to parse listing propertyId ${propertyIds[index]} in ${county} County`, result.reason);
     }
@@ -143,12 +116,12 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
 
   const saveResults = await Promise.allSettled(scrapedListings.map((scrapedListing) => saveListing(scrapedListing)));
 
-  let inserted = 0;
+  const outcomes = { inserted: 0, updated: 0, unchanged: 0 };
   let failedWrites = 0;
 
   saveResults.forEach((result, index) => {
     if (result.status === 'fulfilled') {
-      inserted += result.value ? 1 : 0;
+      outcomes[result.value.listing]++;
     } else {
       failedWrites++;
       console.error(
@@ -167,15 +140,15 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
     found: propertyIds.length,
     parsed: scrapedListings.length,
     failedListings: propertyIds.length - scrapedListings.length,
-    inserted,
+    ...outcomes,
     failedWrites,
     fieldWarnings,
   };
 
   console.log(
-    `Parsed ${inserted} new listings for ${county} County successfully! ` +
-      `(found ${summary.found}, parsed ${summary.parsed}, failed ${summary.failedListings}, ` +
-      `inserted ${summary.inserted}, failed writes ${summary.failedWrites}, field warnings ${summary.fieldWarnings})`,
+    `Synced ${county} County: found ${summary.found}, parsed ${summary.parsed}, failed ${summary.failedListings}, ` +
+      `inserted ${summary.inserted}, updated ${summary.updated}, unchanged ${summary.unchanged}, ` +
+      `failed writes ${summary.failedWrites}, field warnings ${summary.fieldWarnings}`,
   );
 
   return summary;

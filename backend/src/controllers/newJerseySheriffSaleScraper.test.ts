@@ -1,102 +1,38 @@
-import { db, listings, statusHistories } from '@sheriff-sale/database';
+import { ListingSnapshot, syncListing } from '../services/listingSync';
 import { NewJerseySheriffSaleHttpClient, newJerseySheriffSaleService } from '../services/newJerseySheriffSale';
-import { ListingParse } from '../types';
+import { todaysArchiveDate } from '../services/newJerseySheriffSale/saveHtmlToS3';
 import {
   LISTING_CONCURRENCY,
-  ScrapedListing,
   newJerseySheriffSaleCountyParser,
   saveListing,
+  scrapeListing,
 } from './newJerseySheriffSaleScraper';
 
-jest.mock('@sheriff-sale/database', () => ({
-  db: { transaction: jest.fn() },
-  listings: { id: 'Listing.id', propertyId: 'Listing.propertyId' },
-  statusHistories: {},
-}));
+// The database client is never loaded: syncListing is mocked and everything else here is pure.
+jest.mock('@sheriff-sale/database', () => ({}));
+jest.mock('../services/listingSync/syncListing', () => ({ syncListing: jest.fn() }));
 
 jest.mock('../services/newJerseySheriffSale', () => ({
   NewJerseySheriffSaleHttpClient: jest.fn(),
   newJerseySheriffSaleService: {
-    cleanAddress: jest.fn(),
     getCountyListingsHtml: jest.fn(),
     getListingDetailsHtml: jest.fn(),
     parseCountyProperyIds: jest.fn(),
-    parseListingDetails: jest.fn(),
-    parseStatusHistory: jest.fn(),
-    // The real schema, so these tests cover what validation does to the parsed values.
-    validateListingDetails: jest.requireActual('../services/newJerseySheriffSale/listingSchema').validateListingDetails,
-    validateStatusHistory: jest.requireActual('../services/newJerseySheriffSale/listingSchema').validateStatusHistory,
+    parseListingSnapshot: jest.fn(),
   },
 }));
 
+jest.mock('../services/newJerseySheriffSale/saveHtmlToS3', () => ({ todaysArchiveDate: jest.fn() }));
+
 const service = jest.mocked(newJerseySheriffSaleService);
-const transaction = jest.mocked(db).transaction as unknown as jest.Mock;
-
-type Write = { table: 'Listing' | 'StatusHistory'; values: unknown };
-
-// A fake transaction: writes are buffered and only land in `committed` when the callback resolves.
-// Like the unique index, a listing insert conflicts when its propertyId is stored or claimed by an open transaction.
-let committed: Write[];
-let storedPropertyIds: Set<number | null>;
-let claimedPropertyIds: Set<number | null>;
-const listingInsert = jest.fn();
-const historyInsert = jest.fn();
-
-const fakeTransaction = async <T>(callback: (tx: unknown) => Promise<T>): Promise<T> => {
-  const pending: Write[] = [];
-  const claimed: (number | null)[] = [];
-
-  const tx = {
-    insert: (table: unknown) => ({
-      values: (values: unknown) => {
-        if (table === statusHistories) {
-          return historyInsert(values).then(() => {
-            pending.push({ table: 'StatusHistory', values });
-          });
-        }
-
-        if (table !== listings) {
-          throw new Error('unexpected table');
-        }
-
-        return {
-          onConflictDoNothing: (config: unknown) => ({
-            returning: async (columns: unknown) => {
-              await listingInsert(values, config, columns);
-              const { propertyId } = values as ListingParse;
-
-              if (storedPropertyIds.has(propertyId) || claimedPropertyIds.has(propertyId)) {
-                return [];
-              }
-
-              claimedPropertyIds.add(propertyId);
-              claimed.push(propertyId);
-              pending.push({ table: 'Listing', values });
-
-              return [{ id: `listing-${propertyId}` }];
-            },
-          }),
-        };
-      },
-    }),
-  };
-
-  try {
-    const result = await callback(tx);
-    committed.push(...pending);
-    claimed.forEach((propertyId) => storedPropertyIds.add(propertyId));
-
-    return result;
-  } finally {
-    claimed.forEach((propertyId) => claimedPropertyIds.delete(propertyId));
-  }
-};
+const sync = jest.mocked(syncListing);
 
 const range = (start: number, count: number) => Array.from({ length: count }, (_, i) => start + i);
 
-const scraped = (propertyId: number, statusHistory: ScrapedListing['statusHistory'] = []): ScrapedListing => ({
-  listing: { propertyId, address: '1 MAIN STREET' } as ListingParse,
-  statusHistory,
+const parsedPage = (sheriffId = 'F-1') => ({
+  layout: 'current' as const,
+  listing: { sheriffId, address: '1 MAIN STREET\nTRENTON NJ 08608' },
+  statusHistory: [{ status: 'Scheduled', date: '1/1/2026' }],
 });
 
 beforeEach(() => {
@@ -105,95 +41,92 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
   jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-  service.cleanAddress.mockReturnValue({} as ReturnType<typeof service.cleanAddress>);
+  jest.mocked(todaysArchiveDate).mockReturnValue('2026-10-18');
   service.getCountyListingsHtml.mockResolvedValue('county-html');
   service.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => `listing-${propertyId}`);
-  service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET' });
-  service.parseStatusHistory.mockReturnValue([{ status: 'Scheduled', date: '1/1/2026' }]);
+  service.parseListingSnapshot.mockImplementation((html) => parsedPage(`F-${html.replace('listing-', '')}`));
+  sync.mockResolvedValue({ listing: 'inserted', statusInserted: 1, statusExtended: 0 });
+});
 
-  committed = [];
-  storedPropertyIds = new Set();
-  claimedPropertyIds = new Set();
-  listingInsert.mockResolvedValue(undefined);
-  historyInsert.mockResolvedValue(undefined);
-  transaction.mockImplementation(fakeTransaction);
+describe('scrapeListing', () => {
+  it("builds the snapshot for the listing's county and property ID, dated with today's archive date", async () => {
+    const { snapshot, warnings } = await scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Atlantic', 2195502430);
+
+    expect(service.parseListingSnapshot).toHaveBeenCalledWith('listing-2195502430');
+    expect(snapshot).toMatchObject({
+      listing: {
+        county: 'Atlantic',
+        propertyId: 2195502430,
+        sheriffId: 'F-2195502430',
+        street: '1 Main Street',
+        city: 'Trenton',
+        state: 'NJ',
+      },
+      statusHistory: [{ status: 'Scheduled', date: '2026-01-01' }],
+      snapshotDate: '2026-10-18',
+      contentHash: expect.stringMatching(/^[0-9a-f]{64}$/),
+    });
+    expect(warnings).toEqual([]);
+  });
+
+  it('tags each field warning with the county and property ID', async () => {
+    service.parseListingSnapshot.mockReturnValue({
+      ...parsedPage(),
+      listing: { ...parsedPage().listing, upsetAmount: 'TBD' },
+    });
+
+    const { snapshot, warnings } = await scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Bergen', 7);
+
+    expect(snapshot.listing.upsetAmount).toBeNull();
+    expect(warnings).toEqual([
+      { field: 'upsetAmount', value: 'TBD', reason: 'not a dollar amount', county: 'Bergen', propertyId: 7 },
+    ]);
+  });
+
+  it('rejects a page without an address', async () => {
+    service.parseListingSnapshot.mockReturnValue({ ...parsedPage(), listing: { sheriffId: 'F-1' } });
+
+    await expect(scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Atlantic', 7)).rejects.toThrow(
+      'Listing has no address',
+    );
+  });
+
+  it('rejects a page with no recognised layout', async () => {
+    service.parseListingSnapshot.mockReturnValue({ layout: 'unrecognised' });
+
+    await expect(scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Atlantic', 7)).rejects.toThrow(
+      'Listing details layout not recognised for propertyId 7',
+    );
+  });
+
+  it('rejects a page without a sheriff number', async () => {
+    service.parseListingSnapshot.mockReturnValue(parsedPage(' \r '));
+
+    await expect(scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Atlantic', 7)).rejects.toThrow(
+      'Listing propertyId 7 has no sheriff number',
+    );
+  });
 });
 
 describe('saveListing', () => {
-  it('inserts the listing and all its status histories in one statement inside the transaction', async () => {
-    const statusHistory = [
-      { status: 'Scheduled', date: '1/1/2026' },
-      { status: 'Adjourned', date: '2/1/2026' },
-    ];
+  it('syncs the snapshot through the shared sync and resolves its result', async () => {
+    const snapshot = { listing: { county: 'Bergen', sheriffId: 'F-1', propertyId: 1 } } as ListingSnapshot;
+    sync.mockResolvedValueOnce({ listing: 'updated', statusInserted: 2, statusExtended: 1 });
 
-    await expect(saveListing(scraped(2195502430, statusHistory))).resolves.toBe(true);
-
-    expect(transaction).toHaveBeenCalledTimes(1);
-    expect(listingInsert).toHaveBeenCalledWith(
-      { propertyId: 2195502430, address: '1 MAIN STREET' },
-      { target: listings.propertyId },
-      { id: listings.id },
-    );
-    expect(historyInsert).toHaveBeenCalledTimes(1);
-    expect(committed).toEqual([
-      { table: 'Listing', values: { propertyId: 2195502430, address: '1 MAIN STREET' } },
-      {
-        table: 'StatusHistory',
-        values: [
-          { status: 'Scheduled', date: '1/1/2026', listingId: 'listing-2195502430' },
-          { status: 'Adjourned', date: '2/1/2026', listingId: 'listing-2195502430' },
-        ],
-      },
-    ]);
-  });
-
-  it('returns false and writes no status history when the propertyId is already stored', async () => {
-    storedPropertyIds.add(2195453969);
-
-    await expect(saveListing(scraped(2195453969, [{ status: 'Scheduled', date: '1/1/2026' }]))).resolves.toBe(false);
-
-    expect(historyInsert).not.toHaveBeenCalled();
-    expect(committed).toEqual([]);
-  });
-
-  it('skips the status-history insert when the listing has none', async () => {
-    await expect(saveListing(scraped(1))).resolves.toBe(true);
-
-    expect(historyInsert).not.toHaveBeenCalled();
-    expect(committed).toEqual([{ table: 'Listing', values: { propertyId: 1, address: '1 MAIN STREET' } }]);
-  });
-
-  it('rejects and stores nothing when the status-history insert fails', async () => {
-    historyInsert.mockRejectedValueOnce(new Error('value too long'));
-
-    await expect(saveListing(scraped(1, [{ status: 'Scheduled', date: '1/1/2026' }]))).rejects.toThrow(
-      'value too long',
-    );
-
-    expect(committed).toEqual([]);
-  });
-
-  it('inserts only one listing when the same propertyId is saved concurrently', async () => {
-    const results = await Promise.all([
-      saveListing(scraped(1, [{ status: 'Scheduled', date: '1/1/2026' }])),
-      saveListing(scraped(1, [{ status: 'Scheduled', date: '1/1/2026' }])),
-    ]);
-
-    expect(results.filter(Boolean)).toHaveLength(1);
-    expect(committed.filter((write) => write.table === 'Listing')).toHaveLength(1);
-    expect(committed.filter((write) => write.table === 'StatusHistory')).toHaveLength(1);
+    await expect(saveListing(snapshot)).resolves.toEqual({ listing: 'updated', statusInserted: 2, statusExtended: 1 });
+    expect(sync).toHaveBeenCalledWith(snapshot);
   });
 });
 
 describe('newJerseySheriffSaleCountyParser', () => {
   it('skips a listing that fails to parse and saves the rest', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2, 3]);
-    service.parseListingDetails.mockImplementation((html) => {
+    service.parseListingSnapshot.mockImplementation((html) => {
       if (html === 'listing-2') {
         throw new TypeError("Cannot read properties of undefined (reading 'querySelectorAll')");
       }
 
-      return { address: '1 MAIN STREET' };
+      return parsedPage();
     });
 
     const summary = await newJerseySheriffSaleCountyParser('Atlantic');
@@ -204,24 +137,41 @@ describe('newJerseySheriffSaleCountyParser', () => {
       parsed: 2,
       failedListings: 1,
       inserted: 2,
+      updated: 0,
+      unchanged: 0,
       failedWrites: 0,
       fieldWarnings: 0,
     });
-    expect(transaction).toHaveBeenCalledTimes(2);
+    expect(sync).toHaveBeenCalledTimes(2);
     expect(console.error).toHaveBeenCalledWith(
       'Failed to parse listing propertyId 2 in Atlantic County',
       expect.any(TypeError),
     );
   });
 
-  it('does not insert listings already in the database', async () => {
-    service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    storedPropertyIds.add(1);
+  it('counts listings inserted, updated and unchanged', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1, 2, 3, 4]);
+    sync
+      .mockResolvedValueOnce({ listing: 'inserted', statusInserted: 1, statusExtended: 0 })
+      .mockResolvedValueOnce({ listing: 'updated', statusInserted: 0, statusExtended: 1 })
+      .mockResolvedValueOnce({ listing: 'unchanged', statusInserted: 0, statusExtended: 1 })
+      .mockResolvedValueOnce({ listing: 'unchanged', statusInserted: 0, statusExtended: 0 });
 
     const summary = await newJerseySheriffSaleCountyParser('Bergen');
 
-    expect(summary.inserted).toBe(1);
-    expect(summary.failedWrites).toBe(0);
+    expect(summary).toMatchObject({ inserted: 1, updated: 1, unchanged: 2, failedWrites: 0 });
+  });
+
+  it('counts a page with no recognised layout as a failed listing and does not sync it', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1, 2]);
+    service.parseListingSnapshot.mockImplementation((html) =>
+      html === 'listing-2' ? { layout: 'unrecognised' } : parsedPage(),
+    );
+
+    const summary = await newJerseySheriffSaleCountyParser('Burlington');
+
+    expect(summary).toMatchObject({ parsed: 1, failedListings: 1, inserted: 1 });
+    expect(sync).toHaveBeenCalledTimes(1);
   });
 
   it('rejects when every listing fails to fetch or parse', async () => {
@@ -231,40 +181,33 @@ describe('newJerseySheriffSaleCountyParser', () => {
     await expect(newJerseySheriffSaleCountyParser('Camden')).rejects.toThrow(
       'All 2 listings in Camden County failed to parse.',
     );
-    expect(transaction).not.toHaveBeenCalled();
+    expect(sync).not.toHaveBeenCalled();
   });
 
   it('rejects when every database write fails', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    transaction.mockRejectedValue(new Error('connection refused'));
+    sync.mockRejectedValue(new Error('connection refused'));
 
     await expect(newJerseySheriffSaleCountyParser('Essex')).rejects.toThrow(
       'All 2 listing writes in Essex County failed.',
     );
   });
 
-  it('writes a listing and its status histories in one transaction, failing it when a history insert fails', async () => {
+  it('logs a failed write with its property ID', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1]);
-    const historyError = new Error('value too long for type character varying(12)');
-    historyInsert.mockRejectedValueOnce(historyError);
+    const syncError = new Error('deadlock detected');
+    sync.mockRejectedValueOnce(syncError);
 
     await expect(newJerseySheriffSaleCountyParser('Gloucester')).rejects.toThrow(
       'All 1 listing writes in Gloucester County failed.',
     );
 
-    expect(transaction).toHaveBeenCalledTimes(1);
-    expect(listingInsert).toHaveBeenCalledTimes(1);
-    expect(historyInsert).toHaveBeenCalledTimes(1);
-    expect(committed).toEqual([]);
-    expect(console.error).toHaveBeenCalledWith(
-      'Failed to save listing propertyId 1 in Gloucester County',
-      historyError,
-    );
+    expect(console.error).toHaveBeenCalledWith('Failed to save listing propertyId 1 in Gloucester County', syncError);
   });
 
   it('resolves when only some database writes fail', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    transaction.mockRejectedValueOnce(new Error('value too long'));
+    sync.mockRejectedValueOnce(new Error('value too long'));
 
     const summary = await newJerseySheriffSaleCountyParser('Hudson');
 
@@ -283,6 +226,8 @@ describe('newJerseySheriffSaleCountyParser', () => {
       parsed: 0,
       failedListings: 0,
       inserted: 0,
+      updated: 0,
+      unchanged: 0,
       failedWrites: 0,
       fieldWarnings: 0,
     });
@@ -339,6 +284,21 @@ describe('newJerseySheriffSaleCountyParser', () => {
     expect(detailsClientsByPropertyId.get(102)).toBe(passaicClient);
   });
 
+  it('syncs each listing under the county it was scraped for', async () => {
+    service.parseCountyProperyIds.mockResolvedValueOnce([1]).mockResolvedValueOnce([101]);
+
+    await Promise.all([newJerseySheriffSaleCountyParser('Gloucester'), newJerseySheriffSaleCountyParser('Passaic')]);
+
+    const countiesByPropertyId = new Map(sync.mock.calls.map(([{ listing }]) => [listing.propertyId, listing.county]));
+
+    expect(countiesByPropertyId).toEqual(
+      new Map([
+        [1, 'Gloucester'],
+        [101, 'Passaic'],
+      ]),
+    );
+  });
+
   it('does not parse a listing whose session was rejected', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1, 2]);
     service.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => {
@@ -352,124 +312,65 @@ describe('newJerseySheriffSaleCountyParser', () => {
     const summary = await newJerseySheriffSaleCountyParser('Passaic');
 
     expect(summary.failedListings).toBe(1);
-    expect(service.parseListingDetails).toHaveBeenCalledTimes(1);
-    expect(service.parseListingDetails).toHaveBeenCalledWith('listing-1');
+    expect(service.parseListingSnapshot).toHaveBeenCalledTimes(1);
+    expect(service.parseListingSnapshot).toHaveBeenCalledWith('listing-1');
     expect(console.error).toHaveBeenCalledWith(
       'Failed to parse listing propertyId 2 in Passaic County',
       expect.objectContaining({ message: 'Session rejected for propertyId 2: redirected to /' }),
     );
   });
 
-  it('saves the validated listing, with the amount as a number and the dates as ISO dates', async () => {
-    service.parseCountyProperyIds.mockResolvedValue([1]);
-    service.parseListingDetails.mockReturnValue({
-      address: '1 MAIN STREET\nTRENTON NJ 08608',
-      upsetAmount: '$1,585.95',
-      saleDate: '08/12/2024 02:00 PM',
-      plaintiff: '\r U.S. BANK NATIONAL ASSOCIATION   ',
-      propertyNote: '',
-    });
-    service.cleanAddress.mockReturnValue({
-      address: '1 MAIN STREET TRENTON NJ 08608',
-      city: 'Trenton',
-      street: '1 Main Street',
-      zipcode: '08608',
-      unit: '',
-      secondaryUnit: '',
-    });
-
-    await newJerseySheriffSaleCountyParser('Passaic');
-
-    expect(service.cleanAddress).toHaveBeenCalledWith('1 MAIN STREET\nTRENTON NJ 08608');
-    expect(committed).toEqual([
-      {
-        table: 'Listing',
-        values: expect.objectContaining({
-          address: '1 MAIN STREET TRENTON NJ 08608',
-          upsetAmount: 1585.95,
-          judgment: null,
-          saleDate: '2024-08-12',
-          plaintiff: 'U.S. BANK NATIONAL ASSOCIATION',
-          propertyId: 1,
-        }),
-      },
-      { table: 'StatusHistory', values: [{ status: 'Scheduled', date: '2026-01-01', listingId: 'listing-1' }] },
-    ]);
-    expect(committed[0].values).not.toHaveProperty('propertyNote');
-  });
-
-  it.each([
-    ['has no address', {}],
-    ['has a whitespace-only address', { address: ' \n ' }],
-  ])('does not save a listing that %s, and counts it as a failed listing', async (_case, details) => {
-    service.parseCountyProperyIds.mockResolvedValue([1, 2]);
-    service.parseListingDetails.mockImplementation((html) =>
-      html === 'listing-2' ? { plaintiff: 'BANK', ...details } : { address: '1 MAIN STREET' },
-    );
-
-    const summary = await newJerseySheriffSaleCountyParser('Atlantic');
-
-    expect(summary).toMatchObject({ found: 2, parsed: 1, failedListings: 1, inserted: 1 });
-    expect(committed.filter((write) => write.table === 'Listing')).toEqual([
-      { table: 'Listing', values: expect.objectContaining({ propertyId: 1 }) },
-    ]);
-    expect(console.error).toHaveBeenCalledWith(
-      'Failed to parse listing propertyId 2 in Atlantic County',
-      expect.objectContaining({ message: expect.stringContaining('Listing has no address') }),
-    );
-  });
-
   it('saves a listing with a field coerced to null, and counts and logs the warning', async () => {
     service.parseCountyProperyIds.mockResolvedValue([7]);
-    service.parseListingDetails.mockReturnValue({ address: '1 MAIN STREET', upsetAmount: 'TBD' });
+    service.parseListingSnapshot.mockReturnValue({
+      ...parsedPage(),
+      listing: { ...parsedPage().listing, upsetAmount: 'TBD' },
+    });
 
     const summary = await newJerseySheriffSaleCountyParser('Bergen');
 
     expect(summary).toMatchObject({ inserted: 1, fieldWarnings: 1 });
-    expect(committed[0]).toEqual({ table: 'Listing', values: expect.objectContaining({ upsetAmount: null }) });
+    expect(sync).toHaveBeenCalledWith(
+      expect.objectContaining({ listing: expect.objectContaining({ upsetAmount: null }) }),
+    );
     expect(console.warn).toHaveBeenCalledWith(
       'Field warning for listing propertyId 7 in Bergen County: upsetAmount "TBD" is not a dollar amount',
     );
   });
 
-  it('saves the valid status-history rows and warns about the one it skips', async () => {
+  it('syncs the valid status-history rows and warns about the one it skips', async () => {
     service.parseCountyProperyIds.mockResolvedValue([1]);
-    service.parseStatusHistory.mockReturnValue([
-      { status: 'Scheduled', date: '3/2/2021' },
-      { status: 'Adjourned', date: '4/30/3021' },
-      { status: 'Sold', date: '5/4/2021' },
-    ]);
+    service.parseListingSnapshot.mockReturnValue({
+      ...parsedPage(),
+      statusHistory: [
+        { status: 'Scheduled', date: '3/2/2021' },
+        { status: 'Adjourned', date: '4/30/3021' },
+        { status: 'Sold', date: '5/4/2021' },
+      ],
+    });
 
     const summary = await newJerseySheriffSaleCountyParser('Hunterdon');
 
     expect(summary.fieldWarnings).toBe(1);
-    expect(committed[1]).toEqual({
-      table: 'StatusHistory',
-      values: [
-        { status: 'Scheduled', date: '2021-03-02', listingId: 'listing-1' },
-        { status: 'Sold', date: '2021-05-04', listingId: 'listing-1' },
-      ],
-    });
+    expect(sync.mock.calls[0][0].statusHistory).toEqual([
+      { status: 'Scheduled', date: '2021-03-02' },
+      { status: 'Sold', date: '2021-05-04' },
+    ]);
   });
 
   it('sums the field warnings of every listing in the county, without failing the run', async () => {
     service.parseCountyProperyIds.mockResolvedValue(range(1, 10));
-    service.parseListingDetails.mockImplementation((html) => ({
-      address: '1 MAIN STREET',
-      ...(['listing-2', 'listing-5', 'listing-9'].includes(html) && { saleDate: '2/30/2024' }),
-    }));
+    service.parseListingSnapshot.mockImplementation((html) => {
+      const page = parsedPage(`F-${html}`);
+
+      return ['listing-2', 'listing-5', 'listing-9'].includes(html)
+        ? { ...page, listing: { ...page.listing, saleDate: '2/30/2024' } }
+        : page;
+    });
 
     const summary = await newJerseySheriffSaleCountyParser('Camden');
 
-    expect(summary).toEqual({
-      county: 'Camden',
-      found: 10,
-      parsed: 10,
-      failedListings: 0,
-      inserted: 10,
-      failedWrites: 0,
-      fieldWarnings: 3,
-    });
+    expect(summary).toMatchObject({ found: 10, parsed: 10, inserted: 10, failedWrites: 0, fieldWarnings: 3 });
     expect(console.warn).toHaveBeenCalledTimes(3);
   });
 });
