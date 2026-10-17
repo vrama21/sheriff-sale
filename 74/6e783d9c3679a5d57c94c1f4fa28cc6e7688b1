@@ -1,0 +1,9 @@
+openspec/changes/upgrade-node-24/tasks.md
+  ai_agent 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "746e783d9c3679a5d57c94c1f4fa28cc6e7688b1",
+  "prompts": {}
+}
