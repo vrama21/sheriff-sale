@@ -1,7 +1,7 @@
-# Scrape archive. Imported from the old CDK stack; holds every scraped page, so it must never be
-# destroyed or replaced.
+# Scrape archive; holds every scraped page, so it must never be destroyed or replaced. The name has
+# no env suffix and is also hardcoded in backend/src/services/newJerseySheriffSale/saveHtmlToS3.ts.
 resource "aws_s3_bucket" "archive" {
-  bucket = "nj-sheriff-sale-${local.env}"
+  bucket = "nj-sheriff-sale"
 
   lifecycle {
     prevent_destroy = true
