@@ -1,4 +1,5 @@
-import { S3, PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
+import { PutObjectCommandInput } from '@aws-sdk/client-s3';
+import { s3 } from './s3Client';
 
 interface SaveConfig {
   bucketName: string;
@@ -14,8 +15,6 @@ interface SaveConfig {
  * Saves data into S3
  */
 export const saveS3 = ({ bucketName, data, key, sse = false }: SaveConfig) => {
-  const s3 = new S3({ region: 'us-east-2' });
-
   const params: PutObjectCommandInput = {
     Body: data,
     Bucket: bucketName,

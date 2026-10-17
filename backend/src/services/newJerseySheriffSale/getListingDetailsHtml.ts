@@ -16,9 +16,18 @@ export const getListingDetailsHtml = async ({ propertyId }: GetListingDetailsHtm
     },
   });
 
+  if (typeof response.data !== 'string' || !response.data) {
+    throw new Error(`Empty listing details response for propertyId ${propertyId} (status ${response.status})`);
+  }
+
   const html = he.decode(response.data);
 
-  await saveHtmlToS3({ html, keyPrefix: 'listing-html-files', keySuffix: `property-id-${propertyId}.html` });
+  // Archived before parsing so unparseable HTML is still kept; the archive is best-effort.
+  try {
+    await saveHtmlToS3({ html, keyPrefix: 'listing-html-files', keySuffix: `property-id-${propertyId}.html` });
+  } catch (error) {
+    console.error(`Failed to save html for propertyId ${propertyId} to S3`, error);
+  }
 
-  return he.decode(response.data);
+  return html;
 };

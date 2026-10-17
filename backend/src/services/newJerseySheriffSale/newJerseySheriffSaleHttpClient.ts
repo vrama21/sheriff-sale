@@ -9,6 +9,8 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
   public constructor() {
     super({
       baseURL: 'https://salesweb.civilview.com',
+      // A hung socket would otherwise hold a listing limiter slot until the Lambda times out.
+      timeout: 30_000,
       withCredentials: true,
     });
 
@@ -20,7 +22,9 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
 
         return req;
       },
-      (error) => error,
+      (error) => {
+        throw error;
+      },
     );
 
     this.axiosInstance.interceptors.response.use(
@@ -40,7 +44,9 @@ export class NewJerseySheriffSaleHttpClient extends HttpClient {
 
         return req;
       },
-      (error) => error,
+      (error) => {
+        throw error;
+      },
     );
 
     this.aspSessionId;
