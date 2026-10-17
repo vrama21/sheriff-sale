@@ -1,0 +1,38 @@
+backend/src/services/newJerseySheriffSale/__fixtures__/listingDetailsLegacySalem.html
+  s_4243d67b3abe9e::t_7a531eec00c13c 1-244
+backend/src/services/newJerseySheriffSale/detailValueText.ts
+  s_4243d67b3abe9e::t_03dc4de162ca1f 1-24
+backend/src/services/newJerseySheriffSale/parseListingSnapshot.ts
+  s_4243d67b3abe9e::t_02cd95741146ed 33
+  s_4243d67b3abe9e::t_58df7328471cf4 1-32,34-46
+backend/src/services/newJerseySheriffSale/__fixtures__/listingDetailsLegacyCumberland.html
+  s_4243d67b3abe9e::t_7a531eec00c13c 1-284
+backend/src/services/newJerseySheriffSale/index.ts
+  s_4243d67b3abe9e::t_02cd95741146ed 5,7,13,17,19,25
+backend/src/services/newJerseySheriffSale/parseLegacyListingDetails.test.ts
+  s_4243d67b3abe9e::t_9cfda77a129910 1-108
+backend/src/services/newJerseySheriffSale/parseListingSnapshot.test.ts
+  s_4243d67b3abe9e::t_707181799bd18a 1-54
+backend/src/services/newJerseySheriffSale/parseLegacyListingDetails.ts
+  s_4243d67b3abe9e::t_fbb458f818a954 1-46
+backend/src/services/newJerseySheriffSale/parseListingDetails.ts
+  s_4243d67b3abe9e::t_03dc4de162ca1f 1,3
+openspec/changes/replay-archived-listings/tasks.md
+  ai_agent 38-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "ca305720012c5fcfa091448dad2092f627e1bbde",
+  "prompts": {},
+  "sessions": {
+    "s_4243d67b3abe9e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d93832ad-2b41-4a10-9fd7-ce63904dd505",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
