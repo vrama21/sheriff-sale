@@ -1,0 +1,20 @@
+README.md
+  s_b09217e633fde8::t_3f0011494b6ebf 1-61,63-68
+  s_b09217e633fde8::t_e8cf3648010b34 62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "64c1dc76fac076379a758cc4cf47d10a0b75d60a",
+  "prompts": {},
+  "sessions": {
+    "s_b09217e633fde8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "411a13dd-de25-4597-8d3a-5b89284ad915",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
