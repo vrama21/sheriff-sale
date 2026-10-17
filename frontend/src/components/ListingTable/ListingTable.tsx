@@ -1,15 +1,22 @@
 /* eslint-disable react/jsx-key */
 import React, { useMemo } from 'react';
-import { Column, useTable } from 'react-table';
+import { CellProps, Column, useTable } from 'react-table';
 import { Table, TableBody, TableHead, TableRow, TableCell, useMediaQuery } from '@mui/material';
 import { Listing } from '@sheriff-sale/database';
-import { formatToCurrency } from '../../helpers';
+import { formatSaleDate, formatToCurrency } from '../../helpers';
 import { ViewListingButton } from '../../components';
 import { useStyles } from './ListingTable.styles';
 
 interface ListingTableProps {
   listings: Listing[];
 }
+
+// A judgment, when the listing has one, else the upset amount.
+const AmountCell = ({ row }: CellProps<Listing>) => {
+  const value = row.original.judgment ?? row.original.upsetAmount;
+
+  return <span>{value != null ? formatToCurrency(value) : '-'}</span>;
+};
 
 const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTableProps) => {
   const { classes } = useStyles();
@@ -24,6 +31,7 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
         {
           Header: 'Upset ',
           accessor: 'upsetAmount',
+          Cell: AmountCell,
         },
       ]
     : [
@@ -38,6 +46,9 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
         {
           Header: 'Sale Date',
           accessor: 'saleDate',
+          Cell(cellProps) {
+            return <span>{formatSaleDate(cellProps.row.original.saleDate)}</span>;
+          },
         },
         {
           Header: 'Attorney',
@@ -46,13 +57,7 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
         {
           Header: 'Upset Amount',
           accessor: 'upsetAmount',
-          Cell(cellProps) {
-            const rowData = cellProps.row.original;
-
-            const value = rowData.judgment || rowData.upsetAmount;
-
-            return <span>{value ? formatToCurrency(value) : '-'}</span>;
-          },
+          Cell: AmountCell,
         },
         {
           Header: 'Link',
@@ -70,7 +75,9 @@ const ListingTable: React.FC<ListingTableProps> = ({ listings }: ListingTablePro
         attorney: listing.attorney,
         county: listing.county,
         defendant: listing.defendant,
+        judgment: listing.judgment,
         saleDate: listing.saleDate,
+        upsetAmount: listing.upsetAmount,
         id: listing.id,
       })),
     [listings],

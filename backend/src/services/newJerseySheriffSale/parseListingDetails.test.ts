@@ -11,11 +11,6 @@ ${valueHtml}                        </div>
 
 const detailsPage = (...items: string[]) => `<div class="sale-details-list">${items.join('')}</div>`;
 
-beforeEach(() => {
-  jest.restoreAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
-});
-
 describe('parseListingDetails', () => {
   it('parses a details page with a mixed-case address and an upset amount', () => {
     expect(parseListingDetails(readFixture('listingDetailsPassaic.html'))).toEqual({
@@ -32,6 +27,7 @@ describe('parseListingDetails', () => {
       upsetAmount: '$813,074.58',
       attorney: 'ATTORNEY FIRM PLACEHOLDER, LLC',
       parcel: 'Tax Lot: 21.11 (Formerly Lot 21-K) in Block: 173',
+      propertyNote: '',
     });
   });
 
@@ -47,10 +43,11 @@ describe('parseListingDetails', () => {
       attorney: 'ATTORNEY FIRM PLACEHOLDER, P.C.',
       judgment: '$258,635.93',
       parcel: 'BLOCK: 127 LOT: 40',
+      propertyNote: '',
     });
   });
 
-  it('logs and leaves out a label that is not a listing field, and still parses the rest', () => {
+  it('keys a label that is not a listing field by its camelCase name, for listingSchema to drop', () => {
     const listing = parseListingDetails(
       detailsPage(
         detailItem('Sheriff #', 'F-1'),
@@ -59,8 +56,11 @@ describe('parseListingDetails', () => {
       ),
     );
 
-    expect(listing).toEqual({ sheriffId: 'F-1', address: '1 MAIN STREET\nTRENTON NJ 08608' });
-    expect(console.log).toHaveBeenCalledWith('Ignoring listing detail label "Mystery Field": not a listing field');
+    expect(listing).toEqual({
+      sheriffId: 'F-1',
+      mysteryField: 'something',
+      address: '1 MAIN STREET\nTRENTON NJ 08608',
+    });
   });
 
   it('decodes entities in values without turning them into markup', () => {

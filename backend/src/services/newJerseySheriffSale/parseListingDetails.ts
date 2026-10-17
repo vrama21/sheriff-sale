@@ -1,9 +1,5 @@
 import { HTMLElement, Node, parse } from 'node-html-parser';
 import { cleanPropertyKey } from './cleanPropertyKey';
-import { ListingParse } from '../../types';
-
-// Labels the schema doesn't store (such as "Property Note") appear on every page; log each one only once.
-const loggedUnknownLabels = new Set<string>();
 
 /** The node's decoded text with whitespace runs collapsed, and each `<br>` as a newline. */
 const textWithLineBreaks = (node: Node): string => {
@@ -27,7 +23,8 @@ const cleanValue = (valueElement: HTMLElement, keepLineBreaks: boolean): string 
   return lines.join(keepLineBreaks ? '\n' : ' ');
 };
 
-export const parseListingDetails = (propertyHtml: string): ListingParse => {
+/** Each detail item's text keyed by its listing field name, unvalidated: listingSchema checks and coerces them. */
+export const parseListingDetails = (propertyHtml: string): Record<string, string> => {
   const root = parse(propertyHtml);
 
   const detailItems = root.querySelectorAll('.sale-detail-item');
@@ -50,11 +47,6 @@ export const parseListingDetails = (propertyHtml: string): ListingParse => {
     const key = cleanPropertyKey(label);
 
     if (!key) {
-      if (!loggedUnknownLabels.has(label)) {
-        loggedUnknownLabels.add(label);
-        console.log(`Ignoring listing detail label "${label}": not a listing field`);
-      }
-
       return;
     }
 
@@ -62,5 +54,5 @@ export const parseListingDetails = (propertyHtml: string): ListingParse => {
     property[key] = cleanValue(valueElement, key === 'address');
   });
 
-  return property as unknown as ListingParse;
+  return property;
 };

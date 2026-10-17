@@ -16,6 +16,7 @@ const summaryFor = (county: NJCounty) => ({
   failedListings: 0,
   inserted: 1,
   failedWrites: 0,
+  fieldWarnings: 0,
 });
 
 beforeEach(() => {
