@@ -1,0 +1,19 @@
+openspec/changes/replay-archived-listings/design.md
+  ai_agent 1-179
+openspec/changes/replay-archived-listings/.openspec.yaml
+  ai_agent 1-2
+openspec/changes/replay-archived-listings/tasks.md
+  ai_agent 1-68
+openspec/changes/replay-archived-listings/specs/archive-replay/spec.md
+  ai_agent 1-109
+openspec/changes/replay-archived-listings/specs/listing-sync/spec.md
+  ai_agent 1-152
+openspec/changes/replay-archived-listings/proposal.md
+  ai_agent 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a4c035ccc402399a8d09df9b799bf42c476e4d1c",
+  "prompts": {}
+}
