@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-config({ path: __dirname + '/../../../.env.local' });
+config({ path: __dirname + '/../../../.env.local', quiet: true });
 
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db, sql } from './client';

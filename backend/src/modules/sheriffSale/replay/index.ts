@@ -28,7 +28,7 @@ const parseArgsOrExit = (): ReplayArgs => {
 const main = async () => {
   const args = parseArgsOrExit();
 
-  config({ path: join(__dirname, '../../../../../.env') });
+  config({ path: join(__dirname, '../../../../../.env'), quiet: true });
 
   const deps: ReplayDeps = {
     readText: (key) => getS3Text({ bucketName: ARCHIVE_BUCKET_NAME, key }),
