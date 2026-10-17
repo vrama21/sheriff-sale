@@ -1,0 +1,62 @@
+frontend/tsconfig.json
+  s_c0b20ded9e1925::t_820e2ce012a536 5,8
+README.md
+  s_c0b20ded9e1925::t_2271908cf4f342 55-65
+vite.config.ts
+  s_c0b20ded9e1925::t_6a10ebd1633a49 38-39
+  s_c0b20ded9e1925::t_09c1a11a6bc5ec 28
+  s_c0b20ded9e1925::t_d2fde3aa7fcdcb 40-46
+  s_c0b20ded9e1925::t_7ba8bd185a6a1a 5-7,9,11-27
+  s_c0b20ded9e1925::t_fc1f09000010d8 10
+  s_c0b20ded9e1925::t_820e2ce012a536 1-4,8,29-37,47-48
+frontend/src/server/routers/constants.ts
+  s_c0b20ded9e1925::t_fc1f09000010d8 6
+.vscode/settings.json
+  s_c0b20ded9e1925::t_820e2ce012a536 6,8
+  s_c0b20ded9e1925::t_7a8addb5053886 9-11,14,17-20
+  s_c0b20ded9e1925::t_1f1bca0d02e0ed 2,4
+backend/package.json
+  s_c0b20ded9e1925::t_f014b5b2fa2e53 11-12
+frontend/src/components/Select/Select.tsx
+  s_c0b20ded9e1925::t_fc1f09000010d8 1
+packages/database/package.json
+  s_c0b20ded9e1925::t_874898d40d5f69 5,7
+  s_c0b20ded9e1925::t_820e2ce012a536 12,19,34
+  s_c0b20ded9e1925::t_f014b5b2fa2e53 20
+packages/database/tsconfig.json
+  s_c0b20ded9e1925::t_7ae63df74c8cd1 3
+.github/workflows/cicd.yml
+  s_c0b20ded9e1925::t_1a418c20180f55 34-38
+  s_c0b20ded9e1925::t_c434e592da118c 125
+frontend/package.json
+  s_c0b20ded9e1925::t_f014b5b2fa2e53 9
+.vscode/extensions.json
+  s_c0b20ded9e1925::t_820e2ce012a536 1-3
+packages/database/vite.config.ts
+  s_c0b20ded9e1925::t_820e2ce012a536 1,4-5,15
+  s_c0b20ded9e1925::t_7ae63df74c8cd1 2-3,6-14
+package.json
+  s_c0b20ded9e1925::t_820e2ce012a536 27-28,33-36
+  s_c0b20ded9e1925::t_e02ab0b1efdc68 17
+frontend/src/server/context.ts
+  s_c0b20ded9e1925::t_c434e592da118c 21,25
+turbo.json
+  s_c0b20ded9e1925::t_862abb61d12df7 3
+  s_c0b20ded9e1925::t_c434e592da118c 18-19,22,33,36,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "df78b0997bd32d2e46cd3352d194a6bd40454ae1",
+  "prompts": {},
+  "sessions": {
+    "s_c0b20ded9e1925": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bc66daf4-c619-4533-97fd-c898f7c1d470",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
