@@ -7,7 +7,8 @@ on:
 
 concurrency:
   group: ${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel main: interrupting a tofu apply can leave infra half-applied and the state locked.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -16,7 +17,7 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  # Runs on every branch, so it stays outside the dev environment (main and cicd* only) and gets
+  # Runs on every branch, so it stays outside the prod environment (main and cicd* only) and gets
   # placeholders instead of its secrets: drizzle.config.ts only checks that these are set, and
   # nothing in build or test connects to the database.
   build:
@@ -39,12 +40,17 @@ jobs:
         with:
           name: build-artifacts
           path: ./packages/database/dist
+      - name: Upload Lambda bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-bundle
+          path: ./backend/dist
 
   migrate:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' # Only runs on the main branch
-    environment: dev
+    environment: prod
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -56,11 +62,36 @@ jobs:
           npm run db:generate
           npm run db:migrate
 
+  deploy-backend:
+    needs: migrate
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Only runs on the main branch
+    environment: prod
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: us-east-2
+      TF_VAR_database_url: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Lambda bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: lambda-bundle
+          path: ./backend/dist
+      - name: Install OpenTofu (version from mise.toml)
+        uses: jdx/mise-action@v5
+      - name: OpenTofu Apply
+        working-directory: ./infra
+        run: |
+          tofu init -input=false
+          tofu apply -auto-approve -input=false
+
   deploy-frontend:
     needs: migrate
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' # Only runs on the main branch
-    environment: dev
+    environment: prod
     steps:
       - uses: actions/checkout@v4
       - name: Download build artifacts

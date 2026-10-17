@@ -94,7 +94,8 @@ Mapping CDK resources to OpenTofu resources:
 ### D8. CI: build anywhere, apply only on main, in `prod`
 - `build` (all branches): also uploads `backend/dist` as an artifact. The placeholder env stays, since the build no longer needs AWS access.
 - `migrate`, `deploy-backend`, and `deploy-frontend` (main only) use `environment: prod`.
-- `deploy-backend` (`needs: migrate`): downloads the artifact, installs OpenTofu (`opentofu/setup-opentofu`, version matching `mise.toml`), then runs `tofu init` and `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets.
+- `deploy-backend` (`needs: migrate`): downloads the artifact, installs OpenTofu with `jdx/mise-action`, which installs the version pinned in `mise.toml` so CI and local runs match, then runs `tofu init` and `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets.
+- Workflow concurrency still cancels superseded runs on other branches, but never on `main`. Cancelling a `tofu apply` partway could leave infrastructure half-applied and the state lock held.
 
 ### D9. GitHub environment `dev` → `prod`
 The repo has a `dev` environment with 6 secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`) and the variable `ENV=dev`. GitHub's API can't read secret values, so they can't be copied:
