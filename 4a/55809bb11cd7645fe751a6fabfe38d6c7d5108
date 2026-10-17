@@ -1,0 +1,33 @@
+openspec/specs/listing-validation/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1,3-5,131
+openspec/specs/civilview-scraping/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1-123
+openspec/specs/listing-address-backfill/spec.md
+  s_c4d50d8dd52154::t_0ade1ec273378d 1-192
+openspec/specs/listing-sync/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1,3-5,161
+openspec/specs/listing-storage/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1,3-5,40-90,115
+openspec/specs/database-toolchain/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1,3-5,47
+openspec/specs/scraper-pipeline/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1-109
+openspec/specs/archive-replay/spec.md
+  s_c4d50d8dd52154::t_df624aabfb6a74 1,3-5,113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4a55809bb11cd7645fe751a6fabfe38d6c7d5108",
+  "prompts": {},
+  "sessions": {
+    "s_c4d50d8dd52154": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7492bd75-ce5b-4f5d-9ead-78c29cde763b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
