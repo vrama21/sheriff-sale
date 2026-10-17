@@ -6,6 +6,7 @@
 # GH_TOKEN = "{{ exec(command='gh auth token --user <github user>') }}"
 # TF_VAR_database_url = "<prod DATABASE_URL, for tofu plan/apply in infra/>"
 [tools]
+node = "24"
 opentofu = "1.13"
 
 [env]

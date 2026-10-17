@@ -1,5 +1,5 @@
 {
-  "extends": "@sheriff-sale/tsconfig/node20.json",
+  "extends": "@sheriff-sale/tsconfig/node24.json",
   "include": ["next-env.d.ts", "**/*.ts", "tsup.config.ts"],
   "exclude": ["node_modules"]
 }

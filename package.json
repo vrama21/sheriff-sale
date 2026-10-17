@@ -19,7 +19,7 @@
     "test": "turbo run test"
   },
   "devDependencies": {
-    "@types/node": "20.14.9",
+    "@types/node": "24.19.2",
     "dotenv": "16.4.5",
     "esbuild": "0.21.5",
     "prettier": "3.3.2",
@@ -28,7 +28,7 @@
     "typescript": "5.5.2"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "24.x"
   },
-  "packageManager": "npm@10.5.2"
+  "packageManager": "npm@11.19.1"
 }

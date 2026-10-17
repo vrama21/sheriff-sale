@@ -11,7 +11,7 @@ Turborepo monorepo with npm workspaces:
 
 ### mise
 
-[mise](https://mise.jdx.dev) switches the Node version (from `.nvmrc`) and loads this repo's environment variables, such
+[mise](https://mise.jdx.dev) switches the Node version (from `mise.toml`) and loads this repo's environment variables, such
 as `AWS_PROFILE`, when you `cd` into the repo.
 
 1. Install mise and hook it into your shell (for other shells, see the
@@ -22,13 +22,7 @@ as `AWS_PROFILE`, when you `cd` into the repo.
    echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
    ```
 
-2. Let mise read `.nvmrc` files (off by default):
-
-   ```bash
-   mise settings add idiomatic_version_file_enable_tools node
-   ```
-
-3. Create `mise.local.toml` in the repo root with your own values. It is gitignored, and mise loads it on top of
+2. Create `mise.local.toml` in the repo root with your own values. It is gitignored, and mise loads it on top of
    `mise.toml`:
 
    ```toml
@@ -40,7 +34,7 @@ as `AWS_PROFILE`, when you `cd` into the repo.
    TF_VAR_database_url = "<DATABASE_URL>"
    ```
 
-4. Trust the repo's config and install Node and OpenTofu:
+3. Trust the repo's config and install Node and OpenTofu:
 
    ```bash
    mise trust
@@ -48,7 +42,7 @@ as `AWS_PROFILE`, when you `cd` into the repo.
    ```
 
 To check it, open a new shell in the repo: `echo $AWS_PROFILE` should print your profile, and `node --version` should
-print 20.x. `aws sso login` and the AWS SDKs then use that profile automatically.
+print 24.x. `aws sso login` and the AWS SDKs then use that profile automatically.
 
 ### Dependencies
 
