@@ -23,7 +23,7 @@ The CI workflow SHALL run `tofu init` and `tofu apply -auto-approve` in `infra/`
 - **THEN** no OpenTofu command runs and no AWS credentials are used
 
 ### Requirement: Single prod GitHub environment
-CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the GitHub environment `prod`. It SHALL hold the secrets `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`, and the variable `ENV=prod`. It SHALL NOT hold AWS credentials. The `dev` GitHub environment SHALL be deleted once `prod` is in use.
+CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the GitHub environment `prod`. It SHALL hold the secrets `DATABASE_URL` and `VERCEL_TOKEN`, and the variables `ENV=prod`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` (identifiers, not credentials). It SHALL NOT hold AWS credentials. The `dev` GitHub environment SHALL be deleted once `prod` is in use.
 
 #### Scenario: Deploy jobs use prod
 - **WHEN** the workflow runs on `main`

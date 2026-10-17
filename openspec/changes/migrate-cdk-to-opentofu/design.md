@@ -100,7 +100,7 @@ Mapping CDK resources to OpenTofu resources:
 ### D9. GitHub environment `dev` → `prod`
 The repo has a `dev` environment with 6 secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN`) and the variable `ENV=dev`. Environments can't be renamed, and GitHub's API can't read secret values, so they can't be copied:
 1. Create the `prod` environment (branch rules `main`, `cicd*`, same as `dev`) and set `ENV=prod`. This can be done with `gh`.
-2. The user re-enters the 4 non-AWS secrets, e.g. `gh secret set <NAME> --env prod`. The AWS keys are not carried over (D11).
+2. `DATABASE_URL` and `VERCEL_TOKEN` are re-entered as secrets. `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are identifiers, not credentials, so they become environment variables (`vars.*`), taken from `frontend/.vercel/project.json`. The AWS keys are not carried over (D11).
 3. Switch the workflow to `environment: prod`.
 4. Delete `dev` once a `main` run succeeds.
 

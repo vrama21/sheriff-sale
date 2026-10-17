@@ -13,8 +13,8 @@ concurrency:
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   ENV: ${{ vars.ENV }}
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
 
 jobs:
   # Runs on every branch, so it stays outside the prod environment (main and cicd* only) and gets

@@ -44,7 +44,7 @@ It is also the point to settle the environment model: AWS hosts exactly one depl
 - **CI**: `.github/workflows/cicd.yml`:
   - The `build` job also uploads the Lambda bundle.
   - `deploy-backend` runs OpenTofu.
-  - Jobs use `environment: prod`. The `prod` GitHub environment needs `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` re-entered, because GitHub can't copy secret values. It holds no AWS keys.
+  - Jobs use `environment: prod`. The `prod` GitHub environment needs the secrets `DATABASE_URL` and `VERCEL_TOKEN` re-entered, because GitHub can't copy secret values. `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` become plain environment variables. It holds no AWS keys.
   - `deploy-backend` gets AWS credentials through OIDC (`id-token: write`, `aws-actions/configure-aws-credentials`).
 - **Local development**: local scraper runs write to `nj-sheriff-sale`, the prod bucket, just as they already use the hosted Railway database. Isolating local runs is out of scope.
 - **Dependencies**: removes `aws-cdk`, `aws-cdk-lib`, `constructs`, and `source-map-support` (if unused elsewhere). Uses the existing root `esbuild`. Adds OpenTofu (via mise) and the `hashicorp/aws` and `hashicorp/archive` providers.

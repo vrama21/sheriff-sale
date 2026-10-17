@@ -55,7 +55,7 @@
 ## 7. Hand over to CI
 
 - [x] 7.1 Create the `prod` GitHub environment and set variable `ENV=prod`
-- [ ] 7.2 (User) Set the `prod` secrets: `DATABASE_URL`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `VERCEL_TOKEN` (no AWS keys; see 7.8)
+- [ ] 7.2 Set the `prod` secrets `DATABASE_URL` (done) and `VERCEL_TOKEN` (user), and the variables `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` (done, from `frontend/.vercel/project.json`); no AWS keys (see 7.8)
 - [x] 7.3 Upload `backend/dist` as an artifact from the `build` job
 - [x] 7.4 Add a `deploy-backend` job (main only, `needs: migrate`) that downloads the bundle, installs OpenTofu from `mise.toml` with `jdx/mise-action`, and runs `tofu init` + `tofu apply -auto-approve` in `infra/` with `TF_VAR_database_url` and the AWS secrets
 - [x] 7.5 Switch `migrate`, `deploy-backend`, and `deploy-frontend` to `environment: prod`
