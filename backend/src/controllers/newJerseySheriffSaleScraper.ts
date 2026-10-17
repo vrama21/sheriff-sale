@@ -55,18 +55,20 @@ export const saveListing = async ({
     return false;
   }
 
-  console.log(`Inserting Listing propertyId ${parsedListing.propertyId} and address ${parsedListing.address} ...`);
-  const [newListing] = await db
-    .insert(listings)
-    .values({ ...parsedListing })
-    .returning();
-  console.log(`Inserted Listing ${newListing.id}`);
+  // One transaction, so a failed status-history insert rolls back the listing too. Otherwise the next run
+  // would find the listing, skip it, and never write its histories.
+  await db.transaction(async (tx) => {
+    console.log(`Inserting Listing propertyId ${parsedListing.propertyId} and address ${parsedListing.address} ...`);
+    const [newListing] = await tx
+      .insert(listings)
+      .values({ ...parsedListing })
+      .returning();
+    console.log(`Inserted Listing ${newListing.id}`);
 
-  console.log(`Found ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
-  await Promise.all(
-    parsedStatusHistories.map(async (parsedStatusHistory) => {
+    console.log(`Found ${parsedStatusHistories.length} Status Histories for Listing ${newListing.id} ...`);
+    for (const parsedStatusHistory of parsedStatusHistories) {
       console.log(`Inserting Status History for listing ${newListing.id} ...`);
-      const [newStatusHistory] = await db
+      const [newStatusHistory] = await tx
         .insert(statusHistories)
         .values({
           ...parsedStatusHistory,
@@ -75,8 +77,8 @@ export const saveListing = async ({
         .onConflictDoNothing()
         .returning();
       console.log(`Inserted Status History ${newStatusHistory?.id} for listing ${newListing.id}`);
-    }),
-  );
+    }
+  });
 
   return true;
 };

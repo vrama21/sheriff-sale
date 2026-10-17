@@ -7,6 +7,7 @@ jest.mock('@sheriff-sale/database', () => ({
   db: {
     query: { listings: { findFirst: jest.fn() } },
     insert: jest.fn(),
+    transaction: jest.fn(),
   },
   listings: {},
   statusHistories: {},
@@ -28,6 +29,8 @@ const mockedDb = jest.mocked(db);
 
 const findFirst = mockedDb.query.listings.findFirst as unknown as jest.Mock;
 const insertValues = jest.fn();
+// Inserts must go through the transaction; db.insert is left unmocked so a direct insert fails.
+const txInsert = jest.fn();
 
 const range = (start: number, count: number) => Array.from({ length: count }, (_, i) => start + i);
 
@@ -46,9 +49,10 @@ beforeEach(() => {
   insertValues.mockImplementation(async () => [{ id: 'new-id' }]);
 
   const returning = () => insertValues();
-  (mockedDb.insert as unknown as jest.Mock).mockImplementation(() => ({
+  txInsert.mockImplementation(() => ({
     values: () => ({ returning, onConflictDoNothing: () => ({ returning }) }),
   }));
+  (mockedDb.transaction as unknown as jest.Mock).mockImplementation(async (run) => run({ insert: txInsert }));
 });
 
 describe('newJerseySheriffSaleCountyParser', () => {
@@ -105,6 +109,24 @@ describe('newJerseySheriffSaleCountyParser', () => {
 
     await expect(newJerseySheriffSaleCountyParser('Essex')).rejects.toThrow(
       'All 2 listing writes in Essex County failed.',
+    );
+  });
+
+  it('writes a listing and its status histories in one transaction, failing it when a history insert fails', async () => {
+    service.parseCountyProperyIds.mockResolvedValue([1]);
+    const historyError = new Error('value too long for type character varying(12)');
+    insertValues.mockResolvedValueOnce([{ id: 'new-id' }]).mockRejectedValueOnce(historyError);
+
+    await expect(newJerseySheriffSaleCountyParser('Gloucester')).rejects.toThrow(
+      'All 1 listing writes in Gloucester County failed.',
+    );
+
+    expect(mockedDb.transaction).toHaveBeenCalledTimes(1);
+    expect(txInsert).toHaveBeenCalledTimes(2);
+    expect(mockedDb.insert).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to save listing propertyId 1 in Gloucester County',
+      historyError,
     );
   });
 
