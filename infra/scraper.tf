@@ -1,13 +1,12 @@
 # Daily New Jersey sheriff sale scraper: EventBridge schedule -> Lambda -> S3 archive, with an SQS
 # dead-letter queue for failed async invocations.
 
-# Created by Lambda before this config existed; imported rather than created.
 resource "aws_cloudwatch_log_group" "scraper" {
-  name = "/aws/lambda/${local.scraper_prefix}-${local.env}"
+  name = "/aws/lambda/${local.scraper_name}"
 }
 
 resource "aws_sqs_queue" "scraper_dlq" {
-  name                      = "${local.scraper_prefix}-dlq-${local.env}"
+  name                      = "${local.scraper_name}-dlq"
   message_retention_seconds = 1209600 # 14 days
   sqs_managed_sse_enabled   = true
 }
@@ -24,7 +23,7 @@ data "aws_iam_policy_document" "scraper_assume_role" {
 }
 
 resource "aws_iam_role" "scraper" {
-  name               = "${local.scraper_prefix}-role-${local.env}"
+  name               = "${local.scraper_name}-role"
   assume_role_policy = data.aws_iam_policy_document.scraper_assume_role.json
 }
 
@@ -68,7 +67,7 @@ data "archive_file" "scraper" {
 }
 
 resource "aws_lambda_function" "scraper" {
-  function_name    = "${local.scraper_prefix}-${local.env}"
+  function_name    = local.scraper_name
   role             = aws_iam_role.scraper.arn
   runtime          = "nodejs24.x"
   handler          = "index.handler"
@@ -99,7 +98,7 @@ resource "aws_lambda_function" "scraper" {
 }
 
 resource "aws_cloudwatch_event_rule" "scraper_schedule" {
-  name                = "${local.scraper_prefix}-rule-${local.env}"
+  name                = "${local.scraper_name}-rule"
   description         = "New Jersey Sheriff Sale Scraper cron rule to run at 12:00AM UTC every day"
   schedule_expression = "cron(0 0 * * ? *)"
 }

@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon';
 import { getS3, saveS3 } from '../s3';
 
+// Managed in infra/storage.tf.
+const bucketName = 'nj-sheriff-sale';
+
 export type SaveHtmlToS3Args = {
   html: string;
   keyPrefix: string;
@@ -8,12 +11,8 @@ export type SaveHtmlToS3Args = {
 };
 
 export const saveHtmlToS3 = async ({ html, keyPrefix, keySuffix }: SaveHtmlToS3Args) => {
-  const { ENV } = process.env;
-  if (!ENV) throw new Error('ENV is not defined');
-
   const todaysDate = DateTime.utc().toISODate();
 
-  const bucketName = `nj-sheriff-sale-${ENV}`;
   const s3FileName = `${keyPrefix}/${todaysDate}/${keySuffix}`;
 
   console.log(`Checking if ${s3FileName} already exists ...`);

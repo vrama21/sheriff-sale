@@ -1,18 +1,21 @@
 # infra
 
-OpenTofu config for the backend's AWS resources (account `590184139982`, `us-east-2`, env `dev`):
+OpenTofu config for the backend's AWS resources (account `590184139982`, `us-east-2`). AWS hosts a
+single environment; all testing is local.
 
-- `nj-sheriff-sale-dev`: S3 archive of scraped pages (`prevent_destroy`)
-- `new-jersey-sheriff-sale-scraper-dev`: scraper Lambda, its IAM role, SQS dead-letter queue, log
+- `nj-sheriff-sale`: S3 archive of scraped pages (`prevent_destroy`)
+- `new-jersey-sheriff-sale-scraper`: scraper Lambda, its IAM role, SQS dead-letter queue, log
   group, and the daily `cron(0 0 * * ? *)` EventBridge schedule
 - `sheriff-sale-tofu-state-590184139982`: the bucket holding this config's own state
   (`prevent_destroy`, versioned)
+
+Resource names carry no environment; the Lambda runs with `ENV=prod`.
 
 ## Prerequisites
 
 - OpenTofu, pinned in the root `mise.toml` (`mise install`).
 - AWS credentials for the account, e.g. `AWS_PROFILE` in `mise.local.toml`.
-- `TF_VAR_database_url` set to the dev `DATABASE_URL` (e.g. in `mise.local.toml`).
+- `TF_VAR_database_url` set to the prod `DATABASE_URL` (e.g. in `mise.local.toml`).
 - The Lambda bundle: `npm run build` from the repo root (writes `backend/dist/index.js`).
 
 ## Day to day
