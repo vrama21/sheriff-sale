@@ -6,4 +6,6 @@ locals {
   state_bucket = "sheriff-sale-tofu-state-${local.account_id}"
 
   scraper_name = "new-jersey-sheriff-sale-scraper"
+
+  clerk_records_name = "new-jersey-clerk-records"
 }

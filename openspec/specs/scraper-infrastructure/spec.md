@@ -3,7 +3,9 @@
 ## Purpose
 
 The AWS resources behind the daily New Jersey sheriff sale scraper: the `nj-sheriff-sale` archive bucket, the Lambda and its IAM role, dead-letter queue, schedule, and log group, plus their names and protection rules.
+
 ## Requirements
+
 ### Requirement: Archive bucket
 
 OpenTofu SHALL manage an S3 bucket named `nj-sheriff-sale`. The name SHALL NOT be derived from the environment. The resource SHALL set `lifecycle { prevent_destroy = true }` and SHALL declare:
@@ -133,4 +135,3 @@ OpenTofu SHALL manage an event invoke config for the scraper function with `maxi
 
 - **WHEN** a scheduled invocation throws or times out
 - **THEN** the function is not invoked again for that event, and the event appears in `new-jersey-sheriff-sale-scraper-dlq`
-

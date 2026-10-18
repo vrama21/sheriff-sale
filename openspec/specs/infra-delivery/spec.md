@@ -3,7 +3,9 @@
 ## Purpose
 
 How backend infrastructure changes are built and delivered: the esbuild Lambda bundle, CI applying `infra/` on `main` through a GitHub OIDC role in the `prod` environment, and the removal of the old CDK toolchain.
+
 ## Requirements
+
 ### Requirement: Lambda bundle build
 
 The `backend` workspace `build` script SHALL type-check the sources and SHALL use esbuild to bundle `src/modules/sheriffSale/handler.ts` into `backend/dist/index.js`. The bundle SHALL be a single CommonJS file targeting Node 24 with `@aws-sdk/*` included. The bundle SHALL export `handler`. The build SHALL NOT require AWS credentials, `DATABASE_URL`, or `ENV`.
@@ -115,4 +117,3 @@ After cutover, the repository SHALL NOT contain the CDK app (`backend/bin/`, `ba
 
 - **WHEN** the account's S3 buckets are listed after the grace period
 - **THEN** `nj-sheriff-sale-dev` does not exist, and `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` still exists
-

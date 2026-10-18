@@ -3,7 +3,9 @@
 ## Purpose
 
 TBD - created by archiving change upgrade-drizzle. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Pinned Drizzle versions
 
 `packages/database/package.json` SHALL pin `drizzle-orm` and `drizzle-kit` to exact versions, with no range operators. `drizzle-orm` SHALL be 0.41.0 or later, so that `numeric` columns support `mode: 'number'`, and SHALL stay below 1.0 until a stable 1.0 is released. The two packages SHALL be a matched pair: when one is upgraded, the other SHALL be moved in the same change to the newest release on its current minor line, or left unchanged if it is already the newest.
@@ -82,4 +84,3 @@ Every migration SHALL be backward compatible with the application code deployed 
 
 - **WHEN** a migration fails to apply
 - **THEN** the script prints the error, closes the connection, and exits with code 1
-

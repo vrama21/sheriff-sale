@@ -1,8 +1,11 @@
 # local-environment Specification
 
 ## Purpose
+
 TBD - created by archiving change harden-ci-env-and-ops. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Single local env file
 
 The repo-root `.env` SHALL be the only env file that local tooling reads. `packages/database/drizzle.config.ts`, `packages/database/src/migrate.ts`, `backend/src/modules/sheriffSale/handler.local.ts`, `backend/src/modules/sheriffSale/replay/index.ts`, the `frontend` `dev` script, `docker-compose.yml`, and the db-query skill's local connection SHALL all read `<root>/.env`, resolved independently of the working directory. No file in the repository SHALL load `.env.local`. Library code, such as `packages/database/src/client.ts`, SHALL read `process.env` only and SHALL NOT load any env file. An entry point that loads `.env` SHALL do so before it loads the database client.
@@ -76,4 +79,3 @@ It SHALL NOT declare the obsolete `version` key, `expose`, or any admin UI servi
 
 - **WHEN** `select version()` runs against the local container and against prod
 - **THEN** both report the same major version
-

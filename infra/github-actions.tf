@@ -13,6 +13,10 @@ locals {
   scraper_alarms_arn    = "arn:aws:sns:${local.region}:${local.account_id}:${local.scraper_name}-alarms"
   scraper_alarm_arn     = "arn:aws:cloudwatch:${local.region}:${local.account_id}:alarm:${local.scraper_name}-*"
   github_actions_role   = "sheriff-sale-github-actions"
+
+  clerk_records_function_arn  = "arn:aws:lambda:${local.region}:${local.account_id}:function:${local.clerk_records_name}"
+  clerk_records_rule_arn      = "arn:aws:events:${local.region}:${local.account_id}:rule/${local.clerk_records_name}-rule"
+  clerk_records_log_group_arn = "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/${local.clerk_records_name}"
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -74,6 +78,24 @@ data "aws_iam_policy_document" "github_actions_tofu" {
     sid       = "ScraperFunction"
     actions   = ["lambda:*"]
     resources = [local.scraper_function_arn, "${local.scraper_function_arn}:*"]
+  }
+
+  statement {
+    sid       = "ClerkRecordsFunction"
+    actions   = ["lambda:*"]
+    resources = [local.clerk_records_function_arn, "${local.clerk_records_function_arn}:*"]
+  }
+
+  statement {
+    sid       = "ClerkRecordsSchedule"
+    actions   = ["events:*"]
+    resources = [local.clerk_records_rule_arn]
+  }
+
+  statement {
+    sid       = "ClerkRecordsLogGroup"
+    actions   = ["logs:*"]
+    resources = [local.clerk_records_log_group_arn, "${local.clerk_records_log_group_arn}:*"]
   }
 
   statement {

@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="ctl00_Head1"><title>
+	Public Records Electronic Search System
+</title><meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    
+    
+  <script type="text/javascript" src="../Js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../Js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../Js/js.cookie.min.js"></script>
+    <script type="text/javascript" src="../Js/bootstrap.min.js"></script>
+
+    
+    <link href="../includes/style/basestyle.css" type="text/css" rel="Stylesheet" /><link href="../nodestyle.css" rel="stylesheet" type="text/css" />
+    <!--[if IE ]>
+  <link href="../nodestyleIE.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+
+    <script language="javascript" type="text/javascript" src="../includes/jsDate.js"></script>
+    <script>
+  $(document).ready(function () {
+      var $getHeight = $(window).height();
+      window.localStorage.setItem("WindowHeight", $getHeight); 
+
+      var spnTitle = $('#ctl00_spnTitle').text();
+      //alert(spnTitle);
+      if (spnTitle == 'Freeholders Agenda') {
+          $('#ctl00_spnTitle').text('Meeting Agenda');
+          $('#ctl00_SiteMapPath1_ctl04_lblCurrent').text('Meeting Agenda');
+      }
+      else if (spnTitle == 'Freeholders Minutes') {
+          $('#ctl00_spnTitle').text('Meeting Minutes');
+          $('#ctl00_SiteMapPath1_ctl04_lblCurrent').text('Meeting Minutes');
+      }
+    });
+    </script>
+    <script language="javascript" type="text/javascript">
+        function popUpTermsofuse(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 50,top = 100');");
+        }
+
+        function popUpFAQ(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=700,height=400,left = 50,top = 100');");
+        }
+
+        function removespace(s) {
+            var nonChar = new RegExp("\\s", "g");
+            var str = s.replace(nonChar, "");
+            return str;
+        }
+
+        function donothing() {
+        }
+
+        function jump(url) {
+            window.location = url;
+        }
+
+        function jumpParent(url) {
+            parent.window.location = url;
+        }
+        function mypopup(url) {
+            var leftspc = screen.availWidth - 350;
+            var topspc = screen.availHeight - (screen.availHeight - 200);
+            mywindow = window.open(url, "mywindow", "left=" + leftspc + ",top=" + topspc + ",location=0,status=0,scrollbars=0,width=400,height=100");
+
+        }
+        function CheckCart() {
+            if (document.getElementById('ctl00_lblMasterCart') != null) {
+                var labelval = document.getElementById('ctl00_lblMasterCart').innerHTML;
+                if (labelval == '') {
+
+                    return true;
+                }
+                else {
+                    return confirm('There are items in Checkout Cart, which would be lost on SignOut. Do you still want to SignOut?');
+                }
+            }
+
+        }
+    </script>
+
+<link href="../App_Themes/BurlingtonPress/Style.css" type="text/css" rel="stylesheet" /><style type="text/css">
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_0 { background-color:white;visibility:hidden;display:none;position:absolute;left:0px;top:0px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_1 { text-decoration:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_2 { width:100%; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_3 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_4 { width:100%;padding:0px 0px 0px 0px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_5 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_6 { width:100%;padding:0px 12px 0px 12px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_7 {  }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_8 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_9 {  }
+
+</style></head>
+<body>
+    <form name="aspnetForm" method="post" action="./ShowDetails.aspx" id="aspnetForm" style="height: 100%; margin: 0;">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEwNzExMjE5NDUPZBYCZg9kFgICAw9kFg5mDw8WBB4ISW1hZ2VVcmwFMi9QcmVzc1xBcHBfVGhlbWVzL0J1cmxpbmd0b25QcmVzcy9JbWFnZXMvL0NhcnQucG5nHgdWaXNpYmxlaGRkAgEPDxYCHwFoZGQCAg8WAh8BaGQCBA8WAh4JaW5uZXJodG1sBRBQcm9wZXJ0eSBSZWNvcmRzZAIFDzwrAAUBAA8WAh4PU2l0ZU1hcFByb3ZpZGVyBRJTcWxTaXRlTWFwUHJvdmlkZXJkZAIIDw8WAh8BaGRkAgoPZBYCAgEPZBYCZg9kFgJmD2QWAgIJDw8WBB4IQ3NzQ2xhc3MFCkh5cGVyTGluazIeBF8hU0ICAmRkZNWmK5HzSNiOncO3+FRT9i6BTKD5uhSnpOZZfZtHNjHw" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Press/WebResource.axd?d=FQG5Mv9yBNoVJo4f_nYFvt_Kik5sPfxhIjMomcpoYjS2rGHGKjs798xISA_IBKdcTEgcwtXlP8JzQDlJRQybjaDhAj7x2uXrYtZBNsBjfSU1&amp;t=638914220334897068" type="text/javascript"></script>
+
+
+<script src="/Press/WebResource.axd?d=hIetgqvCc6o7i95TQWPZYo6pT_WwjFAYZ0QOxmsS2-TF0i4yO2hwaX2n9RgrpTK_YahM-FkjW8UXUCMvQoPApBwxzW-hKksAnSMzwof4_ME1&amp;t=638914220334897068" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="89983770" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAfjob6y3woV0Rgq0eEQQCGkd2yJOnHVLAXkgIKE660GJ0PuAbtZ9mbVBte57gkpupKwGc7t+FBVg6kG/bZ3z8D2vqKVhJjfe+nMpFCBiIVozKUy+4coTR32qhalI+sSvzaEIl2vg72FWhcrAMTCoKEVVAPUCnr2y9/SnWFa2T7IzSCMMbl1g8dyMEe+ZeXzCWw=" />
+</div>   
+    <table width="99%" border="0" align="center" cellpadding="0" class="tblht96" cellspacing="0">
+        <tr>
+            <td style="width: 8px">
+                <div id="TopLeftCornerBg"></div>
+            </td>
+            <td>
+                <div id="TopCenterBg"></div>
+            </td>
+            <td style="width: 8px">
+                <div id="TopRightCornerBg"></div>
+            </td>
+        </tr>
+        <tr>
+            <td background="/Press/App_Themes/BurlingtonPress/Images/MainLeftBg.jpg">
+            </td>
+            <td bgcolor="#ffffff" valign="top" style="height: 100%" class="MainTableBorder">
+                <table width="100%" border="0" height="100%" cellspacing="0" align="center" cellpadding="0">
+                    <tr>
+                        <td valign="top" style="height: 100%">
+                            <table width="100%" class="tblht91" border="0" align="center" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td valign="top" height="29" class="mainHeaderBack">
+                                        <table style="width: 100%" cellspacing="0" cellpadding="0"  border="0">
+                                            <tr>
+                                                <td style="width: 50%; vertical-align: top">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                                        <tr>
+                                                            <td style="height: 30px">
+                                                                &nbsp;
+                                                            </td>
+                                                            <td>
+                                                                <img alt="" src="/Press/App_Themes/BurlingtonPress/Images/PressHeader.jpg" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td style="width: 50%; vertical-align: top">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                                        <tr>
+                                                            <td class="SloganText" style="text-align: right">
+                                                                Public Records Electronic Search System(PRESS)
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="right" class="white" style="padding-top: 5px">
+                                                                <a href="/Press/Index.aspx" class="TopMenuLink">Home&nbsp;</a>
+                                                                |<a href="javascript:void(0);" class="TopMenuLink" onclick="popUpFAQ('/Press/includes/oprsfaq.pdf');">&nbsp;&nbsp;FAQs&nbsp;</a>
+                                                                |<a href="http://www.co.burlington.nj.us/directory.aspx" target="_new" class="TopMenuLink">&nbsp;&nbsp;Contact Us&nbsp;</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="height: 5px">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                    <tr>
+                                                                        <td align="right" style="padding-right: 10px">
+                                                                            &nbsp;
+                                                                            
+                                                                        </td>
+                                                                        
+                                                                        <td id="ctl00_rowLogIn" align="right" class="white">
+                                                                            <a href="../LoginPublic.aspx" id="ctl00_lnkSignIn" class="TopMenuLink">&nbsp;LogIn&nbsp;</a>                                            
+                                                                        </td>
+
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>                                                       
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; height: 20px" class="mainHeaderBack">
+                                        <span id="ctl00_spnTitle" class="LabelStyle2">Property Records</span>
+                                    </td>
+                                   
+                                </tr>
+                                <tr>
+                                    <td style="height: 100%; vertical-align: top">
+                                        <table border="0" style="height: 95%; width: 100%" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td style="height: 24px">
+                                                    <table style="width: 100%" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td style="width: 60%" class="bgcolor01">
+                                                                <span id="ctl00_SiteMapPath1" style="display:inline-block;height:20px;width:100%;"><a href="#ctl00_SiteMapPath1_SkipLink"><img alt="Skip Navigation Links" src="/Press/WebResource.axd?d=BulGAxD6x_Y6ZU-0T2Q9mmzFpwglvVh1-XjgDUZSBftjlF6t2b0Oztj8FMC9UqGFEUlH8ayeBSequ_rgX0T9fA1flWL4TqsLoqxE31unyvY1&amp;t=638914220334897068" width="0" height="0" style="border-width:0px;" /></a><span class="node" style="display:inline-block;width:0px;">
+                                                                        
+                                                                        <input name="ctl00$SiteMapPath1$ctl00$hidNode" type="hidden" id="ctl00_SiteMapPath1_ctl00_hidNode" value="0" />
+                                                                    </span><span class="node" style="display:inline-block;width:15%;">
+                                                                        <a href="#ctl00_SiteMapPath1_ctl02_mnuSMP_SkipLink"><img alt="Skip Navigation Links" src="/Press/WebResource.axd?d=BulGAxD6x_Y6ZU-0T2Q9mmzFpwglvVh1-XjgDUZSBftjlF6t2b0Oztj8FMC9UqGFEUlH8ayeBSequ_rgX0T9fA1flWL4TqsLoqxE31unyvY1&amp;t=638914220334897068" width="0" height="0" style="border-width:0px;" /></a><table id="ctl00_SiteMapPath1_ctl02_mnuSMP" class="ctl00_SiteMapPath1_ctl02_mnuSMP_2" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0"><table class="fontboldblack ctl00_SiteMapPath1_ctl02_mnuSMP_4" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td style="white-space:nowrap;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 fontboldblack ctl00_SiteMapPath1_ctl02_mnuSMP_3" href="#" style="border-style:none;font-size:1em;cursor:text;">County Clerk</a></td><td style="width:0;"><img src="../App_Themes/BurlingtonPress/Images/downarrow.jpg" alt="Expand County Clerk" style="border-style:none;vertical-align:middle;" /></td>
+			</tr>
+		</table></td>
+	</tr>
+</table><div id="ctl00_SiteMapPath1_ctl02_mnuSMPn0Items" class="ctl00_SiteMapPath1_ctl02_mnuSMP_0 border2 ctl00_SiteMapPath1_ctl02_mnuSMP_7">
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Property Records Search System provides online access to information on property related transaction records for Burlington County." id="ctl00_SiteMapPath1_ctl02_mnuSMPn1">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="ClerkHome.aspx?op=basic" style="border-style:none;font-size:1em;">Property Records</a></td>
+				</tr>
+			</table></td>
+		</tr><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Election Results (2002 to Present)" id="ctl00_SiteMapPath1_ctl02_mnuSMPn2">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="Election.aspx?op=ELE" style="border-style:none;font-size:1em;">Election Results</a></td>
+				</tr>
+			</table></td>
+		</tr><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Property Record Images before 1964" id="ctl00_SiteMapPath1_ctl02_mnuSMPn3">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="http://ccarchive.co.burlington.nj.us" target="_New" style="border-style:none;font-size:1em;">Property Record Images before 1964</a></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table><div class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6 ctl00_SiteMapPath1_ctl02_mnuSMP_0" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0ItemsUp" onmouseover="PopOut_Up(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+		<img src="/Press/WebResource.axd?d=I8OvlqYK8RpF2nFJkfrKvWzkHKNCt8VYqJOcDGCZwBfP5irPKa83kWRJ4NY6HphV7dLtTQP5zls7ZxOiZDZDRk0--hamAyFszPV_RRAh9Fs1&amp;t=638914220334897068" alt="Scroll up" />
+	</div><div class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6 ctl00_SiteMapPath1_ctl02_mnuSMP_0" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0ItemsDn" onmouseover="PopOut_Down(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+		<img src="/Press/WebResource.axd?d=UAxRWUEHZXMEMO-MwI3rWfMGPpzJe4CsqqtzWUeMhX2RqRWMh0Ci4D0g2Gn9a34lIGK11tlpZy6wJokamoM6bz356Swvp7dJ1fM0-uUgsRg1&amp;t=638914220334897068" alt="Scroll down" />
+	</div>
+</div><a id="ctl00_SiteMapPath1_ctl02_mnuSMP_SkipLink"></a>
+                                                                        <input name="ctl00$SiteMapPath1$ctl02$hidNode" type="hidden" id="ctl00_SiteMapPath1_ctl02_hidNode" value="1461" />
+                                                                    </span><span class="pos">
+                                                                        
+                                                                    </span><span class="currentnode" style="display:inline-block;width:40%;">
+                                                                        <input name="ctl00$SiteMapPath1$ctl04$hidNode1" type="hidden" id="ctl00_SiteMapPath1_ctl04_hidNode1" value="~/Clerk/ShowDetails.aspx" />
+                                                                        <span id="ctl00_SiteMapPath1_ctl04_lblCurrent">Property Records</span>
+                                                                    </span><a id="ctl00_SiteMapPath1_SkipLink"></a></span>
+                                                            </td>
+                                                            <td align="right" style="width: 40%" class="bordertop1">
+                                                                <table style="width: 100%; height: 24px" cellpadding="0" cellspacing="0" border="0">
+                                                                    <tr>
+                                                                        <td style="width: 24px">
+                                                                            <img alt="" src="/Press/App_Themes/BurlingtonPress/Images/MenuCorner.jpg" />
+                                                                        </td>
+                                                                        <td style="height: 24px" align="right">
+                                                                            <table cellpadding="0" cellspacing="0" border="0" align="right">
+                                                                                <tr>
+                                                                                    <td style="text-align: right; padding-right: 5px">
+                                                                                        <a class="HyperLink1" href="/Press/Clerk/ClerkHome.aspx?op=basic">Records Search</a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                            
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 100%; vertical-align: top; background-color: #fff" colspan="2">
+                                                    <table width="100%" align="center" style="height: 100%" border="0" cellpadding="0"
+                                                        cellspacing="0">
+                                                        <tr>
+                                                            <td valign="top" style="height: 100%" align="center">
+                                                                
+     <script src="Js/jquery.min.js"></script>    
+     <script language="javascript" type="text/javascript">
+       $(document).ready(function () {          
+               resizeContent();
+               $(window).resize(function () {
+                   resizeContent();
+               });         
+
+           function resizeContent() {
+               $height = window.localStorage.getItem("WindowHeight");
+               if ($height >= 900)
+                   $height -= 155; // For resolution 1920 X 1080
+               else if ($height > 700 && $height < 900)
+                   $height -= 155; // For resolution 1600 X 900
+               $('#frameheightID').height($height); 
+               $('.FooterBg').height(32);
+               $('#FooterHeight').css('margin-top',8 +'px');
+           }
+       });
+    </script>
+
+    <table id="frameheightID" style="width: 100%;" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td style="padding-top: 10px">
+                <table id="ctl00_ContentPlaceHolder1_tblSearchLinks" cellpadding="0" width="100%" cellspacing="0" border="0">
+	<tr>
+		<td align="right" style="height: 20px;" class="back">                             
+                            <a id="ctl00_ContentPlaceHolder1_hypBasic" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypBasic&#39;,&#39;&#39;)">Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<span id="ctl00_ContentPlaceHolder1_spnsep1">|</span>&nbsp;&nbsp;&nbsp;&nbsp;                             
+                            <a id="ctl00_ContentPlaceHolder1_hypResults" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypResults&#39;,&#39;&#39;)">Search Results</a>&nbsp;&nbsp;&nbsp;&nbsp;<span id="ctl00_ContentPlaceHolder1_spnsep2">|</span>&nbsp;&nbsp;&nbsp;&nbsp;                             
+                            <a id="ctl00_ContentPlaceHolder1_hypImg" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypImg&#39;,&#39;&#39;)">View Image</a>&nbsp;&nbsp;
+                        </td>
+	</tr>
+</table>
+
+                <table width="100%" style="height: 100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td style="height: 100%; vertical-align: top">
+                            <iframe src="ShowDetails.htm?789687" id="ctl00_ContentPlaceHolder1_ifrmElection" width="100%" height="100%" frameborder="0"></iframe>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>    
+
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr class="FooterBg">
+                                    <td>
+                                        <table id="FooterHeight" width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td style="text-align: left; padding-left: 10px; width: 25%">
+                                                    <a href="javascript:popUpTermsofuse('/Press/TermsOfUse.aspx')" class="TopMenuLink">Terms of Use</a>
+                                                    <span style="color: #14517e; font-size: 11px">(ITPR03V PRESS (RELEASE)v2021.8.5.28346)</span> 
+                                                </td>
+                                                <td style="text-align: center; width: 50%" class="white">
+                                                    Site compatible with Internet Explorer and Chrome
+                                                </td>
+                                                <td class="white" style="width: 25%; text-align: right; padding-right: 10px">
+                                                    Rel 2025-1(08-21-2025/05-07-2026)* 
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td background="/Press/App_Themes/BurlingtonPress/Images/MainRightBg.jpg">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 8px">
+                <div id="BottomLeftCornerBg"></div>
+            </td>
+            <td>
+                <div id="BottomTopCenterBg"></div>
+            </td>
+            <td style="width: 8px">
+                <div id="BottomTopRightCornerBg"></div>
+            </td>
+        </tr>
+    </table>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_SiteMapPath1_ctl02_mnuSMP_Data = new Object();
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.disappearAfter = 500;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.horizontalOffset = 1;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.verticalOffset = 6;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.hoverClass = 'ctl00_SiteMapPath1_ctl02_mnuSMP_9 menuon1';
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.hoverHyperLinkClass = 'ctl00_SiteMapPath1_ctl02_mnuSMP_8 menuon1';
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.iframeUrl = '/Press/WebResource.axd?d=knuKFjvzTU0v0BB-62Ro2otmOfJ8SpeJMfqeTez5840LQN8pfQGPCykV8bCH9LXGksiHbcpjukf5d7VvKLNpzojkrkQ8ZxbJ-Y7dep805Cg1&t=638914220334897068';
+//]]>
+</script>
+</form>
+</body>
+</html>

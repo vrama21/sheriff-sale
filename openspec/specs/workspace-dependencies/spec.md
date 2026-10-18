@@ -1,8 +1,11 @@
 # workspace-dependencies Specification
 
 ## Purpose
+
 TBD - created by archiving change upgrade-backend-dependencies. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: One lockfile
 
 The repository SHALL have exactly one npm lockfile, the root `package-lock.json`. No workspace SHALL contain its own `package-lock.json`. `npm ci` at the root SHALL install every workspace.
@@ -101,4 +104,3 @@ The root `package.json` SHALL pin `typescript` to an exact 6.x or 7.x version, w
 
 - **WHEN** `tsc --noEmit -p backend` runs on the root TypeScript version
 - **THEN** it reports no deprecated-option error and needs no `ignoreDeprecations` setting
-

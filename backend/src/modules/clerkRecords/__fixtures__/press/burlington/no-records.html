@@ -1,0 +1,836 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="ctl00_Head1"><title>
+	Public Records Electronic Search System
+</title><meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    
+    
+  <script type="text/javascript" src="../Js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../Js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../Js/js.cookie.min.js"></script>
+    <script type="text/javascript" src="../Js/bootstrap.min.js"></script>
+
+    
+    <link href="../includes/style/basestyle.css" type="text/css" rel="Stylesheet" /><link href="../nodestyle.css" rel="stylesheet" type="text/css" />
+    <!--[if IE ]>
+  <link href="../nodestyleIE.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+
+    <script language="javascript" type="text/javascript" src="../includes/jsDate.js"></script>
+    <script>
+  $(document).ready(function () {
+      var $getHeight = $(window).height();
+      window.localStorage.setItem("WindowHeight", $getHeight); 
+
+      var spnTitle = $('#ctl00_spnTitle').text();
+      //alert(spnTitle);
+      if (spnTitle == 'Freeholders Agenda') {
+          $('#ctl00_spnTitle').text('Meeting Agenda');
+          $('#ctl00_SiteMapPath1_ctl04_lblCurrent').text('Meeting Agenda');
+      }
+      else if (spnTitle == 'Freeholders Minutes') {
+          $('#ctl00_spnTitle').text('Meeting Minutes');
+          $('#ctl00_SiteMapPath1_ctl04_lblCurrent').text('Meeting Minutes');
+      }
+    });
+    </script>
+    <script language="javascript" type="text/javascript">
+        function popUpTermsofuse(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 50,top = 100');");
+        }
+
+        function popUpFAQ(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=700,height=400,left = 50,top = 100');");
+        }
+
+        function removespace(s) {
+            var nonChar = new RegExp("\\s", "g");
+            var str = s.replace(nonChar, "");
+            return str;
+        }
+
+        function donothing() {
+        }
+
+        function jump(url) {
+            window.location = url;
+        }
+
+        function jumpParent(url) {
+            parent.window.location = url;
+        }
+        function mypopup(url) {
+            var leftspc = screen.availWidth - 350;
+            var topspc = screen.availHeight - (screen.availHeight - 200);
+            mywindow = window.open(url, "mywindow", "left=" + leftspc + ",top=" + topspc + ",location=0,status=0,scrollbars=0,width=400,height=100");
+
+        }
+        function CheckCart() {
+            if (document.getElementById('ctl00_lblMasterCart') != null) {
+                var labelval = document.getElementById('ctl00_lblMasterCart').innerHTML;
+                if (labelval == '') {
+
+                    return true;
+                }
+                else {
+                    return confirm('There are items in Checkout Cart, which would be lost on SignOut. Do you still want to SignOut?');
+                }
+            }
+
+        }
+    </script>
+
+<link href="../App_Themes/BurlingtonPress/Style.css" type="text/css" rel="stylesheet" /><style type="text/css">
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_0 { background-color:white;visibility:hidden;display:none;position:absolute;left:0px;top:0px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_1 { text-decoration:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_2 { width:100%; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_3 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_4 { width:100%;padding:0px 0px 0px 0px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_5 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_6 { width:100%;padding:0px 12px 0px 12px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_7 {  }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_8 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_9 {  }
+
+</style></head>
+<body>
+    <form name="aspnetForm" method="post" action="./ClerkHome.aspx?op=basic" id="aspnetForm" style="height: 100%; margin: 0;">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEwOTE1MDIzNzQPZBYCZg9kFgICAw9kFg5mDw8WBB4ISW1hZ2VVcmwFMi9QcmVzc1xBcHBfVGhlbWVzL0J1cmxpbmd0b25QcmVzcy9JbWFnZXMvL0NhcnQucG5nHgdWaXNpYmxlaGRkAgEPDxYCHwFoZGQCAg8WAh8BaGQCBA8WAh4JaW5uZXJodG1sBRBQcm9wZXJ0eSBSZWNvcmRzZAIFDzwrAAUBAA8WAh4PU2l0ZU1hcFByb3ZpZGVyBRJTcWxTaXRlTWFwUHJvdmlkZXJkZAIIDw8WAh8BaGRkAgoPZBYKZg9kFgJmD2QWAmYPZBYGAgEPDxYEHghDc3NDbGFzcwUKSHlwZXJMaW5rMh4EXyFTQgICZGQCBQ8PFgYfBAUKSHlwZXJMaW5rMh4HRW5hYmxlZGcfBQICZGQCCQ8PFgIfBmhkZAIBDw8WCB4EVGV4dAUQTm8gcmVzdWx0cyBmb3VuZB8EBQVlcnJvch8FAgIfAWdkZAICDxYCHwFoZAIDDxYCHwFoFhYCFQ8QDxYEHg1EYXRhVGV4dEZpZWxkBQhUb3duTmFtZR4LXyFEYXRhQm91bmRnZBAVKhxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5DkJBU1MgUklWRVIgVFdQDEJFVkVSTFkgQ0lUWQ9CT1JERU5UT1dOIENJVFkOQk9SREVOVE9XTiBUV1APQlVSTElOR1RPTiBDSVRZDkJVUkxJTkdUT04gVFdQEENIRVNURVJGSUVMRCBUV1APQ0lOTkFNSU5TT04gVFdQC0RFTEFOQ08gVFdQCkRFTFJBTiBUV1AORUFTVEFNUFRPTiBUV1ASRURHRVdBVEVSIFBBUksgVFdQC0VWRVNIQU0gVFdQD0ZJRUxEU0JPUk8gQk9STwxGTE9SRU5DRSBUV1AOSEFJTkVTUE9SVCBUV1ANTFVNQkVSVE9OIFRXUA1NQU5TRklFTEQgVFdQD01BUExFIFNIQURFIFRXUBJNRURGT1JEIExBS0VTIEJPUk8LTUVERk9SRCBUV1AOTU9PUkVTVE9XTiBUV1APTU9VTlQgSE9MTFkgVFdQEE1PVU5UIExBVVJFTCBUV1APTkVXIEhBTk9WRVIgVFdQEU5PUlRIIEhBTk9WRVIgVFdQDFBBTE1ZUkEgQk9STw5QRU1CRVJUT04gQk9STw1QRU1CRVJUT04gVFdQDVJJVkVSU0lERSBUV1ANUklWRVJUT04gQk9STwtTSEFNT05HIFRXUA9TT1VUSEFNUFRPTiBUV1APU1BSSU5HRklFTEQgVFdQDlRBQkVSTkFDTEUgVFdQDldBU0hJTkdUT04gVFdQDldFU1RBTVBUT04gVFdQD1dJTExJTkdCT1JPIFRXUAxXT09ETEFORCBUV1AQV1JJR0hUU1RPV04gQk9STwtDT1VOVFkgV0lERRUqHFBsZWFzZSBTZWxlY3QgYSBNdW5pY2lwYWxpdHkOQkFTUyBSSVZFUiBUV1AMQkVWRVJMWSBDSVRZD0JPUkRFTlRPV04gQ0lUWQ5CT1JERU5UT1dOIFRXUA9CVVJMSU5HVE9OIENJVFkOQlVSTElOR1RPTiBUV1AQQ0hFU1RFUkZJRUxEIFRXUA9DSU5OQU1JTlNPTiBUV1ALREVMQU5DTyBUV1AKREVMUkFOIFRXUA5FQVNUQU1QVE9OIFRXUBJFREdFV0FURVIgUEFSSyBUV1ALRVZFU0hBTSBUV1APRklFTERTQk9STyBCT1JPDEZMT1JFTkNFIFRXUA5IQUlORVNQT1JUIFRXUA1MVU1CRVJUT04gVFdQDU1BTlNGSUVMRCBUV1APTUFQTEUgU0hBREUgVFdQEk1FREZPUkQgTEFLRVMgQk9STwtNRURGT1JEIFRXUA5NT09SRVNUT1dOIFRXUA9NT1VOVCBIT0xMWSBUV1AQTU9VTlQgTEFVUkVMIFRXUA9ORVcgSEFOT1ZFUiBUV1ARTk9SVEggSEFOT1ZFUiBUV1AMUEFMTVlSQSBCT1JPDlBFTUJFUlRPTiBCT1JPDVBFTUJFUlRPTiBUV1ANUklWRVJTSURFIFRXUA1SSVZFUlRPTiBCT1JPC1NIQU1PTkcgVFdQD1NPVVRIQU1QVE9OIFRXUA9TUFJJTkdGSUVMRCBUV1AOVEFCRVJOQUNMRSBUV1AOV0FTSElOR1RPTiBUV1AOV0VTVEFNUFRPTiBUV1APV0lMTElOR0JPUk8gVFdQDFdPT0RMQU5EIFRXUBBXUklHSFRTVE9XTiBCT1JPC0NPVU5UWSBXSURFFCsDKmdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZxYBZmQCGQ8QDxYGHg5EYXRhVmFsdWVGaWVsZAUHRG9jVHlwZR8IBQdEb2NOYW1lHwlnZBAV1AEUU2VsZWN0IERvY3VtZW50IFR5cGUJQUZGSURBVklUGUFHUkVFTUVOVCBOT1QgVE8gRU5DVU1CRVIMQUdSRUVNRU5UKFMpDUFJUkNSQUZUIExJRU4RQU1FTkRFRCBBR1JFRU1FTlQOQU1FTkRFRCBCWUxBV1MRQU1FTkRFRCBDT01QTEFJTlQSQU1FTkRFRCBDT05ETyBMSUVOGUFNRU5ERUQgQ09OU1RSVUNUSU9OIExJRU4jQU1FTkRFRCBERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMdQU1FTkRFRCBERUNMQVJBVElPTiBPRiBUQUtJTkcXQU1FTkRFRCBGSU5BTCBKVURHRU1FTlQNQU1FTkRFRCBMRUFTRRNBTUVOREVEIE1BU1RFUiBERUVEDUFNRU5ERUQgT1JERVIVQU1FTkRNRU5UIE9GIE1PUlRHQUdFEEFNRU5ETUVOVCBPRiBVQ0MQQU1FTkVEIEpVREdFTUVOVApBU1NJR05NRU5UF0FTU0lHTk1FTlQgT0YgQUdSRUVNRU5UGUFTU0lHTk1FTlQgT0YgQ09OVFJBQ1QoUykWQVNTSUdOTUVOVCBPRiBMRUFTRShTKSBBU1NJR05NRU5UIE9GIExFQVNFKFMpICYgUkVOVChTKRVBU1NJR05NRU5UIE9GIExJRU4oUykWQVNTSUdOTUVOVCBPRiBNT1JUR0FHRRVBU1NJR05NRU5UIE9GIFJFTlQoUykWQVNTSUdOTUVOVCBPRiBUQVggU0FMRSJBU1NJR05NRU5UIE9GIFRBWCBTQUxFIENFUlRJRklDQVRFEUFTU0lHTk1FTlQgT0YgVUNDF0FTU1VNUFRJT04gT0YgQUdSRUVNRU5UDEJJTEwgT0YgU0FMRRdCVUlMRElORyBDT05UUkFDVC1QTEFOUxdCVUlMRElORyBDT05UUkFDVC1TUEVDUxFCVVJMSU5HVE9OIENPVU5UWQZCWSBMQVcYQ0FOQ0VMTEFUSU9OIE9GIE1PUlRHQUdFEkNBTkNFTExFRCBUQVggU0FMRQxDQyBKVURHRU1FTlQLQ0VSVElGSUNBVEUcQ0VSVElGSUNBVEUgT0YgSU5DT1JQT1JBVElPThlDRVJUSUZJQ0FURSBPRiBSRURFTVBUSU9ODkNIQU5HRSBPRiBOQU1FBkNIRUNLUw9DT01NT04gTEFXIExJRU4JQ09NUExBSU5UC0NPTkRPIExJRU5TFUNPTkRPIExJRU5TIERJU0NIQVJHRQdDT05TRU5UFENPTlNFTlQgT0YgSlVER0VNRU5UDUNPTlNFTlQgT1JERVIOQ09OU0VOVCBXQUlWRVIZQ09OU09MSURBVElPTiBPRiBNT1JUR0FHRRFDT05TVFJVQ1RJT04gTElFTh1DT05TVFJVQ1RJT04gTElFTiAtIERJU0NIQVJHRSVDT05TVFJVQ1RJT04gTElFTiAtIERJU0NIQVJHRSBCWSBCT05ECENPTlRSQUNUJkNPUlJFQ1RJT04gREVDTEFSQVRJT04gT0YgUkVTVFJJQ1RJT05TF0NPUlJFQ1RJT04gVE8gQUdSRUVNRU5UGENPUlJFQ1RJT04gVE8gQVNTSUdOTUVOVBJDT1JSRUNUSU9OIFRPIERFRUQWQ09SUkVDVElPTiBUTyBNT1JUR0FHRR9DT1JSRUNUSU9OIFRPIFBPV0VSIE9GIEFUVE9STkVZGkNPUlJFQ1RJT04gVE8gUklHSFQtT0YtV0FZHENPUlJFQ1RJT04gVE8gU0hFUklGRidTIERFRUQlQ09SUkVDVElPTiBUTyBTVUJPUkRJTkFUSU9OIEFHUkVFTUVOVB5DT1VOVFkgQ0xFUksgSlVER0VNRU5ULVJFTEVBU0UuQ09VTlRZLUFTU0lHTkVNRU5UIE9GIExFQVNFUyAmIFJFTlRTLU5PIENIQVJHRSVDT1VOVFktU1RBVEUgV0VUTEFORCBQRVJNSVQtTk8gQ0hBUkdFCENSSU1JTkFMGERFQ0xBUkFUSU9OIE9GIEFHUkVFTUVOVClERUNMQVJBVElPTiBPRiBFTlZJUk9OTUVOVEFMIFJFU1RSSUNUSU9OUxtERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMiREVDTEFSQVRJT04gT0YgUkVTVFJJQ1RJT05TIC0gUEggMSRERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMgLSBQSCAyJjMjREVDTEFSQVRJT04gT0YgUkVTVFJJQ1RJT05TIC0gU0VDIDEVREVDTEFSQVRJT04gT0YgVEFLSU5HFERFQ0xBUkFUSU9OIE9GIFRSVVNUBERFRUQSREVFRCBPRiBERURJQ0FUSU9OHURFRUQtRlVMTCBFWEVNUFRJT04tTk8gQ0hBUkdFH0RJU0NIQVJHRSBERUNMQVJBVElPTiBPRiBUQUtJTkc7RElTQ0hBUkdFIE5PVElDRSBPRiBVTlBBSUQgQkFMQU5DRS9SSUdIVCBUTyBGSUxFIExJRU4gQ0xBSU0WRElTQ0hBUkdFIE9GIEFHUkVFTUVOVBpESVNDSEFSR0UgT0YgQUlSQ1JBRlQgTElFThdESVNDSEFSR0UgT0YgQVNTSUdOTUVOVBZESVNDSEFSR0UgT0YgSlVER0VNRU5UFURJU0NIQVJHRSBPRiBNT1JUR0FHRRJESVNDSEFSR0UgT0YgT1JERVIKRElTQ0xBSU1FUglEWUZTIExJRU4IRUFTRU1FTlQURVNUT1BQRUwgQ0VSVElGSUNBVEUWRVhURU5TSU9OIE9GIEFHUkVFTUVOVBJFWFRFTlNJT04gT0YgTEVBU0UVRVhURU5TSU9OIE9GIE1PUlRHQUdFEEZFREVSQUwgVEFYIExJRU4cRkVERVJBTCBUQVggTElFTiAtIERJU0NIQVJHRRpGRURFUkFMIFRBWCBMSUVOIC0gUkVMRUFTRR1GRURFUkFMIFRBWCBMSUVOIC0gUkVWT0NBVElPTh1GRURFUkFMIFRBWCBMSUVOIC0gV0lUSERSQVdBTApGSUxFRCBNQVBTD0ZJTkFMIEpVREdFTUVOVAVHUkFOVAZJTiBSRU0WSU5IRVJJVEFOQ0UgVEFYIFdBSVZFUglKVURHRU1FTlQGTEFQU0VEGkxFQVNFIEZPUiA5OSBZRUFSUyBPUiBNT1JFCExFQVNFKFMpE0xJQ0VOU0lORyBBR1JFRU1FTlQLTElTIFBFTkRFTlMVTElTIFBFTkRFTlMgLSBBTUVOREVEF0xJUyBQRU5ERU5TIC0gRElTQ0hBUkdFFkxJUyBQRU5ERU5TIC0gUkVMRUFTRUQQTUFHSVNUUkFURSBSRUNPRxBNQUdJU1RSQVRFUyBCT05EDU1BUlNIQUxTIERFRUQLTUFTVEVSIERFRUQOTUVDSEFOSUNTIExJRU4aTUVDSEFOSUNTIExJRU4gLSBESVNDSEFSR0UYTUVDSEFOSUNTIExJRU4gLSBSRUxFQVNFHU1FQ0hBTklDUyBOT1RJQ0UgT0YgSU5URU5USU9OBk1FUkdFUhJNSVNDRUxMQU5FT1VTIEJPTkQdTUlTQ0VMTEFORU9VUyBCT05ELSBESVNDSEFSR0UPTU5JIC0gRElTQ0hBUkdFGU1PRElGSUNBVElPTiBPRiBBR1JFRU1FTlQYTU9ESUZJQ0FUSU9OIE9GIE1PUlRHQUdFCE1PUlRHQUdFG01PUlRHQUdFIFNFQ1VSSVRZIEFHUkVFTUVOVBJNT1JUR0FHRS1OTyBDSEFSR0UOTVVOSUNJUEFMIERFRUQjTVVOSUNJUEFMLUNFUlRJRklDQVRFIE9GIFJFREVNUFRJT04lTVVOSUNJUEFMLURFQ0xBUkFUSU9OIE9GIFJFU1RSSUNUSU9OUxxNVU5JQ0lQQUwtREVFRCBPRiBERURJQ0FUSU9OEk1VTklDSVBBTC1FQVNFTUVOVA9NVU5JQ0lQQUwtTEVBU0UhTVVOSUNJUEFMLVJFTEVBU0UgT0YgUkVTVFJJQ1RJT05TIk1VTklDSVBBTC1URVJNSU5BVElPTiBPRiBBR1JFRU1FTlQMTVVOSUNJUEFMSVRZBk5PVElDRRROT1RJQ0UgT0YgU0VUVExFTUVOVDFOT1RJQ0UgT0YgVU5QQUlEIEJBTEFOQ0UvUklHSFQgVE8gRklMRSBMSUVOIENMQUlNBk9QVElPThVPUkRFUihTKSBPRiBUSEUgQ09VUlQJT1JESU5BTkNFGFBPU1RQT05FTUVOVCBPRiBNT1JUR0FHRRFQT1dFUiBPRiBBVFRPUk5FWRdSRURFTVBUSU9OIE9GIFRBWCBTQUxFUwdSRUxFQVNFFFJFTEVBU0UgT0YgQUdSRUVNRU5UE1JFTEVBU0UgT0YgQ09OVFJBQ1QUUkVMRUFTRSBPRiBKVURHRU1FTlQQUkVMRUFTRSBPRiBMRUFTRRRSRUxFQVNFIE9GIExJQUJJTElUWQ9SRUxFQVNFIE9GIExJRU4PUkVMRUFTRSBPRiBMSUVOE1JFTEVBU0UgT0YgTU9SVEdBR0UQUkVMRUFTRSBPRiBPUkRFUhdSRUxFQVNFIE9GIFJFU1RSSUNUSU9OUxdSRUxFQVNFIE9GIFJJR0hULU9GLVdBWRFSRUxFQVNFIE9GIFJJR0hUUw5SRUxFQVNFIE9GIFVDQxdSRVBPUlQgT0YgQ09NTUlTU0lPTkVSUxpSRVNJRyAmIEFQUE9JTlRFRCBUUlVTVEVFUwpSRVNPTFVUSU9OFVJFU1RSSUNUSU9OIEFHUkVFTUVOVB1SRVZPQ0FUSU9OIE9GIEFHUkVFTUVOVCBTRUMgMRhSRVZPQ0FUSU9OIE9GIERJU0NMQUlNRVIZUkVWT0NBVElPTiBPRiBNQVNURVIgREVFRB9SRVZPQ0FUSU9OIE9GIFBPV0VSIE9GIEFUVE9STkVZE1JFVk9DQVRJT04gT0YgVFJVU1QkUkVWT0tJTkcgUkVMRUFTRSBPRiBGRURFUkFMIFRBWCBMSUVODFJJR0hUIE9GIFdBWRFTRUNVUkVEIEFHUkVFTUVOVBNTRUNVUkVEIFRSQU5TQUNUSU9ODlNIRVJJRkYnUyBCT05EDlNIRVJJRkYnUyBERUVEDlNIRVJJRkZTIFJFQ09HFFNUQVRFIFdFVExBTkQgUEVSTUlUJ1NUSVBVTEFUSU9OIE9GIFNFVFRMRU1FTlQgQU5EIERJU01JU1NBTBdTVElQVUxBVElPTiBXQUlWRVIvTElFThdTVUJPUkRJTkFUSU9OIEFHUkVFTUVOVCJTVUJPUkRJTkFUSU9OIEFHUkVFTUVOVC0gTk8gQ0hBUkdFGVNVQk9SRElOQVRJT04gT0YgTU9SVEdBR0UUU1VCT1JESU5BVElPTiBPRiBVQ0MWU1VQUExFTUVOVEFMIEFHUkVFTUVOVBZTVVBQTEVNRU5UQUwgQUdSRUVNRU5UKFNVUFBMRU1FTlRBTCBERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMVU1VQUExFTUVOVEFMIE1PUlRHQUdFElNVUFBMRU1FTlRBTCBPUkRFUhRUQVggU0FMRSBDRVJUSUZJQ0FURRhURVJNSU5BVElPTiBPRiBBR1JFRU1FTlQUVEVSTUlOQVRJT04gT0YgTEVBU0UbVEVSTUlOQVRJT04gT0YgUklHSFQgT0YgV0FZFVRFUk1JTkFUSU9OIFNUQVRFTUVOVAxUSVRMRSBMRVRURVIVVE9XTlNISVAgQ0FOQ0VMTEFUSU9OElRPV05TSElQIERJU0NIQVJHRQ9UUlVTVCBBR1JFRU1FTlQQVUNDIENPTlRJTlVBVElPThpVQ0MgQ09OVElOVUFUSU9OLU5PIENIQVJHRQ5WQUNBVElPTiBPUkRFUgZXQUlWRVIMV0FJVkVSIExJRU5TB1dBUlJBTlQUV0FSUkFOVCBTQVRJU0ZBQ1RJT04eV0FSUkFOVCBTQVRJU0ZBQ1RJT04gSlVER0VNRU5UGVdFTEZBUkUgTElFTiBTQVRJU0ZBQ1RJT04NV0VMRkFSRSBMSUVOUxFXUklUIE9GIEVYRUNVVElPThXUAQADQUZGA0FORQNBR1ICQUwDQU1BA0FNQgNBTUMDQUNMBEFDTE4EQU1EUgRBTURUA0FNSgNBTUwEQU1NRARBT1JEA0FNRARBTUVOBEFKVUQEQVNTTgNBU0EDQVNDA0FTTARBU0xSBEFTTEkDQVNNA0FTUgRBU1RTA0FUUwRBU0dOBEFTTVADQk9TA0JDUANCQ1MDQ05CBEJMQVcDQ05NBENUU0wDQ0NKBENFUlQDQ0VSA0NPUgNDT04GQ0hFQ0tTA0NMTARDT01QA0NMTgNDTEQEQ09OUwNDT0oDQ09PA0NPVwNDTVQCQ0wEQ05MRARDTERCBENOVFIDQ0RSA0NBRwNDQVMDQ1JEBENNVEcEQ1BPQQNDUlcDQ1NEA0NTQQRDQ0pSBUNBU0xSBUNXRVRMBENSSU0EREFHUgNERVIEREVDUgREUlBBBERDUkIERENSQwNEQ1QDREVUBERFRUQDRE9EBkRFRUROQwRERENUA05VRANEU0EDREFMBERBU04DREpHA0RJUwRET1JEA0RTQwREWUZTA0VBUwNFU0MDRVhBA0VYTANFWFQDRlRMBEZUTEQERlRMUgRGVExWBEZUTFcDTUFQA0ZKRANHUlQESVJFTQNJVFcESlVERwRMQVBTBUxTRTk5A0xTRQRMSUFHA0xJUwNMUEEDTFBEA0xQUgNNU1IDTUdCBU1BREVEA01TRANNQ0wETUNMRARNQ0xSA01OSQNNR1IDTVNCBE1TQkQETU5JRARNQUdSA01PRANNVEcDTVNBBU1UR05DBE1ERUQETUNPUgVNREVDUgRNRE9EBE1FQVMETUxTRQVNUkVMUgRNVEFHA01VTgROT1RDA05TTQNOVUIDT1BUA09SRANPRE4EUE1URwNQT0EEUlRTTANSTFMEUkFHUgRSQ1RSBFJFTEoEUkxTRQNSTEIEUkVMTAJSTANSTE0EUk9SRARSRUxSBFJMUlcDUkxSA1JFTAVSUFRDUgRSQVBUA1JTTANSQUcEUlZBRwVSVkRTQwRSVk1EBFJWUEEEUlZUUgVSUkZUTANST1cEU0NBRwNTRUMDU0hCBFNERUQDU0hSBFdFVEwDU1NEA1NXTARTQUdSBlNBR1JOQwNTT00DU1VCBFNQQUcEQVBBRwNTRFIEU01URwRTT1JEA1RTTANUQUcDVE9MA1RSVwRURVJNA1RMVARUV1BDBFRXUEQEVFJBRwRDT05UBkNPTlROQwNWQUMDV1ZSA1dWTANXQVIDV1JTA1dTSgRXTEZTA1dMRgNXT0UUKwPUAWdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnFgFmZAItDxBkZBYBZmQCLw8QZGQWAWZkAjUPEA8WBB8IBQhUb3duTmFtZR8JZ2QQFSocUGxlYXNlIFNlbGVjdCBhIE11bmljaXBhbGl0eQ5CQVNTIFJJVkVSIFRXUAxCRVZFUkxZIENJVFkPQk9SREVOVE9XTiBDSVRZDkJPUkRFTlRPV04gVFdQD0JVUkxJTkdUT04gQ0lUWQ5CVVJMSU5HVE9OIFRXUBBDSEVTVEVSRklFTEQgVFdQD0NJTk5BTUlOU09OIFRXUAtERUxBTkNPIFRXUApERUxSQU4gVFdQDkVBU1RBTVBUT04gVFdQEkVER0VXQVRFUiBQQVJLIFRXUAtFVkVTSEFNIFRXUA9GSUVMRFNCT1JPIEJPUk8MRkxPUkVOQ0UgVFdQDkhBSU5FU1BPUlQgVFdQDUxVTUJFUlRPTiBUV1ANTUFOU0ZJRUxEIFRXUA9NQVBMRSBTSEFERSBUV1ASTUVERk9SRCBMQUtFUyBCT1JPC01FREZPUkQgVFdQDk1PT1JFU1RPV04gVFdQD01PVU5UIEhPTExZIFRXUBBNT1VOVCBMQVVSRUwgVFdQD05FVyBIQU5PVkVSIFRXUBFOT1JUSCBIQU5PVkVSIFRXUAxQQUxNWVJBIEJPUk8OUEVNQkVSVE9OIEJPUk8NUEVNQkVSVE9OIFRXUA1SSVZFUlNJREUgVFdQDVJJVkVSVE9OIEJPUk8LU0hBTU9ORyBUV1APU09VVEhBTVBUT04gVFdQD1NQUklOR0ZJRUxEIFRXUA5UQUJFUk5BQ0xFIFRXUA5XQVNISU5HVE9OIFRXUA5XRVNUQU1QVE9OIFRXUA9XSUxMSU5HQk9STyBUV1AMV09PRExBTkQgVFdQEFdSSUdIVFNUT1dOIEJPUk8LQ09VTlRZIFdJREUVKhxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5DkJBU1MgUklWRVIgVFdQDEJFVkVSTFkgQ0lUWQ9CT1JERU5UT1dOIENJVFkOQk9SREVOVE9XTiBUV1APQlVSTElOR1RPTiBDSVRZDkJVUkxJTkdUT04gVFdQEENIRVNURVJGSUVMRCBUV1APQ0lOTkFNSU5TT04gVFdQC0RFTEFOQ08gVFdQCkRFTFJBTiBUV1AORUFTVEFNUFRPTiBUV1ASRURHRVdBVEVSIFBBUksgVFdQC0VWRVNIQU0gVFdQD0ZJRUxEU0JPUk8gQk9STwxGTE9SRU5DRSBUV1AOSEFJTkVTUE9SVCBUV1ANTFVNQkVSVE9OIFRXUA1NQU5TRklFTEQgVFdQD01BUExFIFNIQURFIFRXUBJNRURGT1JEIExBS0VTIEJPUk8LTUVERk9SRCBUV1AOTU9PUkVTVE9XTiBUV1APTU9VTlQgSE9MTFkgVFdQEE1PVU5UIExBVVJFTCBUV1APTkVXIEhBTk9WRVIgVFdQEU5PUlRIIEhBTk9WRVIgVFdQDFBBTE1ZUkEgQk9STw5QRU1CRVJUT04gQk9STw1QRU1CRVJUT04gVFdQDVJJVkVSU0lERSBUV1ANUklWRVJUT04gQk9STwtTSEFNT05HIFRXUA9TT1VUSEFNUFRPTiBUV1APU1BSSU5HRklFTEQgVFdQDlRBQkVSTkFDTEUgVFdQDldBU0hJTkdUT04gVFdQDldFU1RBTVBUT04gVFdQD1dJTExJTkdCT1JPIFRXUAxXT09ETEFORCBUV1AQV1JJR0hUU1RPV04gQk9STwtDT1VOVFkgV0lERRQrAypnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAlEPEGRkFgFmZAJTDxBkZBYBZmQCWw8PFgIfBwUIWlpRWEpWV0tkZAJhDxAPFgYfCgUHRG9jVHlwZR8IBQdEb2NOYW1lHwlnZBAV1AEUU2VsZWN0IERvY3VtZW50IFR5cGUJQUZGSURBVklUGUFHUkVFTUVOVCBOT1QgVE8gRU5DVU1CRVIMQUdSRUVNRU5UKFMpDUFJUkNSQUZUIExJRU4RQU1FTkRFRCBBR1JFRU1FTlQOQU1FTkRFRCBCWUxBV1MRQU1FTkRFRCBDT01QTEFJTlQSQU1FTkRFRCBDT05ETyBMSUVOGUFNRU5ERUQgQ09OU1RSVUNUSU9OIExJRU4jQU1FTkRFRCBERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMdQU1FTkRFRCBERUNMQVJBVElPTiBPRiBUQUtJTkcXQU1FTkRFRCBGSU5BTCBKVURHRU1FTlQNQU1FTkRFRCBMRUFTRRNBTUVOREVEIE1BU1RFUiBERUVEDUFNRU5ERUQgT1JERVIVQU1FTkRNRU5UIE9GIE1PUlRHQUdFEEFNRU5ETUVOVCBPRiBVQ0MQQU1FTkVEIEpVREdFTUVOVApBU1NJR05NRU5UF0FTU0lHTk1FTlQgT0YgQUdSRUVNRU5UGUFTU0lHTk1FTlQgT0YgQ09OVFJBQ1QoUykWQVNTSUdOTUVOVCBPRiBMRUFTRShTKSBBU1NJR05NRU5UIE9GIExFQVNFKFMpICYgUkVOVChTKRVBU1NJR05NRU5UIE9GIExJRU4oUykWQVNTSUdOTUVOVCBPRiBNT1JUR0FHRRVBU1NJR05NRU5UIE9GIFJFTlQoUykWQVNTSUdOTUVOVCBPRiBUQVggU0FMRSJBU1NJR05NRU5UIE9GIFRBWCBTQUxFIENFUlRJRklDQVRFEUFTU0lHTk1FTlQgT0YgVUNDF0FTU1VNUFRJT04gT0YgQUdSRUVNRU5UDEJJTEwgT0YgU0FMRRdCVUlMRElORyBDT05UUkFDVC1QTEFOUxdCVUlMRElORyBDT05UUkFDVC1TUEVDUxFCVVJMSU5HVE9OIENPVU5UWQZCWSBMQVcYQ0FOQ0VMTEFUSU9OIE9GIE1PUlRHQUdFEkNBTkNFTExFRCBUQVggU0FMRQxDQyBKVURHRU1FTlQLQ0VSVElGSUNBVEUcQ0VSVElGSUNBVEUgT0YgSU5DT1JQT1JBVElPThlDRVJUSUZJQ0FURSBPRiBSRURFTVBUSU9ODkNIQU5HRSBPRiBOQU1FBkNIRUNLUw9DT01NT04gTEFXIExJRU4JQ09NUExBSU5UC0NPTkRPIExJRU5TFUNPTkRPIExJRU5TIERJU0NIQVJHRQdDT05TRU5UFENPTlNFTlQgT0YgSlVER0VNRU5UDUNPTlNFTlQgT1JERVIOQ09OU0VOVCBXQUlWRVIZQ09OU09MSURBVElPTiBPRiBNT1JUR0FHRRFDT05TVFJVQ1RJT04gTElFTh1DT05TVFJVQ1RJT04gTElFTiAtIERJU0NIQVJHRSVDT05TVFJVQ1RJT04gTElFTiAtIERJU0NIQVJHRSBCWSBCT05ECENPTlRSQUNUJkNPUlJFQ1RJT04gREVDTEFSQVRJT04gT0YgUkVTVFJJQ1RJT05TF0NPUlJFQ1RJT04gVE8gQUdSRUVNRU5UGENPUlJFQ1RJT04gVE8gQVNTSUdOTUVOVBJDT1JSRUNUSU9OIFRPIERFRUQWQ09SUkVDVElPTiBUTyBNT1JUR0FHRR9DT1JSRUNUSU9OIFRPIFBPV0VSIE9GIEFUVE9STkVZGkNPUlJFQ1RJT04gVE8gUklHSFQtT0YtV0FZHENPUlJFQ1RJT04gVE8gU0hFUklGRidTIERFRUQlQ09SUkVDVElPTiBUTyBTVUJPUkRJTkFUSU9OIEFHUkVFTUVOVB5DT1VOVFkgQ0xFUksgSlVER0VNRU5ULVJFTEVBU0UuQ09VTlRZLUFTU0lHTkVNRU5UIE9GIExFQVNFUyAmIFJFTlRTLU5PIENIQVJHRSVDT1VOVFktU1RBVEUgV0VUTEFORCBQRVJNSVQtTk8gQ0hBUkdFCENSSU1JTkFMGERFQ0xBUkFUSU9OIE9GIEFHUkVFTUVOVClERUNMQVJBVElPTiBPRiBFTlZJUk9OTUVOVEFMIFJFU1RSSUNUSU9OUxtERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMiREVDTEFSQVRJT04gT0YgUkVTVFJJQ1RJT05TIC0gUEggMSRERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMgLSBQSCAyJjMjREVDTEFSQVRJT04gT0YgUkVTVFJJQ1RJT05TIC0gU0VDIDEVREVDTEFSQVRJT04gT0YgVEFLSU5HFERFQ0xBUkFUSU9OIE9GIFRSVVNUBERFRUQSREVFRCBPRiBERURJQ0FUSU9OHURFRUQtRlVMTCBFWEVNUFRJT04tTk8gQ0hBUkdFH0RJU0NIQVJHRSBERUNMQVJBVElPTiBPRiBUQUtJTkc7RElTQ0hBUkdFIE5PVElDRSBPRiBVTlBBSUQgQkFMQU5DRS9SSUdIVCBUTyBGSUxFIExJRU4gQ0xBSU0WRElTQ0hBUkdFIE9GIEFHUkVFTUVOVBpESVNDSEFSR0UgT0YgQUlSQ1JBRlQgTElFThdESVNDSEFSR0UgT0YgQVNTSUdOTUVOVBZESVNDSEFSR0UgT0YgSlVER0VNRU5UFURJU0NIQVJHRSBPRiBNT1JUR0FHRRJESVNDSEFSR0UgT0YgT1JERVIKRElTQ0xBSU1FUglEWUZTIExJRU4IRUFTRU1FTlQURVNUT1BQRUwgQ0VSVElGSUNBVEUWRVhURU5TSU9OIE9GIEFHUkVFTUVOVBJFWFRFTlNJT04gT0YgTEVBU0UVRVhURU5TSU9OIE9GIE1PUlRHQUdFEEZFREVSQUwgVEFYIExJRU4cRkVERVJBTCBUQVggTElFTiAtIERJU0NIQVJHRRpGRURFUkFMIFRBWCBMSUVOIC0gUkVMRUFTRR1GRURFUkFMIFRBWCBMSUVOIC0gUkVWT0NBVElPTh1GRURFUkFMIFRBWCBMSUVOIC0gV0lUSERSQVdBTApGSUxFRCBNQVBTD0ZJTkFMIEpVREdFTUVOVAVHUkFOVAZJTiBSRU0WSU5IRVJJVEFOQ0UgVEFYIFdBSVZFUglKVURHRU1FTlQGTEFQU0VEGkxFQVNFIEZPUiA5OSBZRUFSUyBPUiBNT1JFCExFQVNFKFMpE0xJQ0VOU0lORyBBR1JFRU1FTlQLTElTIFBFTkRFTlMVTElTIFBFTkRFTlMgLSBBTUVOREVEF0xJUyBQRU5ERU5TIC0gRElTQ0hBUkdFFkxJUyBQRU5ERU5TIC0gUkVMRUFTRUQQTUFHSVNUUkFURSBSRUNPRxBNQUdJU1RSQVRFUyBCT05EDU1BUlNIQUxTIERFRUQLTUFTVEVSIERFRUQOTUVDSEFOSUNTIExJRU4aTUVDSEFOSUNTIExJRU4gLSBESVNDSEFSR0UYTUVDSEFOSUNTIExJRU4gLSBSRUxFQVNFHU1FQ0hBTklDUyBOT1RJQ0UgT0YgSU5URU5USU9OBk1FUkdFUhJNSVNDRUxMQU5FT1VTIEJPTkQdTUlTQ0VMTEFORU9VUyBCT05ELSBESVNDSEFSR0UPTU5JIC0gRElTQ0hBUkdFGU1PRElGSUNBVElPTiBPRiBBR1JFRU1FTlQYTU9ESUZJQ0FUSU9OIE9GIE1PUlRHQUdFCE1PUlRHQUdFG01PUlRHQUdFIFNFQ1VSSVRZIEFHUkVFTUVOVBJNT1JUR0FHRS1OTyBDSEFSR0UOTVVOSUNJUEFMIERFRUQjTVVOSUNJUEFMLUNFUlRJRklDQVRFIE9GIFJFREVNUFRJT04lTVVOSUNJUEFMLURFQ0xBUkFUSU9OIE9GIFJFU1RSSUNUSU9OUxxNVU5JQ0lQQUwtREVFRCBPRiBERURJQ0FUSU9OEk1VTklDSVBBTC1FQVNFTUVOVA9NVU5JQ0lQQUwtTEVBU0UhTVVOSUNJUEFMLVJFTEVBU0UgT0YgUkVTVFJJQ1RJT05TIk1VTklDSVBBTC1URVJNSU5BVElPTiBPRiBBR1JFRU1FTlQMTVVOSUNJUEFMSVRZBk5PVElDRRROT1RJQ0UgT0YgU0VUVExFTUVOVDFOT1RJQ0UgT0YgVU5QQUlEIEJBTEFOQ0UvUklHSFQgVE8gRklMRSBMSUVOIENMQUlNBk9QVElPThVPUkRFUihTKSBPRiBUSEUgQ09VUlQJT1JESU5BTkNFGFBPU1RQT05FTUVOVCBPRiBNT1JUR0FHRRFQT1dFUiBPRiBBVFRPUk5FWRdSRURFTVBUSU9OIE9GIFRBWCBTQUxFUwdSRUxFQVNFFFJFTEVBU0UgT0YgQUdSRUVNRU5UE1JFTEVBU0UgT0YgQ09OVFJBQ1QUUkVMRUFTRSBPRiBKVURHRU1FTlQQUkVMRUFTRSBPRiBMRUFTRRRSRUxFQVNFIE9GIExJQUJJTElUWQ9SRUxFQVNFIE9GIExJRU4PUkVMRUFTRSBPRiBMSUVOE1JFTEVBU0UgT0YgTU9SVEdBR0UQUkVMRUFTRSBPRiBPUkRFUhdSRUxFQVNFIE9GIFJFU1RSSUNUSU9OUxdSRUxFQVNFIE9GIFJJR0hULU9GLVdBWRFSRUxFQVNFIE9GIFJJR0hUUw5SRUxFQVNFIE9GIFVDQxdSRVBPUlQgT0YgQ09NTUlTU0lPTkVSUxpSRVNJRyAmIEFQUE9JTlRFRCBUUlVTVEVFUwpSRVNPTFVUSU9OFVJFU1RSSUNUSU9OIEFHUkVFTUVOVB1SRVZPQ0FUSU9OIE9GIEFHUkVFTUVOVCBTRUMgMRhSRVZPQ0FUSU9OIE9GIERJU0NMQUlNRVIZUkVWT0NBVElPTiBPRiBNQVNURVIgREVFRB9SRVZPQ0FUSU9OIE9GIFBPV0VSIE9GIEFUVE9STkVZE1JFVk9DQVRJT04gT0YgVFJVU1QkUkVWT0tJTkcgUkVMRUFTRSBPRiBGRURFUkFMIFRBWCBMSUVODFJJR0hUIE9GIFdBWRFTRUNVUkVEIEFHUkVFTUVOVBNTRUNVUkVEIFRSQU5TQUNUSU9ODlNIRVJJRkYnUyBCT05EDlNIRVJJRkYnUyBERUVEDlNIRVJJRkZTIFJFQ09HFFNUQVRFIFdFVExBTkQgUEVSTUlUJ1NUSVBVTEFUSU9OIE9GIFNFVFRMRU1FTlQgQU5EIERJU01JU1NBTBdTVElQVUxBVElPTiBXQUlWRVIvTElFThdTVUJPUkRJTkFUSU9OIEFHUkVFTUVOVCJTVUJPUkRJTkFUSU9OIEFHUkVFTUVOVC0gTk8gQ0hBUkdFGVNVQk9SRElOQVRJT04gT0YgTU9SVEdBR0UUU1VCT1JESU5BVElPTiBPRiBVQ0MWU1VQUExFTUVOVEFMIEFHUkVFTUVOVBZTVVBQTEVNRU5UQUwgQUdSRUVNRU5UKFNVUFBMRU1FTlRBTCBERUNMQVJBVElPTiBPRiBSRVNUUklDVElPTlMVU1VQUExFTUVOVEFMIE1PUlRHQUdFElNVUFBMRU1FTlRBTCBPUkRFUhRUQVggU0FMRSBDRVJUSUZJQ0FURRhURVJNSU5BVElPTiBPRiBBR1JFRU1FTlQUVEVSTUlOQVRJT04gT0YgTEVBU0UbVEVSTUlOQVRJT04gT0YgUklHSFQgT0YgV0FZFVRFUk1JTkFUSU9OIFNUQVRFTUVOVAxUSVRMRSBMRVRURVIVVE9XTlNISVAgQ0FOQ0VMTEFUSU9OElRPV05TSElQIERJU0NIQVJHRQ9UUlVTVCBBR1JFRU1FTlQQVUNDIENPTlRJTlVBVElPThpVQ0MgQ09OVElOVUFUSU9OLU5PIENIQVJHRQ5WQUNBVElPTiBPUkRFUgZXQUlWRVIMV0FJVkVSIExJRU5TB1dBUlJBTlQUV0FSUkFOVCBTQVRJU0ZBQ1RJT04eV0FSUkFOVCBTQVRJU0ZBQ1RJT04gSlVER0VNRU5UGVdFTEZBUkUgTElFTiBTQVRJU0ZBQ1RJT04NV0VMRkFSRSBMSUVOUxFXUklUIE9GIEVYRUNVVElPThXUAQADQUZGA0FORQNBR1ICQUwDQU1BA0FNQgNBTUMDQUNMBEFDTE4EQU1EUgRBTURUA0FNSgNBTUwEQU1NRARBT1JEA0FNRARBTUVOBEFKVUQEQVNTTgNBU0EDQVNDA0FTTARBU0xSBEFTTEkDQVNNA0FTUgRBU1RTA0FUUwRBU0dOBEFTTVADQk9TA0JDUANCQ1MDQ05CBEJMQVcDQ05NBENUU0wDQ0NKBENFUlQDQ0VSA0NPUgNDT04GQ0hFQ0tTA0NMTARDT01QA0NMTgNDTEQEQ09OUwNDT0oDQ09PA0NPVwNDTVQCQ0wEQ05MRARDTERCBENOVFIDQ0RSA0NBRwNDQVMDQ1JEBENNVEcEQ1BPQQNDUlcDQ1NEA0NTQQRDQ0pSBUNBU0xSBUNXRVRMBENSSU0EREFHUgNERVIEREVDUgREUlBBBERDUkIERENSQwNEQ1QDREVUBERFRUQDRE9EBkRFRUROQwRERENUA05VRANEU0EDREFMBERBU04DREpHA0RJUwRET1JEA0RTQwREWUZTA0VBUwNFU0MDRVhBA0VYTANFWFQDRlRMBEZUTEQERlRMUgRGVExWBEZUTFcDTUFQA0ZKRANHUlQESVJFTQNJVFcESlVERwRMQVBTBUxTRTk5A0xTRQRMSUFHA0xJUwNMUEEDTFBEA0xQUgNNU1IDTUdCBU1BREVEA01TRANNQ0wETUNMRARNQ0xSA01OSQNNR1IDTVNCBE1TQkQETU5JRARNQUdSA01PRANNVEcDTVNBBU1UR05DBE1ERUQETUNPUgVNREVDUgRNRE9EBE1FQVMETUxTRQVNUkVMUgRNVEFHA01VTgROT1RDA05TTQNOVUIDT1BUA09SRANPRE4EUE1URwNQT0EEUlRTTANSTFMEUkFHUgRSQ1RSBFJFTEoEUkxTRQNSTEIEUkVMTAJSTANSTE0EUk9SRARSRUxSBFJMUlcDUkxSA1JFTAVSUFRDUgRSQVBUA1JTTANSQUcEUlZBRwVSVkRTQwRSVk1EBFJWUEEEUlZUUgVSUkZUTANST1cEU0NBRwNTRUMDU0hCBFNERUQDU0hSBFdFVEwDU1NEA1NXTARTQUdSBlNBR1JOQwNTT00DU1VCBFNQQUcEQVBBRwNTRFIEU01URwRTT1JEA1RTTANUQUcDVE9MA1RSVwRURVJNA1RMVARUV1BDBFRXUEQEVFJBRwRDT05UBkNPTlROQwNWQUMDV1ZSA1dWTANXQVIDV1JTA1dTSgRXTEZTA1dMRgNXT0UUKwPUAWdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnFgFmZAJxDxBkZBYBAgJkAnMPEGRkFgECAmQCBA8WAh8BZxYEAgEPFgIfAWhkAgQPPCsACwEADxYKHghQYWdlU2l6ZQJkHghEYXRhS2V5cxYAHgtfIUl0ZW1Db3VudAL/////Dx4VXyFEYXRhU291cmNlSXRlbUNvdW50Av////8PHglQYWdlQ291bnRmZGRkkjAk5gvn6KrS9gmFZtd5prvJt2Up/KVdX5l2Qhl2OWw=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Press/WebResource.axd?d=FQG5Mv9yBNoVJo4f_nYFvt_Kik5sPfxhIjMomcpoYjS2rGHGKjs798xISA_IBKdcTEgcwtXlP8JzQDlJRQybjaDhAj7x2uXrYtZBNsBjfSU1&amp;t=638914220334897068" type="text/javascript"></script>
+
+
+<script src="/Press/WebResource.axd?d=hIetgqvCc6o7i95TQWPZYo6pT_WwjFAYZ0QOxmsS2-TF0i4yO2hwaX2n9RgrpTK_YahM-FkjW8UXUCMvQoPApBwxzW-hKksAnSMzwof4_ME1&amp;t=638914220334897068" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="D8795D1B" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAeNk9REf8DcnfScFLTjNxktd2yJOnHVLAXkgIKE660GJ0PuAbtZ9mbVBte57gkpupKwGc7t+FBVg6kG/bZ3z8D2vqKVhJjfe+nMpFCBiIVozKUy+4coTR32qhalI+sSvzYfiRmXbnH2+n/NRqp4+6Esn+kL0QQ5g9AWr3m8BRSa+OSNshYqigQMoTv25ejOQQA=" />
+</div>   
+    <table width="99%" border="0" align="center" cellpadding="0" class="tblht96" cellspacing="0">
+        <tr>
+            <td style="width: 8px">
+                <div id="TopLeftCornerBg"></div>
+            </td>
+            <td>
+                <div id="TopCenterBg"></div>
+            </td>
+            <td style="width: 8px">
+                <div id="TopRightCornerBg"></div>
+            </td>
+        </tr>
+        <tr>
+            <td background="/Press/App_Themes/BurlingtonPress/Images/MainLeftBg.jpg">
+            </td>
+            <td bgcolor="#ffffff" valign="top" style="height: 100%" class="MainTableBorder">
+                <table width="100%" border="0" height="100%" cellspacing="0" align="center" cellpadding="0">
+                    <tr>
+                        <td valign="top" style="height: 100%">
+                            <table width="100%" class="tblht91" border="0" align="center" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td valign="top" height="29" class="mainHeaderBack">
+                                        <table style="width: 100%" cellspacing="0" cellpadding="0"  border="0">
+                                            <tr>
+                                                <td style="width: 50%; vertical-align: top">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                                        <tr>
+                                                            <td style="height: 30px">
+                                                                &nbsp;
+                                                            </td>
+                                                            <td>
+                                                                <img alt="" src="/Press/App_Themes/BurlingtonPress/Images/PressHeader.jpg" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td style="width: 50%; vertical-align: top">
+                                                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                                        <tr>
+                                                            <td class="SloganText" style="text-align: right">
+                                                                Public Records Electronic Search System(PRESS)
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="right" class="white" style="padding-top: 5px">
+                                                                <a href="/Press/Index.aspx" class="TopMenuLink">Home&nbsp;</a>
+                                                                |<a href="javascript:void(0);" class="TopMenuLink" onclick="popUpFAQ('/Press/includes/oprsfaq.pdf');">&nbsp;&nbsp;FAQs&nbsp;</a>
+                                                                |<a href="http://www.co.burlington.nj.us/directory.aspx" target="_new" class="TopMenuLink">&nbsp;&nbsp;Contact Us&nbsp;</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="height: 5px">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                    <tr>
+                                                                        <td align="right" style="padding-right: 10px">
+                                                                            &nbsp;
+                                                                            
+                                                                        </td>
+                                                                        
+                                                                        <td id="ctl00_rowLogIn" align="right" class="white">
+                                                                            <a href="../LoginPublic.aspx" id="ctl00_lnkSignIn" class="TopMenuLink">&nbsp;LogIn&nbsp;</a>                                            
+                                                                        </td>
+
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>                                                       
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; height: 20px" class="mainHeaderBack">
+                                        <span id="ctl00_spnTitle" class="LabelStyle2">Property Records</span>
+                                    </td>
+                                   
+                                </tr>
+                                <tr>
+                                    <td style="height: 100%; vertical-align: top">
+                                        <table border="0" style="height: 95%; width: 100%" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td style="height: 24px">
+                                                    <table style="width: 100%" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td style="width: 60%" class="bgcolor01">
+                                                                <span id="ctl00_SiteMapPath1" style="display:inline-block;height:20px;width:100%;"><a href="#ctl00_SiteMapPath1_SkipLink"><img alt="Skip Navigation Links" src="/Press/WebResource.axd?d=BulGAxD6x_Y6ZU-0T2Q9mmzFpwglvVh1-XjgDUZSBftjlF6t2b0Oztj8FMC9UqGFEUlH8ayeBSequ_rgX0T9fA1flWL4TqsLoqxE31unyvY1&amp;t=638914220334897068" width="0" height="0" style="border-width:0px;" /></a><span class="node" style="display:inline-block;width:0px;">
+                                                                        
+                                                                        <input name="ctl00$SiteMapPath1$ctl00$hidNode" type="hidden" id="ctl00_SiteMapPath1_ctl00_hidNode" value="0" />
+                                                                    </span><span class="node" style="display:inline-block;width:15%;">
+                                                                        <a href="#ctl00_SiteMapPath1_ctl02_mnuSMP_SkipLink"><img alt="Skip Navigation Links" src="/Press/WebResource.axd?d=BulGAxD6x_Y6ZU-0T2Q9mmzFpwglvVh1-XjgDUZSBftjlF6t2b0Oztj8FMC9UqGFEUlH8ayeBSequ_rgX0T9fA1flWL4TqsLoqxE31unyvY1&amp;t=638914220334897068" width="0" height="0" style="border-width:0px;" /></a><table id="ctl00_SiteMapPath1_ctl02_mnuSMP" class="ctl00_SiteMapPath1_ctl02_mnuSMP_2" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0"><table class="fontboldblack ctl00_SiteMapPath1_ctl02_mnuSMP_4" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td style="white-space:nowrap;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 fontboldblack ctl00_SiteMapPath1_ctl02_mnuSMP_3" href="#" style="border-style:none;font-size:1em;cursor:text;">County Clerk</a></td><td style="width:0;"><img src="../App_Themes/BurlingtonPress/Images/downarrow.jpg" alt="Expand County Clerk" style="border-style:none;vertical-align:middle;" /></td>
+			</tr>
+		</table></td>
+	</tr>
+</table><div id="ctl00_SiteMapPath1_ctl02_mnuSMPn0Items" class="ctl00_SiteMapPath1_ctl02_mnuSMP_0 border2 ctl00_SiteMapPath1_ctl02_mnuSMP_7">
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Property Records Search System provides online access to information on property related transaction records for Burlington County." id="ctl00_SiteMapPath1_ctl02_mnuSMPn1">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="ClerkHome.aspx?op=basic" style="border-style:none;font-size:1em;">Property Records</a></td>
+				</tr>
+			</table></td>
+		</tr><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Election Results (2002 to Present)" id="ctl00_SiteMapPath1_ctl02_mnuSMPn2">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="Election.aspx?op=ELE" style="border-style:none;font-size:1em;">Election Results</a></td>
+				</tr>
+			</table></td>
+		</tr><tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Property Record Images before 1964" id="ctl00_SiteMapPath1_ctl02_mnuSMPn3">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="http://ccarchive.co.burlington.nj.us" target="_New" style="border-style:none;font-size:1em;">Property Record Images before 1964</a></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table><div class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6 ctl00_SiteMapPath1_ctl02_mnuSMP_0" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0ItemsUp" onmouseover="PopOut_Up(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+		<img src="/Press/WebResource.axd?d=I8OvlqYK8RpF2nFJkfrKvWzkHKNCt8VYqJOcDGCZwBfP5irPKa83kWRJ4NY6HphV7dLtTQP5zls7ZxOiZDZDRk0--hamAyFszPV_RRAh9Fs1&amp;t=638914220334897068" alt="Scroll up" />
+	</div><div class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6 ctl00_SiteMapPath1_ctl02_mnuSMP_0" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0ItemsDn" onmouseover="PopOut_Down(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+		<img src="/Press/WebResource.axd?d=UAxRWUEHZXMEMO-MwI3rWfMGPpzJe4CsqqtzWUeMhX2RqRWMh0Ci4D0g2Gn9a34lIGK11tlpZy6wJokamoM6bz356Swvp7dJ1fM0-uUgsRg1&amp;t=638914220334897068" alt="Scroll down" />
+	</div>
+</div><a id="ctl00_SiteMapPath1_ctl02_mnuSMP_SkipLink"></a>
+                                                                        <input name="ctl00$SiteMapPath1$ctl02$hidNode" type="hidden" id="ctl00_SiteMapPath1_ctl02_hidNode" value="1461" />
+                                                                    </span><span class="pos">
+                                                                        
+                                                                    </span><span class="currentnode" style="display:inline-block;width:40%;">
+                                                                        <input name="ctl00$SiteMapPath1$ctl04$hidNode1" type="hidden" id="ctl00_SiteMapPath1_ctl04_hidNode1" value="1464" />
+                                                                        <span id="ctl00_SiteMapPath1_ctl04_lblCurrent">Property Records</span>
+                                                                    </span><a id="ctl00_SiteMapPath1_SkipLink"></a></span>
+                                                            </td>
+                                                            <td align="right" style="width: 40%" class="bordertop1">
+                                                                <table style="width: 100%; height: 24px" cellpadding="0" cellspacing="0" border="0">
+                                                                    <tr>
+                                                                        <td style="width: 24px">
+                                                                            <img alt="" src="/Press/App_Themes/BurlingtonPress/Images/MenuCorner.jpg" />
+                                                                        </td>
+                                                                        <td style="height: 24px" align="right">
+                                                                            <table cellpadding="0" cellspacing="0" border="0" align="right">
+                                                                                <tr>
+                                                                                    <td style="text-align: right; padding-right: 5px">
+                                                                                        <a class="HyperLink1" href="/Press/Clerk/ClerkHome.aspx?op=basic">Records Search</a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                            
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 100%; vertical-align: top; background-color: #fff" colspan="2">
+                                                    <table width="100%" align="center" style="height: 100%" border="0" cellpadding="0"
+                                                        cellspacing="0">
+                                                        <tr>
+                                                            <td valign="top" style="height: 100%" align="center">
+                                                                
+
+    <style type="text/css">
+        A.newitemstyleblue:visited {
+            COLOR: blue
+        }
+    </style>
+    <style type="text/css">
+        <!--
+
+        .demo1 {
+            color: #000033;
+            background-color: #ffffff;
+            background-color: #cccccc;
+            position: absolute;
+            top: 200px;
+            left: 100px;
+            width: 300px;
+            z-index: 99;
+            visibility: hidden;
+            border: solid 1px #000000;
+        }
+
+
+
+        -->
+    </style>
+
+    <script type="text/javascript">
+<!--
+    function toggleBox(szDivID, iState) // 1 visible, 0 hidden
+    {
+        if (document.layers)	   //NN4+
+        {
+            document.layers[szDivID].visibility = iState ? "show" : "hide";
+            if (iState == 1)
+                document.layers["aDisc"].visibility = "hide";
+            else
+                document.layers["aDisc"].visibility = "show";
+        }
+        else if (document.getElementById)	  //gecko(NN6) + IE 5+
+        {
+            var obj = document.getElementById(szDivID);
+            obj.style.visibility = iState ? "visible" : "hidden";
+
+            var obj1 = document.getElementById("aDisc");
+            if (iState == 1)
+                obj1.style.visibility = "hidden";
+            else
+                obj1.style.visibility = "visible";
+        }
+        else if (document.all)	// IE 4
+        {
+            document.all[szDivID].style.visibility = iState ? "visible" : "hidden";
+
+            if (iState == 1)
+                document.all["aDisc"].visibility = "hidden";
+            else
+                document.all["aDisc"].visibility = "visible";
+        }
+    }
+
+
+// -->
+    </script>
+    <script type="text/javascript">
+
+        var ctlprefix = "ctl00_ContentPlaceHolder1_";
+
+	    /* Optional: Temporarily hide the "tabber" class so it does not "flash"
+	    on the page as plain HTML. After tabber runs, the class is changed
+	    to "tabberlive" and it will appear. */
+
+        document.write('<style type="text/css">.tabber{display:none;}<\/style>');
+
+	    /*==================================================
+	    Set the tabber options (must do this before including tabber.js)
+	    ==================================================*/
+        var tabberOptions = {
+
+            'cookie': "tabber", /* Name to use for the cookie */
+
+            'onLoad': function (argsObj) {
+                var t = argsObj.tabber;
+                var i;
+
+	            /* Optional: Add the id of the tabber to the cookie name to allow
+	            for multiple tabber interfaces on the site.  If you have
+	            multiple tabber interfaces (even on different pages) I suggest
+	            setting a unique id on each one, to avoid having the cookie set
+	            the wrong tab.
+	            */
+                if (t.id) {
+                    t.cookie = t.id + t.cookie;
+                }
+
+                /* If a cookie was previously set, restore the active tab */
+                i = parseInt(getCookie(t.cookie));
+                if (isNaN(i)) { return; }
+                t.tabShow(i);
+                document.getElementById('hidCurrTab').value = i;
+            },
+
+            'onClick': function (argsObj) {
+
+                var t = argsObj.tabber; /* Tabber object */
+                var id = t.id; /* ID of the main tabber DIV */
+                var i = argsObj.index; /* Which tab was clicked (0 is the first tab) */
+                var e = argsObj.event; /* Event object */
+                var c = argsObj.tabber.cookie;
+                //Setting up the value for HELP file.
+                document.getElementById('hidCurrTab').value = i;
+
+                setCookie(c, i);
+
+            }
+        };
+
+	    /*==================================================
+	    Cookie functions
+	    ==================================================*/
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                ((expires) ? "; expires=" + expires.toGMTString() : "") +
+                ((path) ? "; path=" + path : "") +
+                ((domain) ? "; domain=" + domain : "") +
+                ((secure) ? "; secure" : "");
+        }
+
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+            }
+        }
+
+        function OnHelpButton() {
+            var helpFile = '../webhelp/index.html?page=source/';
+
+
+            if (document.getElementById('hidCurrTab').value == '') {
+                document.getElementById('hidCurrTab').value = 0
+            }
+
+            switch (document.getElementById('hidCurrTab').value) {
+                case '0':
+                    {
+                        helpFile += 'instrument.htm'
+                        break
+                    }
+
+                case '1':
+                    {
+                        helpFile += 'document.htm'
+                        break
+                    }
+
+                case '2':
+                    {
+                        helpFile += 'blockandlot.htm'
+                        break
+                    }
+
+                case '3':
+                    {
+                        helpFile += 'name.htm'
+                        break
+                    }
+
+                case 'results':
+                    {
+                        helpFile += 'SearchResults.htm'
+                        break
+                    }
+
+            }
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+
+
+        function OnHelpButton1(helpParam) {
+            var helpFile = '../webhelp/index.html?page=source/';
+
+            switch (helpParam) {
+                case 'results':
+                    {
+                        helpFile += 'SearchResults.htm'
+                        break
+                    }
+
+            }
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+
+        function goodchars(e, goods) {
+            var key, keychar;
+            key = window.event.keyCode;
+            if (key == null) return true;
+
+            // get character
+            keychar = String.fromCharCode(key);
+            keychar = keychar.toLowerCase();
+            goods = goods.toLowerCase();
+
+            // check goodkeys
+            if (goods.indexOf(keychar) != -1)
+                return true;
+
+            // control keys
+            if (key == null || key == 0 || key == 8 || key == 9 || key == 13 || key == 27)
+                return true;
+
+            // else return false
+            return false;
+        }
+
+        /*Added below function text field ID to work curectly by Shivakumar on Date 04/16/2019*/
+        function CheckSubmit(obj) {
+            var sProblems;
+            var bValid;
+            bValid = true;
+            sProblems = "Cannot Submit Search Request \r\rProblems Identified:";
+            if ((removespace(document.getElementById(ctlprefix + 'txtBlockTab4').value) == "") && (removespace(document.getElementById(ctlprefix + 'txtLotTab4').value) != "")) {
+                sProblems += "\r\tTo search for 'Lot' must search for a 'Block'";
+                bValid = false;
+            }
+            if ((removespace(document.getElementById(ctlprefix + 'txtBookNumberTab3').value) == "") && (removespace(document.getElementById(ctlprefix + 'txtPageNumberTab3').value) != "")) {
+                sProblems += "\r\tTo search for 'Page' must search for a 'Book'";
+                bValid = false;
+            }
+            if ((removespace(document.getElementById(ctlprefix + 'txtInstrumentTab3').value) == "") && (removespace(document.getElementById(ctlprefix + 'txtInstrumentTab3').value) != "")) {
+                sProblems += "\r\tTo specify  'To Instrument Number' must specify 'From Instrument Number'";
+                bValid = false;
+            }
+            if (bValid == true) {
+                showLoading();
+                $(obj).hide();
+                return true;
+            }
+            else {
+                alert(sProblems);
+                return false;
+            }
+        }
+
+        /*Added below code to work loder by Shivakumar on Date 04/16/2019*/
+        function showLoading() {
+            var pb1 = document.getElementById("SearchTabload1");
+            pb1.innerHTML = '<img src="images/loadingwheel.gif" height="40"/>';
+            var pb2 = document.getElementById("SearchTabload2");
+            pb2.innerHTML = '<img src="images/loadingwheel.gif" height="40"/>';
+            var pb3 = document.getElementById("SearchTabload3");
+            pb3.innerHTML = '<img src="images/loadingwheel.gif" height="40"/>';
+            var pb4 = document.getElementById("SearchTabload4");
+            pb4.innerHTML = '<img src="images/loadingwheel.gif" height="40"/>';
+
+        }
+
+
+        function cleartab1() {
+            document.getElementById(ctlprefix + 'txtLastNameTab1').value = '';
+            document.getElementById(ctlprefix + 'txtFirstNameTab1').value = '';
+            document.getElementById(ctlprefix + 'txtFromTab1').value = '';
+            document.getElementById(ctlprefix + 'txtToTab1').value = '';
+            document.getElementById(ctlprefix + 'ddlDocTypeTab1').selectedIndex = 0;
+        }
+
+        function cleartab2() {
+            document.getElementById(ctlprefix + 'txtFromTab2').value = '';
+            document.getElementById(ctlprefix + 'txtToTab2').value = '';
+            document.getElementById(ctlprefix + 'ddlDocTypeTab2').selectedIndex = 0;
+        }
+
+        function cleartab3() {
+            document.getElementById(ctlprefix + 'txtInstrumentTab3').value = '';
+            document.getElementById(ctlprefix + 'txtBookNumberTab3').value = '';
+            document.getElementById(ctlprefix + 'txtPageNumberTab3').value = '';
+        }
+
+        function cleartab4() {
+            document.getElementById(ctlprefix + 'txtFromTab4').value = '';
+            document.getElementById(ctlprefix + 'txtToTab4').value = '';
+            document.getElementById(ctlprefix + 'txtQualifierTab4').value = '';
+            document.getElementById(ctlprefix + 'txtBlockTab4').value = '';
+            document.getElementById(ctlprefix + 'txtLotTab4').value = '';
+            document.getElementById(ctlprefix + 'ddlMunTab4').selectedIndex = 0;
+        }
+
+        function MoreDates(tabIndex) {
+            alert('Please enter any date (in From and To).')
+            switch (tabIndex) {
+                case 1:
+                    {
+                        document.getElementById(ctlprefix + 'txtFromTab1').focus();
+                        break;
+                    }
+                case 2:
+                    {
+                        document.getElementById(ctlprefix + 'txtFromTab2').focus();
+                        break;
+                    }
+                case 4:
+                    {
+                        document.getElementById(ctlprefix + 'txtFromTab4').focus();
+                        break;
+                    }
+            }
+        }
+
+        function FillDates(tabIndex, dateInt) {
+            var currDate = new Date()
+            var fromDate
+            dateInt = dateInt * -1; // To find the nth day prior to today.
+            fromDate = DateAdd('d', dateInt, currDate);
+
+            switch (tabIndex) {
+                case 1:
+                    {
+                        document.getElementById(ctlprefix + 'txtFromTab1').value = simpleDate(fromDate);
+                        document.getElementById(ctlprefix + 'txtToTab1').value = simpleDate(currDate);
+                        break;
+                    }
+                case 2:
+                    {
+                        document.getElementById(ctlprefix + 'txtFromTab2').value = simpleDate(fromDate);
+                        document.getElementById(ctlprefix + 'txtToTab2').value = simpleDate(currDate);
+                        break;
+                    }
+                case 4:
+                    {
+                        document.getElementById(ctlprefix + 'txtFromTab4').value = simpleDate(fromDate);
+                        document.getElementById(ctlprefix + 'txtToTab4').value = simpleDate(currDate);
+                        break;
+                    }
+            }
+        }
+    </script>
+    <script language="javascript" src="../includes/tabber.js"></script>
+
+    <!--Added below Js Referance link on 27/02/2020 by shivakumar, To reffer from local file-->
+    
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.HeaderText td:first-child').addClass('FirstTDGridStyle');
+            $('.HeaderText td:last-child').addClass('LastTDGridStyle');
+            //Datagrid paging top border - color white
+            $("#ctl00_ContentPlaceHolder1_dgdDeedMort tr:first").css('border-top', '1px solid white');
+        });
+    </script>
+
+    <table id="ctl00_ContentPlaceHolder1_tblSearchLinks" style="width: 100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td class="back" style="height: 20px; text-align: right; padding-right: 15px">
+                <a id="ctl00_ContentPlaceHolder1_hypBasic" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypBasic&#39;,&#39;&#39;)">Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="ctl00_ContentPlaceHolder1_spnsep1">|</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a id="ctl00_ContentPlaceHolder1_hypResults" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypResults&#39;,&#39;&#39;)">Search Results</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="ctl00_ContentPlaceHolder1_spnsep2">|</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a id="ctl00_ContentPlaceHolder1_hypImg" disabled="disabled" class="HyperLink2">View Image</a>
+            </td>
+	</tr>
+</table>
+
+    <table style="border-color: #5c9edb; width: 100%" cellpadding="0" cellspacing="0" align="center" border="0">
+        <tr>
+            <td align="center">
+                <span id="ctl00_ContentPlaceHolder1_lblMessage" class="error">No results found</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+        </tr>
+        <!-- Search Begin-->
+        <tr>
+            <td valign="top" align="center">
+                
+            </td>
+        </tr>
+        <!--Sim Search End-->
+        <tr>
+            <td valign="top" align="center">
+                <div id="ctl00_ContentPlaceHolder1_divSearch" style="width: 100%;">
+                    <table cellspacing="0" cellpadding="0" width="99%" align="center" border="0">
+                        <tr>
+                            <td align="right">
+                                <table width="100%" border="0" class="title">
+                                    <tr>
+                                        <td>
+                                            <img alt="" src="/Press/App_Themes/BurlingtonPress/Images/Arrow1.png"
+                                                border="0" />
+                                        </td>
+                                        <td align="left" style="width: 98%; padding-left: 5px">
+                                            
+                                        </td>
+                                        <td align="right">
+                                            <span class="blue" style="vertical-align: middle;"></span>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <!---->
+                                                        <!--<a href="javascript:OnHelpButton1('results')" id="ctl00_ContentPlaceHolder1_A2" class="black">HELP</a>-->
+                                                    </td>
+                                                    <td>
+                                                        <!--<img src="/Press/App_Themes/BurlingtonPress/Images/help.gif" onclick="javascript:OnHelpButton1('results')" style="cursor:hand;" border="0" />-->
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center">
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" align="center">
+                                <!--Grid-->
+                                <br />
+                                <br />
+                                <!--Grid-->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <input name="ctl00$ContentPlaceHolder1$hidDiv" type="hidden" id="ctl00_ContentPlaceHolder1_hidDiv" value="basic" />
+    <input id="hidCurrTab" type="hidden" name="hidCurrTab" />
+
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr class="FooterBg">
+                                    <td>
+                                        <table id="FooterHeight" width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td style="text-align: left; padding-left: 10px; width: 25%">
+                                                    <a href="javascript:popUpTermsofuse('/Press/TermsOfUse.aspx')" class="TopMenuLink">Terms of Use</a>
+                                                    <span style="color: #14517e; font-size: 11px">(ITPR03V PRESS (RELEASE)v2021.8.5.28346)</span> 
+                                                </td>
+                                                <td style="text-align: center; width: 50%" class="white">
+                                                    Site compatible with Internet Explorer and Chrome
+                                                </td>
+                                                <td class="white" style="width: 25%; text-align: right; padding-right: 10px">
+                                                    Rel 2025-1(08-21-2025/05-07-2026)* 
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td background="/Press/App_Themes/BurlingtonPress/Images/MainRightBg.jpg">
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 8px">
+                <div id="BottomLeftCornerBg"></div>
+            </td>
+            <td>
+                <div id="BottomTopCenterBg"></div>
+            </td>
+            <td style="width: 8px">
+                <div id="BottomTopRightCornerBg"></div>
+            </td>
+        </tr>
+    </table>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_SiteMapPath1_ctl02_mnuSMP_Data = new Object();
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.disappearAfter = 500;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.horizontalOffset = 1;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.verticalOffset = 6;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.hoverClass = 'ctl00_SiteMapPath1_ctl02_mnuSMP_9 menuon1';
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.hoverHyperLinkClass = 'ctl00_SiteMapPath1_ctl02_mnuSMP_8 menuon1';
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.iframeUrl = '/Press/WebResource.axd?d=knuKFjvzTU0v0BB-62Ro2otmOfJ8SpeJMfqeTez5840LQN8pfQGPCykV8bCH9LXGksiHbcpjukf5d7VvKLNpzojkrkQ8ZxbJ-Y7dep805Cg1&t=638914220334897068';
+//]]>
+</script>
+</form>
+</body>
+</html>

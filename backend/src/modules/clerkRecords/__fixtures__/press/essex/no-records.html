@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+
+<head id="ctl00_Head1"><title>
+	Public Records Electronic Search System
+</title><link href="../includes/style/basestyle.css" type="text/css" rel="Stylesheet" /><link href="../nodestyle.css" rel="stylesheet" type="text/css" />
+    <!--[if IE ]>
+  <link href="../nodestyleIE.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+
+    <script language="javascript" type="text/javascript" src="../includes/jsDate.js"></script>
+
+    <script language="javascript" type="text/javascript">
+        function popUpTermsofuse(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=600,left = 50,top = 100');");
+        }
+
+        function popUpFAQ(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=700,height=400,left = 50,top = 100');");
+        }
+
+        function removespace(s) {
+            var nonChar = new RegExp("\\s", "g");
+            var str = s.replace(nonChar, "");
+            return str;
+        }
+
+        function donothing() {
+        }
+
+        function jump(url) {
+            window.location = url;
+        }
+
+        function jumpParent(url) {
+            parent.window.location = url;
+        }
+        function mypopup() {
+            var leftspc = screen.availWidth - 350;
+            var topspc = screen.availHeight - (screen.availHeight - 200);
+            mywindow = window.open("../contactus.html", "mywindow", "left=" + leftspc + ",top=" + topspc + ",location=0,status=0,scrollbars=0,width=400,height=100");
+
+        }
+        function CheckCart() {
+            if (document.getElementById('ctl00_lblMasterCart') != null) {
+                var labelval = document.getElementById('ctl00_lblMasterCart').innerHTML;
+                if (labelval == '') {
+
+                    return true;
+                }
+                else {
+                    return confirm('There are items in Checkout Cart, which would be lost on SignOut. Do you still want to SignOut?');
+                }
+            }
+
+        }
+    </script>
+
+<link href="../App_Themes/Essex/Style.css" type="text/css" rel="stylesheet" /><style type="text/css">
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_0 { background-color:white;visibility:hidden;display:none;position:absolute;left:0px;top:0px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_1 { text-decoration:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_2 { width:100%; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_3 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_4 { width:100%;padding:0px 0px 0px 0px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_5 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_6 { width:100%;padding:0px 12px 0px 12px; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_7 {  }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_8 { border-style:none; }
+	.ctl00_SiteMapPath1_ctl02_mnuSMP_9 {  }
+
+</style></head>
+<body>
+    <form name="aspnetForm" method="post" action="./ClerkHome.aspx?op=basic" id="aspnetForm" style="height: 100%; margin: 0;">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTE1NzE4NTU5Nw9kFgJmD2QWAgIDD2QWDmYPDxYEHghJbWFnZVVybAUsL1Byb2RQUkVTU1xBcHBfVGhlbWVzL0Vzc2V4L0ltYWdlcy8vQ2FydC5wbmceB1Zpc2libGVoZGQCAQ8PFgIfAWhkZAICDxYCHwFoZAIEDxYCHglpbm5lcmh0bWwFDlJlY29yZHMgU2VhcmNoZAIFDzwrAAUBAA8WAh4PU2l0ZU1hcFByb3ZpZGVyBRJTcWxTaXRlTWFwUHJvdmlkZXJkZAIIDw8WAh8BaGRkAgoPZBYKAgEPZBYCZg9kFgJmD2QWBgIBDw8WBB4IQ3NzQ2xhc3MFCkh5cGVyTGluazIeBF8hU0ICAmRkAgUPDxYGHwQFCkh5cGVyTGluazIeB0VuYWJsZWRnHwUCAmRkAgkPDxYCHwZoZGQCAw8PFggeBFRleHQFEE5vIHJlc3VsdHMgZm91bmQfBAUFZXJyb3IfBQICHwFnZGQCBQ8WAh8BaGQCBw8WAh8BaBYYAhUPEA8WBB4NRGF0YVRleHRGaWVsZAUIVG93bk5hbWUeC18hRGF0YUJvdW5kZ2QQFRkcUGxlYXNlIFNlbGVjdCBhIE11bmljaXBhbGl0eQpCRUxMRVZJTExFCkJMT09NRklFTEQIQ0FMRFdFTEwLQ0VEQVIgR1JPVkULRUFTVCBPUkFOR0UMRVNTRVggQ09VTlRZC0VTU0VYIEZFTExTCUZBSVJGSUVMRApHTEVOIFJJREdFCUlSVklOR1RPTgpMSVZJTkdTVE9OCU1BUExFV09PRAhNSUxMQlVSTglNT05UQ0xBSVIGTkVXQVJLDk5PUlRIIENBTERXRUxMBk5VVExFWQZPUkFOR0UIUk9TRUxBTkQUU09VVEggT1JBTkdFIFZJTExBR0UGVkVST05BDVdFU1QgQ0FMRFdFTEwLV0VTVCBPUkFOR0ULQ09VTlRZIFdJREUVGRxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5CkJFTExFVklMTEUKQkxPT01GSUVMRAhDQUxEV0VMTAtDRURBUiBHUk9WRQtFQVNUIE9SQU5HRQxFU1NFWCBDT1VOVFkLRVNTRVggRkVMTFMJRkFJUkZJRUxECkdMRU4gUklER0UJSVJWSU5HVE9OCkxJVklOR1NUT04JTUFQTEVXT09ECE1JTExCVVJOCU1PTlRDTEFJUgZORVdBUksOTk9SVEggQ0FMRFdFTEwGTlVUTEVZBk9SQU5HRQhST1NFTEFORBRTT1VUSCBPUkFOR0UgVklMTEFHRQZWRVJPTkENV0VTVCBDQUxEV0VMTAtXRVNUIE9SQU5HRQtDT1VOVFkgV0lERRQrAxlnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnFgFmZAIZDxAPFgYeDkRhdGFWYWx1ZUZpZWxkBQdEb2NUeXBlHwgFB0RvY05hbWUfCWdkEBUgFFNlbGVjdCBEb2N1bWVudCBUeXBlFUFDQ0VQVEFOQ0UgT0YgU1RSRUVUUxZBU1NJR05NRU5UIE9GIE1PUlRHQUdFHUFTU0lHTk1FTlQgT0YgTU9SVEdBR0UtTk8gRkVFGENBTkNFTExBVElPTiBPRiBNT1JUR0FHRQRERUVEHkRJU0NIQVJHRSBOT1RJQ0UgT0YgU0VUVExFTUVOVBVESVNDSEFSR0UgT0YgTU9SVEdBR0UKRElTQ0xBSU1FUgtFU1RBVEUgTElFTgxGRURFUkFMIExJRU4VTElTIFBFTkRFTlMgRElTQ0hBUkdFF0xJUyBQRU5ERU5TIEZPUkVDTE9TVVJFJExJUyBQRU5ERU5TIEZPUkVDTE9TVVJFIEFORCBSRUNPVkVSWRJMSVMgUEVOREVOUyBJTiBSRU0UTElTIFBFTkRFTlMgUkVDT1ZFUlkITU9SVEdBR0UVTU9SVEdBR0UgTU9ESUZJQ0FUSU9OIU1PUlRHQUdFIFBPU1RQT05FIC0gU1VCT1JESU5BVElPThROT1RJQ0UgT0YgU0VUVExFTUVOVBFQT1dFUiBPRiBBVFRPUk5FWRpSRUxFQVNFIE9GIEVTVEFURSBUQVggTElFThdSRUxFQVNFIE9GIEZFREVSQUwgTElFThNSRUxFQVNFIE9GIE1PUlRHQUdFBVVDQyAxBVVDQyAzDVVDQyBBTUVORE1FTlQOVUNDIEFTU0lHTk1FTlQQVUNDIENPTlRJTlVBVElPTgtVQ0MgUkVMRUFTRQ9VQ0MgVEVSTUlOQVRJT04RVkFDQVRJT04gLSBTVFJFRVQVIAACMTcBMwIzTgIyNgExAjM3ATUCMTUCMzYBOAIyMgIyMwIyNQIyMQIyNAEyAjQxAjQyATcBNgIzNQE5ATQCMTECMTMCMzMCMzACMzECMzICMjcCMTYUKwMgZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAisPEGRkFgFmZAIvDxBkZBYBZmQCNQ8QDxYEHwgFCFRvd25OYW1lHwlnZBAVGRxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5CkJFTExFVklMTEUKQkxPT01GSUVMRAhDQUxEV0VMTAtDRURBUiBHUk9WRQtFQVNUIE9SQU5HRQxFU1NFWCBDT1VOVFkLRVNTRVggRkVMTFMJRkFJUkZJRUxECkdMRU4gUklER0UJSVJWSU5HVE9OCkxJVklOR1NUT04JTUFQTEVXT09ECE1JTExCVVJOCU1PTlRDTEFJUgZORVdBUksOTk9SVEggQ0FMRFdFTEwGTlVUTEVZBk9SQU5HRQhST1NFTEFORBRTT1VUSCBPUkFOR0UgVklMTEFHRQZWRVJPTkENV0VTVCBDQUxEV0VMTAtXRVNUIE9SQU5HRQtDT1VOVFkgV0lERRUZHFBsZWFzZSBTZWxlY3QgYSBNdW5pY2lwYWxpdHkKQkVMTEVWSUxMRQpCTE9PTUZJRUxECENBTERXRUxMC0NFREFSIEdST1ZFC0VBU1QgT1JBTkdFDEVTU0VYIENPVU5UWQtFU1NFWCBGRUxMUwlGQUlSRklFTEQKR0xFTiBSSURHRQlJUlZJTkdUT04KTElWSU5HU1RPTglNQVBMRVdPT0QITUlMTEJVUk4JTU9OVENMQUlSBk5FV0FSSw5OT1JUSCBDQUxEV0VMTAZOVVRMRVkGT1JBTkdFCFJPU0VMQU5EFFNPVVRIIE9SQU5HRSBWSUxMQUdFBlZFUk9OQQ1XRVNUIENBTERXRUxMC1dFU1QgT1JBTkdFC0NPVU5UWSBXSURFFCsDGWdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAksPEGRkFgFmZAJPDxBkZBYBZmQCVQ8PFgIfBwUISEFNSUxUT05kZAJZDw8WAh8HBQZBTkRSRVdkZAJdDxAPFgYfCgUHRG9jVHlwZR8IBQdEb2NOYW1lHwlnZBAVIBRTZWxlY3QgRG9jdW1lbnQgVHlwZRVBQ0NFUFRBTkNFIE9GIFNUUkVFVFMWQVNTSUdOTUVOVCBPRiBNT1JUR0FHRR1BU1NJR05NRU5UIE9GIE1PUlRHQUdFLU5PIEZFRRhDQU5DRUxMQVRJT04gT0YgTU9SVEdBR0UEREVFRB5ESVNDSEFSR0UgTk9USUNFIE9GIFNFVFRMRU1FTlQVRElTQ0hBUkdFIE9GIE1PUlRHQUdFCkRJU0NMQUlNRVILRVNUQVRFIExJRU4MRkVERVJBTCBMSUVOFUxJUyBQRU5ERU5TIERJU0NIQVJHRRdMSVMgUEVOREVOUyBGT1JFQ0xPU1VSRSRMSVMgUEVOREVOUyBGT1JFQ0xPU1VSRSBBTkQgUkVDT1ZFUlkSTElTIFBFTkRFTlMgSU4gUkVNFExJUyBQRU5ERU5TIFJFQ09WRVJZCE1PUlRHQUdFFU1PUlRHQUdFIE1PRElGSUNBVElPTiFNT1JUR0FHRSBQT1NUUE9ORSAtIFNVQk9SRElOQVRJT04UTk9USUNFIE9GIFNFVFRMRU1FTlQRUE9XRVIgT0YgQVRUT1JORVkaUkVMRUFTRSBPRiBFU1RBVEUgVEFYIExJRU4XUkVMRUFTRSBPRiBGRURFUkFMIExJRU4TUkVMRUFTRSBPRiBNT1JUR0FHRQVVQ0MgMQVVQ0MgMw1VQ0MgQU1FTkRNRU5UDlVDQyBBU1NJR05NRU5UEFVDQyBDT05USU5VQVRJT04LVUNDIFJFTEVBU0UPVUNDIFRFUk1JTkFUSU9OEVZBQ0FUSU9OIC0gU1RSRUVUFSAAAjE3ATMCM04CMjYBMQIzNwE1AjE1AjM2ATgCMjICMjMCMjUCMjECMjQBMgI0MQI0MgE3ATYCMzUBOQE0AjExAjEzAjMzAjMwAjMxAjMyAjI3AjE2FCsDIGdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnFgECDGQCaQ8QZGQWAQICZAJtDxBkZBYBAgNkAgkPFgIfAWcWBAIBDxYCHwFoZAIEDzwrAAsBAA8WCh4IUGFnZVNpemUCZB4IRGF0YUtleXMWAB4LXyFJdGVtQ291bnQC/////w8eFV8hRGF0YVNvdXJjZUl0ZW1Db3VudAL/////Dx4JUGFnZUNvdW50ZmRkZI3tdGDGhp4o3Db21pBidRwFkmB/ckW1UwO3cZcA6qsd" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/ProdPRESS/WebResource.axd?d=R8iMa9hHlsEWd89ObfJu813zT3hZqL10Eo--KgnDDIt6BhzBXwUxaIigti78UfRQaO4uQkzEvB_kgMHYwzIZ282_ykyVfOYYPotr5mUH3WY1&amp;t=639190689332169432" type="text/javascript"></script>
+
+
+<script src="/ProdPRESS/WebResource.axd?d=gydriojBhpj2s9Q86G3u62M_d5RpPucyXRRthLDs6RlYehzJFfDE6sRf8f7riY2NIiEFfn_usRKEuvNlsh0IcUTFr8OydCNfG6Oy1yhoUGI1&amp;t=639190689332169432" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="C160DF21" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAf04tQnUe+XKK9voZNlsyohd2yJOnHVLAXkgIKE660GJ0PuAbtZ9mbVBte57gkpupKwGc7t+FBVg6kG/bZ3z8D2vqKVhJjfe+nMpFCBiIVozKUy+4coTR32qhalI+sSvzYfiRmXbnH2+n/NRqp4+6EsuaaR2QX0K9Atza9EJUwb1UD5PTFOKVYcmVuBwvupQLQ=" />
+</div>
+    <table width="99%" border="0" align="center" cellpadding="0" class="tblht96" cellspacing="0">
+        <tr>
+            <td width="8">
+                <img src="/ProdPRESS/App_Themes/Essex/Images/MainCorner1.jpg"
+                    width="8" />
+            </td>
+            <td background="/ProdPRESS/App_Themes/Essex/Images/MainTopBg.jpg">
+            </td>
+            <td width="8">
+                <img src="/ProdPRESS/App_Themes/Essex/Images/MainCorner2.jpg"
+                    width="8" />
+            </td>
+        </tr>
+        <tr>
+            <td background="/ProdPRESS/App_Themes/Essex/Images/MainLeftBg.jpg">
+            </td>
+            <td bgcolor="#FFFFFF" valign="top" style="height: 100%" class="MainTableBorder">
+                <table width="100%" border="0" height="100%" cellspacing="0" align="center" cellpadding="0">
+                    <tr>
+                        <td valign="top" style="height: 100%">
+                            <table width="100%" class="tblht91" border="0" align="center" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td valign="top" height="29" class="mainHeaderBack">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="50%" height="70" background="/ProdPRESS/App_Themes/Essex/Images/InnerHeadBack.jpg">
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td style="height: 30px">
+                                                                &nbsp;
+                                                            </td>
+                                                            <td style="height: 30px">
+                                                                <img alt="" src="/ProdPRESS/App_Themes/Essex/Images/Header.png" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td width="50%" valign="top" background="/ProdPRESS/App_Themes/Essex/Images/InnerHeadBack.jpg">
+                                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td align="right">
+                                                                <img alt="" src="/ProdPRESS/App_Themes/Essex/Images/InnerSlogan.png" />
+                                                            </td>
+                                                        </tr>                                                        
+                                                        <tr>
+                                                            <td style="height: 5px">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                         <td align="right">
+                                                                                                    <a href="/ProdPRESS/Index.aspx" class="white"><b>Home&nbsp;</b></a>
+                                                                                                     <a href="javascript:void(0);" class="white"><b>|&nbsp;FAQs&nbsp;</b></a>
+                                                                                                      <a href="#" onclick="mypopup()" class="white"><b>|&nbsp;Contact Us&nbsp;</b></a>
+                                                                                                </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="height: 5px">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td align="right">
+                                                         <table width="40%" border="0" cellspacing="0" cellpadding="0">
+                                                         <tr>
+                                                         <td align="right" style="padding-right: 10px">
+                                                                &nbsp;
+                                                                
+                                                            </td>
+                                                         
+                                                         
+                                                         </tr>
+                                                         </table>  
+                                                         </td>                                                          
+                                                        </tr>
+                                                        <tr><td align="right">&nbsp;</td></tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="20px" class="whiteBold" align="center">
+                                        <table cellpadding="0" height="20px" cellspacing="0" border="0">
+                                            <tr>
+                                                <td valign="bottom" style="padding: 0px 5px 0px 5px; background-color: #4a4d4a">
+                                                    <span id="ctl00_spnTitle" style="font-size: 14px; font-weight: bold; color: #ffffff">Records Search</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" style="height: 100%">
+                                        <table width="100%" border="0" style="height: 100%" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td valign="top" style="height: 100%">
+                                                    <table width="100%" border="0" style="height: 100%" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td valign="top" style="height: 100%">
+                                                                <table width="100%" border="0" style="height: 95%" cellspacing="0" cellpadding="0">
+                                                                    <tr>
+                                                                        <td style="width: 60%" class="bgcolor1">
+                                                                            <div style="width: 100%;">
+                                                                                <span id="ctl00_SiteMapPath1" style="display:inline-block;height:20px;width:100%;"><a href="#ctl00_SiteMapPath1_SkipLink"><img alt="Skip Navigation Links" src="/ProdPRESS/WebResource.axd?d=V7kAxuxbiT9xQMxvf7pdTGfHdjEoyxcOEiWY4c875mQ7uQgeZg_-nocfh321RKb6h-MfrQ1GkAyL3uicUyQ-n3UQ1o3bgzm8Ha-HLNh5ZuQ1&amp;t=639190689332169432" width="0" height="0" style="border-width:0px;" /></a><span class="node" style="display:inline-block;width:0px;">
+                                                                                        
+                                                                                        <input name="ctl00$SiteMapPath1$ctl00$hidNode" type="hidden" id="ctl00_SiteMapPath1_ctl00_hidNode" value="0" />
+                                                                                    </span><span class="node" style="display:inline-block;width:20%;">
+                                                                                        <a href="#ctl00_SiteMapPath1_ctl02_mnuSMP_SkipLink"><img alt="Skip Navigation Links" src="/ProdPRESS/WebResource.axd?d=V7kAxuxbiT9xQMxvf7pdTGfHdjEoyxcOEiWY4c875mQ7uQgeZg_-nocfh321RKb6h-MfrQ1GkAyL3uicUyQ-n3UQ1o3bgzm8Ha-HLNh5ZuQ1&amp;t=639190689332169432" width="0" height="0" style="border-width:0px;" /></a><table id="ctl00_SiteMapPath1_ctl02_mnuSMP" class="ctl00_SiteMapPath1_ctl02_mnuSMP_2" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td onmouseover="Menu_HoverStatic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0"><table class="fontboldblack ctl00_SiteMapPath1_ctl02_mnuSMP_4" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr>
+				<td style="white-space:nowrap;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 fontboldblack ctl00_SiteMapPath1_ctl02_mnuSMP_3" href="#" style="border-style:none;font-size:1em;cursor:text;">Register of Deeds</a></td><td style="width:0;"><img src="../App_Themes/Essex/Images/downarrow.jpg" alt="Expand Register of Deeds" style="border-style:none;vertical-align:middle;" /></td>
+			</tr>
+		</table></td>
+	</tr>
+</table><div id="ctl00_SiteMapPath1_ctl02_mnuSMPn0Items" class="ctl00_SiteMapPath1_ctl02_mnuSMP_0 border2 ctl00_SiteMapPath1_ctl02_mnuSMP_7">
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr onmouseover="Menu_HoverDynamic(this)" onmouseout="Menu_Unhover(this)" onkeyup="Menu_Key(this)" title="Property Records Search System provides online access to information on property related transaction records for Essex County." id="ctl00_SiteMapPath1_ctl02_mnuSMPn1">
+			<td><table class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6" cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td style="white-space:nowrap;width:100%;"><a class="ctl00_SiteMapPath1_ctl02_mnuSMP_1 menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_5" href="ClerkHome.aspx?op=basic" style="border-style:none;font-size:1em;">Property Records</a></td>
+				</tr>
+			</table></td>
+		</tr>
+	</table><div class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6 ctl00_SiteMapPath1_ctl02_mnuSMP_0" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0ItemsUp" onmouseover="PopOut_Up(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+		<img src="/ProdPRESS/WebResource.axd?d=nUCZsz4LqSiMP9UsllSBVfrmMp7VTMoa7KBamRih1TFegkLF7kx05PzFGRWMP_EV27vHXhJGVYgogKDGznd-0f4LRjY4D0qVaUkaeBLSku41&amp;t=639190689332169432" alt="Scroll up" />
+	</div><div class="menuoff1 ctl00_SiteMapPath1_ctl02_mnuSMP_6 ctl00_SiteMapPath1_ctl02_mnuSMP_0" id="ctl00_SiteMapPath1_ctl02_mnuSMPn0ItemsDn" onmouseover="PopOut_Down(this)" onmouseout="PopOut_Stop(this)" style="text-align:center;">
+		<img src="/ProdPRESS/WebResource.axd?d=qEupTZU-_rpsdXuo97B_paM9zw2kIOEH2qylROBm4EKdunpbHMF569QgL-zXdb-OMFN-M95LjFaFzl9Lo1GS-DcrJGMF5N-tK83OpiPyTcI1&amp;t=639190689332169432" alt="Scroll down" />
+	</div>
+</div><a id="ctl00_SiteMapPath1_ctl02_mnuSMP_SkipLink"></a>
+                                                                                        <input name="ctl00$SiteMapPath1$ctl02$hidNode" type="hidden" id="ctl00_SiteMapPath1_ctl02_hidNode" value="1461" />
+                                                                                    </span><span class="pos">
+                                                                                        
+                                                                                    </span><span class="currentnode" style="display:inline-block;width:40%;">
+                                                                                        <input name="ctl00$SiteMapPath1$ctl04$hidNode1" type="hidden" id="ctl00_SiteMapPath1_ctl04_hidNode1" value="1464" />
+                                                                                        <span id="ctl00_SiteMapPath1_ctl04_lblCurrent">Records Search</span>
+                                                                                    </span><a id="ctl00_SiteMapPath1_SkipLink"></a></span>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td align="right" style="width: 40%" class="bordertop1">
+                                                                            <table style="width: 100%" cellpadding="0" cellspacing="0" border="0">
+                                                                                <tr>
+                                                                                    <td style="width: 24px">
+                                                                                        <img alt="" src="/ProdPRESS/App_Themes/Essex/Images/GreenCorner.jpg" />
+                                                                                    </td>
+                                                                                    <td align="right">
+                                                                                        <table cellpadding="0" cellspacing="0" border="0" align="right">
+                                                                                            <tr>
+                                                                                               <td><a href="/ProdPRESS/Clerk/ClerkHome.aspx?op=basic" class="white"><b>Records Search&nbsp;</b></a></td>
+                                                                                                <td class="white">
+                                                                                                    
+                                                                                                </td>
+                                                                                                <td class="white">
+                                                                                                    
+                                                                                                </td>
+                                                                                                <td class="white">
+                                                                                                    
+                                                                                                </td>                                                                                            
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                        
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td valign="top" style="height: 100%" colspan="2">
+                                                                            <table width="100%" align="center" style="height: 100%" border="0" cellpadding="0"
+                                                                                cellspacing="0">
+                                                                                <tr>
+                                                                                    <td valign="top" style="height: 100%" align="center">
+                                                                                        
+	<style type="text/css">A.newitemstyleblue:visited { COLOR: blue }
+	</style>
+	<style type="text/css">
+<!--
+.demo  {color:#000033; background-color:#ffffff; background-color :#ffffff;
+        position: absolute; top:600px; left:230px; width:800px;
+        z-index:99;  visibility:hidden;  border:solid 1px #000000;}
+.demo1  {color:#000033; background-color:#ffffff; background-color :#cccccc;
+        position: absolute; top:200px; left:100px; width:300px; 
+        z-index:99;  visibility:hidden;  border:solid 1px #000000;}
+-->
+</style><script type="text/javascript">
+<!--
+            function toggleBox(szDivID, iState) // 1 visible, 0 hidden
+            {
+                if (document.layers)	   //NN4+
+                {
+                    document.layers[szDivID].visibility = iState ? "show" : "hide";
+                    if (iState == 1)
+                        document.layers["aDisc"].visibility = "hide";
+                    else
+                        document.layers["aDisc"].visibility = "show";
+                }
+                else if (document.getElementById)	  //gecko(NN6) + IE 5+
+                {
+                    var obj = document.getElementById(szDivID);
+                    obj.style.visibility = iState ? "visible" : "hidden";
+
+                    var obj1 = document.getElementById("aDisc");
+                    if (iState == 1)
+                        obj1.style.visibility = "hidden";
+                    else
+                        obj1.style.visibility = "visible";
+                }
+                else if (document.all)	// IE 4
+                {
+                    document.all[szDivID].style.visibility = iState ? "visible" : "hidden";
+
+                    if (iState == 1)
+                        document.all["aDisc"].visibility = "hidden";
+                    else
+                        document.all["aDisc"].visibility = "visible";
+                }
+            }
+
+
+// -->
+</script>
+	<script type="text/javascript">
+	    var ctlprefix = "ctl00_ContentPlaceHolder1_";
+
+	    /* Optional: Temporarily hide the "tabber" class so it does not "flash"
+	    on the page as plain HTML. After tabber runs, the class is changed
+	    to "tabberlive" and it will appear. */
+
+	    document.write('<style type="text/css">.tabber{display:none;}<\/style>');
+
+	    /*==================================================
+	    Set the tabber options (must do this before including tabber.js)
+	    ==================================================*/
+	    var tabberOptions = {
+
+	        'cookie': "tabber", /* Name to use for the cookie */
+
+	        'onLoad': function(argsObj) {
+	            var t = argsObj.tabber;
+	            var i;
+
+	            /* Optional: Add the id of the tabber to the cookie name to allow
+	            for multiple tabber interfaces on the site.  If you have
+	            multiple tabber interfaces (even on different pages) I suggest
+	            setting a unique id on each one, to avoid having the cookie set
+	            the wrong tab.
+	            */
+	            if (t.id) {
+	                t.cookie = t.id + t.cookie;
+	            }
+
+	            /* If a cookie was previously set, restore the active tab */
+	            i = parseInt(getCookie(t.cookie));
+	            if (isNaN(i)) { return; }
+	            t.tabShow(i);
+	            document.getElementById('hidCurrTab').value = i;
+
+	            // If Instrument Number tab is selected dont show the Div tag note.
+	            if (i == 0) {
+	                document.getElementById(ctlprefix + 'note').style.visibility = "hidden";
+	            }
+	            else {
+	                document.getElementById(ctlprefix + 'note').style.visibility = "";
+	            }
+
+	            //alert('getCookie(' + t.cookie + ') = ' + i);
+	        },
+
+	        'onClick': function(argsObj) {
+
+	            var t = argsObj.tabber; /* Tabber object */
+	            var id = t.id; /* ID of the main tabber DIV */
+	            var i = argsObj.index; /* Which tab was clicked (0 is the first tab) */
+	            var e = argsObj.event; /* Event object */
+	            var c = argsObj.tabber.cookie;
+	            //Setting up the value for HELP file.
+	            document.getElementById('hidCurrTab').value = i;
+
+	            // If Instrument Number tab is selected dont show the Div tag note.
+	            if (i == 0) {
+	                document.getElementById(ctlprefix + 'note').style.visibility = "hidden";
+	            }
+	            else {
+	                document.getElementById(ctlprefix + 'note').style.visibility = "";
+	            }
+	            //alert('setCookie(' + c + ',' + i + ')');
+	            setCookie(c, i);
+
+	        }
+	    };
+
+	    /*==================================================
+	    Cookie functions
+	    ==================================================*/
+	    function setCookie(name, value, expires, path, domain, secure) {
+	        document.cookie = name + "=" + escape(value) +
+					((expires) ? "; expires=" + expires.toGMTString() : "") +
+					((path) ? "; path=" + path : "") +
+					((domain) ? "; domain=" + domain : "") +
+					((secure) ? "; secure" : "");
+	    }
+
+	    function getCookie(name) {
+	        var dc = document.cookie;
+	        var prefix = name + "=";
+	        var begin = dc.indexOf("; " + prefix);
+	        if (begin == -1) {
+	            begin = dc.indexOf(prefix);
+	            if (begin != 0) return null;
+	        } else {
+	            begin += 2;
+	        }
+	        var end = document.cookie.indexOf(";", begin);
+	        if (end == -1) {
+	            end = dc.length;
+	        }
+	        return unescape(dc.substring(begin + prefix.length, end));
+	    }
+
+	    function deleteCookie(name, path, domain) {
+	        if (getCookie(name)) {
+	            document.cookie = name + "=" +
+						((path) ? "; path=" + path : "") +
+						((domain) ? "; domain=" + domain : "") +
+						"; expires=Thu, 01-Jan-70 00:00:01 GMT";
+	        }
+	    }
+
+	    function OnHelpButton() {
+	        var helpFile = '../webhelp/index.html?page=source/';
+
+
+	        if (document.getElementById('hidCurrTab').value == '') {
+	            document.getElementById('hidCurrTab').value = 0
+	        }
+
+	        switch (document.getElementById('hidCurrTab').value) {
+	            case '0': 
+	                {
+	                    helpFile += 'instrument.htm'
+	                    break
+	                }
+
+	            case '1': 
+	                {
+	                    helpFile += 'document.htm'
+	                    break
+	                }
+
+	            case '2': 
+	                {
+	                    helpFile += 'blockandlot.htm'
+	                    break
+	                }
+
+	            case '3': 
+	                {
+	                    helpFile += 'name.htm'
+	                    break
+	                }
+
+	            case 'results': 
+	                {
+	                    helpFile += 'SearchResults.htm'
+	                    break
+	                }
+
+	        }
+	        var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+	        newWin.focus();
+	    }
+
+
+	    function OnHelpButton1(helpParam) {
+	        var helpFile = '../webhelp/index.html?page=source/';
+
+	        switch (helpParam) {
+	            case 'results': 
+	                {
+	                    helpFile += 'SearchResults.htm'
+	                    break
+	                }
+
+	        }
+	        var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+	        newWin.focus();
+	    }
+
+	    function goodchars(e, goods) {
+	        var key, keychar;
+	        key = window.event.keyCode;
+	        if (key == null) return true;
+
+	        // get character
+	        keychar = String.fromCharCode(key);
+	        keychar = keychar.toLowerCase();
+	        goods = goods.toLowerCase();
+
+	        // check goodkeys
+	        if (goods.indexOf(keychar) != -1)
+	            return true;
+
+	        // control keys
+	        if (key == null || key == 0 || key == 8 || key == 9 || key == 13 || key == 27)
+	            return true;
+
+	        // else return false
+	        return false;
+	    }
+
+	    function CheckSubmit() {
+	        var sProblems;
+	        var bValid;
+	        bValid = true;
+	        sProblems = "Cannot Submit Search Request \r\rProblems Identified:";
+	        if ((removespace(document.getElementById(ctlprefix + 'txtBlock').value) == "") && (removespace(document.getElementById(ctlprefix + 'txtLot').value) != "")) {
+	            sProblems += "\r\tTo search for 'Lot' must search for a 'Block'";
+	            bValid = false;
+	        }
+	        if ((removespace(document.getElementById(ctlprefix + 'txtBook').value) == "") && (removespace(document.getElementById(ctlprefix + 'txtPage').value) != "")) {
+	            sProblems += "\r\tTo search for 'Page' must search for a 'Book'";
+	            bValid = false;
+	        }
+	        if ((removespace(document.getElementById(ctlprefix + 'txtInstNum1').value) == "") && (removespace(document.getElementById(ctlprefix + 'txtInstNum2').value) != "")) {
+	            sProblems += "\r\tTo specify  'To Instrument Number' must specify 'From Instrument Number'";
+	            bValid = false;
+	        }
+	        if (bValid == true)
+	            return true;
+	        else {
+	            alert(sProblems);
+	            return false;
+	        }
+	    }
+
+	    function cleartab1() {
+	        document.getElementById(ctlprefix + 'txtLastNameTab1').value = '';
+	        document.getElementById(ctlprefix + 'txtFirstNameTab1').value = '';
+	        document.getElementById(ctlprefix + 'txtFromTab1').value = '';
+	        document.getElementById(ctlprefix + 'txtToTab1').value = '';
+	        document.getElementById(ctlprefix + 'ddlDocTypeTab1').selectedIndex = 0;
+	    }
+
+	    function cleartab2() {
+	        document.getElementById(ctlprefix + 'txtFromTab2').value = '';
+	        document.getElementById(ctlprefix + 'txtToTab2').value = '';
+	        document.getElementById(ctlprefix + 'ddlDocTypeTab2').selectedIndex = 0;
+	    }
+
+	    function cleartab3() {
+	        document.getElementById(ctlprefix + 'txtInstrumentTab3').value = '';
+	        document.getElementById(ctlprefix + 'txtBookNumberTab3').value = '';
+	        document.getElementById(ctlprefix + 'txtPageNumberTab3').value = '';
+	    }
+
+	    function cleartab4() {
+	        document.getElementById(ctlprefix + 'txtFromTab4').value = '';
+	        document.getElementById(ctlprefix + 'txtToTab4').value = '';
+	        document.getElementById(ctlprefix + 'txtBlockTab4').value = '';
+	        document.getElementById(ctlprefix + 'txtLotTab4').value = '';
+	        document.getElementById(ctlprefix + 'ddlMunTab4').selectedIndex = 0;
+	    }
+
+	    function MoreDates(tabIndex) {
+	        alert('Please enter any date (in From and To) from 10/1/1996 in 90 days range.')
+	        switch (tabIndex) {
+	            case 1: 
+	                {
+	                    document.getElementById(ctlprefix + 'txtFromTab1').focus();
+	                    break;
+	                }
+	            case 2: 
+	                {
+	                    document.getElementById(ctlprefix + 'txtFromTab2').focus();
+	                    break;
+	                }
+	            case 4: 
+	                {
+	                    document.getElementById(ctlprefix + 'txtFromTab4').focus();
+	                    break;
+	                }
+	        }
+	    }
+
+	    function FillDates(tabIndex, dateInt) {
+	        var currDate = new Date()
+	        var fromDate
+	        dateInt = dateInt * -1; // To find the nth day prior to today.
+	        fromDate = DateAdd('d', dateInt, currDate);
+
+	        switch (tabIndex) {
+	            case 1: 
+	                {
+	                    document.getElementById(ctlprefix + 'txtFromTab1').value = simpleDate(fromDate);
+	                    document.getElementById(ctlprefix + 'txtToTab1').value = simpleDate(currDate);
+	                    break;
+	                }
+	            case 2: 
+	                {
+	                    document.getElementById(ctlprefix + 'txtFromTab2').value = simpleDate(fromDate);
+	                    document.getElementById(ctlprefix + 'txtToTab2').value = simpleDate(currDate);
+	                    break;
+	                }
+	            case 4: 
+	                {
+	                    document.getElementById(ctlprefix + 'txtFromTab4').value = simpleDate(fromDate);
+	                    document.getElementById(ctlprefix + 'txtToTab4').value = simpleDate(currDate);
+	                    break;
+	                }
+	        }
+	    }
+			</script>
+			<script language="javascript" src="../includes/tabber.js"></script>
+
+
+    <table id="ctl00_ContentPlaceHolder1_tblSearchLinks" style="width: 100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td class="back" style="height: 20px; text-align: right; padding-right: 15px">
+                <a id="ctl00_ContentPlaceHolder1_hypBasic" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypBasic&#39;,&#39;&#39;)">Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="ctl00_ContentPlaceHolder1_spnsep1">|</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                <a id="ctl00_ContentPlaceHolder1_hypResults" class="HyperLink2" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$hypResults&#39;,&#39;&#39;)">Search Results</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="ctl00_ContentPlaceHolder1_spnsep2">|</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                <a id="ctl00_ContentPlaceHolder1_hypImg" disabled="disabled">View Image</a>
+            </td>
+	</tr>
+</table>
+
+    <table style="border-color: #5c9edb; width: 100%" cellpadding="0" cellspacing="0" align="center" border="0">
+        <tr>
+            <td align="center">
+                <span id="ctl00_ContentPlaceHolder1_lblMessage" class="error">No results found</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+        </tr>
+        <!-- Search Begin-->
+        <tr>
+            <td valign="top" align="center">
+                
+            </td>
+        </tr>
+        <!--Sim Search End-->
+        <tr>
+            <td valign="top" align="center">
+                <div id="ctl00_ContentPlaceHolder1_divSearch" style="width: 100%;">
+                    <table cellspacing="0" cellpadding="0" width="99%" align="center" border="0">
+                        <tr>
+                            <td align="right">
+                                <table width="100%" border="0" class="title">
+                                    <tr>
+                                        <td>
+                                            <img alt="" src="/ProdPRESS/App_Themes/Essex/Images/Roundbullet.gif"
+                                                border="0" />
+                                        </td>
+                                        <td align="left" style="width: 98%; padding-left: 5px">
+                                            
+                                        </td>
+                                        <td align="right">
+                                            <span class="blue" style="vertical-align: middle;"></span>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <!---->
+                                                        <!--<a href="javascript:OnHelpButton1('results')" id="ctl00_ContentPlaceHolder1_A2" class="black">HELP</a>-->
+                                                    </td>
+                                                    <td>
+                                                        <!--<img src="/ProdPRESS/App_Themes/Essex/Images/help.gif" onclick="javascript:OnHelpButton1('results')" style="cursor:hand;" border="0" />-->
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" style="height: 22px">
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" align="center">
+                                <!--Grid-->
+                                <br />
+                                <br />
+                                <!--Grid-->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <input name="ctl00$ContentPlaceHolder1$hidDiv" type="hidden" id="ctl00_ContentPlaceHolder1_hidDiv" value="basic" /> <input id="hidCurrTab" type="hidden" name="hidCurrTab" />
+	
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #14517e">
+                                    <td>
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="20%" align="left">
+                                                    &nbsp;<a href="javascript:popUpTermsofuse('../TermsOfUse.aspx')" class="footer1"><strong>Terms
+                                                        of Use</strong></a>
+                                                </td>
+                                                <td width="90%" background="/ProdPRESS/App_Themes/Essex/Images/headerBack.jpg">
+                                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                        <tr>
+                                                            <td style="height: 2px;" align="center">
+                                                                <span class="footer1" style="font-weight: lighter; font-size: xx-small;">Site compatible with Edge, Internet Explorer, Chrome, Firefox</span> <font color="#14517e"
+                                                                        face="verdana" size="1pt">(SUNRISE-APP)</font>
+                                                            </td>
+                                                            <td style="width: 15%; height: 2px; font-weight: lighter; font-size: xx-small;" align="right"
+                                                                class="footer1">
+                                                                Rel 2025-1(a)&nbsp;
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td background="/ProdPRESS/App_Themes/Essex/Images/MainRightBg.jpg">
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <img src="/ProdPRESS/App_Themes/Essex/Images/MainCorner3.jpg"
+                    width="8" />
+            </td>
+            <td valign="top" background="/ProdPRESS/App_Themes/Essex/Images/MainBottomBg.jpg">
+            </td>
+            <td valign="top">
+                <img src="/ProdPRESS/App_Themes/Essex/Images/MainCorner4.jpg"
+                    width="8" />
+            </td>
+        </tr>
+    </table>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_SiteMapPath1_ctl02_mnuSMP_Data = new Object();
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.disappearAfter = 500;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.horizontalOffset = 1;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.verticalOffset = 6;
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.hoverClass = 'ctl00_SiteMapPath1_ctl02_mnuSMP_9 menuon1';
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.hoverHyperLinkClass = 'ctl00_SiteMapPath1_ctl02_mnuSMP_8 menuon1';
+ctl00_SiteMapPath1_ctl02_mnuSMP_Data.iframeUrl = '/ProdPRESS/WebResource.axd?d=GV-Fg8zwsybFGWtb1IW5a16Ozk5unjsxrpB02NTKG6T5dXwU1se8BS8xATB8_cpGB8ot-g-oTdksv2srolFhPTDpIJXrlTaUczAWFcOIJrU1&t=639190689332169432';
+//]]>
+</script>
+</form>
+</body>
+</html>
