@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { useStyles } from './ViewListingButton.styles';
-// import { ArrowForward } from '@mui/icons-material';
 import { ButtonSubmit } from '../../components';
 
 const ViewListingButton = ({ listingId }: { listingId: string }) => {
@@ -9,9 +8,7 @@ const ViewListingButton = ({ listingId }: { listingId: string }) => {
   return (
     <>
       <Link href={`listing/${listingId}`}>
-        <ButtonSubmit className={classes.viewListingButtonRoot} value="View Listing">
-          {/* <ArrowForward /> */}
-        </ButtonSubmit>
+        <ButtonSubmit className={classes.viewListingButtonRoot} value="View Listing" />
       </Link>
     </>
   );
