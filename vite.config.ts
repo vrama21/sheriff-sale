@@ -9,6 +9,11 @@ export default defineConfig({
     rules: {
       'no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
       'vite-plus/prefer-vite-plus-imports': 'error',
+      // Type-aware: unhandled or misused promises, and assertions that change nothing.
+      'typescript/await-thenable': 'error',
+      'typescript/no-floating-promises': 'error',
+      'typescript/no-misused-promises': 'error',
+      'typescript/no-unnecessary-type-assertion': 'error',
     },
     ignorePatterns: ['**/dist/**', '**/build/**', '**/.next/**', '**/*.d.ts', 'packages/database/drizzle/**'],
     overrides: [
@@ -23,10 +28,21 @@ export default defineConfig({
           'react/exhaustive-deps': 'warn',
           'react/jsx-key': 'off',
           'nextjs/no-html-link-for-pages': 'off',
+          // The frontend type-checks without strictNullChecks (nextjs.json), so these rules either refuse
+          // to run or call a cast unnecessary that strict mode needs (`process.env.X as string`).
+          'typescript/no-unnecessary-type-assertion': 'off',
+          'typescript/no-useless-default-assignment': 'off',
+        },
+      },
+      {
+        // Tests pass mocked methods around detached (`vi.mocked(db).transaction`); they never rely on `this`.
+        files: ['**/*.test.ts'],
+        rules: {
+          'typescript/unbound-method': 'off',
         },
       },
     ],
-    options: { typeAware: false, typeCheck: false },
+    options: { typeAware: true, typeCheck: false },
   },
   fmt: {
     bracketSpacing: true,

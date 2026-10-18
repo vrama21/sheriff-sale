@@ -1,17 +1,21 @@
-import { HTMLElement, parse } from 'node-html-parser';
+import { parse } from 'node-html-parser';
 
 export const parseCountyPropertyIds = async (countyListingHtml: string): Promise<number[]> => {
   const root = parse(countyListingHtml);
 
-  const listingsTableDiv = root.querySelectorAll('table').slice(-1)[0];
+  const listingsTableDiv = root.querySelectorAll('table').at(-1);
+
+  if (!listingsTableDiv) {
+    throw new Error('County listings layout not recognised: no listings table');
+  }
+
   const listingTableRows = listingsTableDiv.querySelectorAll('tr').slice(1);
 
   const propertyIds = listingTableRows.map((listingTableRow) => {
-    const tableCells = listingTableRow.querySelectorAll('td');
-    const firstCell = tableCells[0].firstChild as HTMLElement;
-    const listingHref = firstCell.getAttribute('href') as string;
+    // A row without a details link has no property ID.
+    const listingHref = listingTableRow.querySelector('td')?.querySelector('a')?.getAttribute('href');
 
-    const propertyId = listingHref.match(/\d+/g)?.slice(0)[0];
+    const propertyId = listingHref?.match(/\d+/)?.[0];
 
     if (propertyId) {
       return Number(propertyId);
@@ -20,5 +24,5 @@ export const parseCountyPropertyIds = async (countyListingHtml: string): Promise
     return undefined;
   });
 
-  return propertyIds.filter((propertyId) => propertyId) as number[];
+  return propertyIds.filter((propertyId): propertyId is number => propertyId !== undefined);
 };

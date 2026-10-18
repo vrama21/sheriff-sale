@@ -27,13 +27,15 @@ export const stubClientAdapter = (
   respond: (request: StubRequest) => StubResponse,
 ): StubRequest[] => {
   const requests: StubRequest[] = [];
-  const axiosInstance = (client as unknown as { axiosInstance: { defaults: { adapter: unknown } } }).axiosInstance;
+  // Bracket access reaches the protected instance with its type intact.
+  const axiosInstance = client['axiosInstance'];
 
   axiosInstance.defaults.adapter = async (config: InternalAxiosRequestConfig) => {
+    const cookie = config.headers.get('Cookie');
     const request: StubRequest = {
       url: config.url,
       params: config.params,
-      cookie: config.headers?.['Cookie'] as string | undefined,
+      cookie: typeof cookie === 'string' ? cookie : undefined,
       maxRedirects: config.maxRedirects,
     };
     requests.push(request);
