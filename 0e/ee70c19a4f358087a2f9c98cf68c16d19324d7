@@ -1,0 +1,45 @@
+backend/src/modules/clerkRecords/parse/docCategory.ts
+  s_35578806346017::t_a6e0c8e1aab83b 1-97
+backend/src/modules/clerkRecords/scrape/types.ts
+  s_35578806346017::t_295b26494bb19c 1-126
+backend/src/modules/clerkRecords/scrape/platforms/press/docTypeOptions.ts
+  s_35578806346017::t_a1f2a976f8de8e 1-390
+backend/src/modules/clerkRecords/parse/docketYear.test.ts
+  s_35578806346017::t_27c6ae631ab426 1-38
+backend/src/modules/clerkRecords/parse/clerkDocumentSchema.ts
+  s_35578806346017::t_3aa368f4c7836b 1-127
+backend/src/modules/clerkRecords/parse/normalizeName.ts
+  s_35578806346017::t_0ce5551cc66e9d 192
+  s_35578806346017::t_6d485209a8ef70 1-191,193-245
+backend/src/modules/clerkRecords/parse/extractParcel.ts
+  s_35578806346017::t_e534099178b7f6 1-11,14,19-20,22-24,26-27,29-39,41-59,64-107
+  s_35578806346017::t_bbac5d58d886f1 12-13,15-18,21,25,28,40,61-63
+  s_35578806346017::t_0ce5551cc66e9d 60
+backend/src/modules/clerkRecords/parse/extractParcel.test.ts
+  s_35578806346017::t_6dad6434e62fe1 1-98
+backend/src/modules/clerkRecords/scrape/platforms/press/counties.ts
+  s_35578806346017::t_f89cea3d0e838c 1-214,216
+  s_35578806346017::t_b5abb998b4edf5 215
+backend/src/modules/clerkRecords/parse/platforms/press/parsePressResultGrid.ts
+  s_35578806346017::t_0f5051879810d8 1-260
+backend/src/modules/clerkRecords/parse/normalizeName.test.ts
+  s_35578806346017::t_dd731cd1149861 1-135
+backend/src/modules/clerkRecords/parse/docketYear.ts
+  s_35578806346017::t_e0d6db7e2cc4ce 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "0eee70c19a4f358087a2f9c98cf68c16d19324d7",
+  "prompts": {},
+  "sessions": {
+    "s_35578806346017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dd4c11d8-7e43-4ea2-a99c-678c6f7676a7",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
