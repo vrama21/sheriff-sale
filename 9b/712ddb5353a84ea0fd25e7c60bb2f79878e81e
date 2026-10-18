@@ -1,0 +1,29 @@
+openspec/specs/archive-replay/spec.md
+  ai_agent 6,8
+openspec/specs/ci-pipeline/spec.md
+  ai_agent 4,6,8
+openspec/specs/database-toolchain/spec.md
+  ai_agent 6,8
+openspec/specs/civilview-scraping/spec.md
+  ai_agent 6,8
+openspec/specs/infra-delivery/spec.md
+  ai_agent 6,8
+openspec/specs/backend-module-layout/spec.md
+  ai_agent 4,6,8
+openspec/specs/local-environment/spec.md
+  ai_agent 4,6,8
+openspec/specs/workspace-dependencies/spec.md
+  ai_agent 4,6,8
+openspec/specs/scraper-infrastructure/spec.md
+  ai_agent 6,8
+openspec/specs/listing-validation/spec.md
+  ai_agent 6,8
+openspec/specs/vite-plus-toolchain/spec.md
+  ai_agent 4,6,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9b712ddb5353a84ea0fd25e7c60bb2f79878e81e",
+  "prompts": {}
+}
