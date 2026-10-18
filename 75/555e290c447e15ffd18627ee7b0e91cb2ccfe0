@@ -1,0 +1,130 @@
+openspec/changes/fix-archive-replay-findings/.openspec.yaml
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-2
+backend/src/modules/sheriffSale/pipeline.ts
+  s_9ef2d600861adf::t_7fde1836d72343 140-147
+  s_9ef2d600861adf::t_4a6b740278952b 35-36
+openspec/changes/fix-archive-replay-findings/specs/civilview-scraping/spec.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-35
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsMiddlesex.html
+  s_9ef2d600861adf::t_e4d614c9250da2 1-188
+openspec/changes/fix-archive-replay-findings/tasks.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-49
+backend/src/modules/sheriffSale/replay/replay.ts
+  s_9ef2d600861adf::t_aaaeddbf507981 8,18-19,53-55,87-88,103-109,183,226,231-243,246-247,256,259-264,266,281-282,307-309
+  s_9ef2d600861adf::t_5d556ffffb00b1 92-100
+backend/src/modules/sheriffSale/parse/cleanPropertyKey.ts
+  s_9ef2d600861adf::t_893b5dc8a0d4b2 32-41
+backend/src/modules/sheriffSale/replay/index.ts
+  s_9ef2d600861adf::t_7ea3cc0fdd3df4 7-10,14,17,36,41-43
+infra/scraper.tf
+  s_9ef2d600861adf::t_3955607fcdb56d 2
+  s_9ef2d600861adf::t_07abcac69cf0c6 125-186
+backend/src/shared/s3/listS3Keys.test.ts
+  s_9ef2d600861adf::t_a29eafc1810563 1-15,21-42
+  s_9ef2d600861adf::t_5d556ffffb00b1 16-20
+backend/README.md
+  s_9ef2d600861adf::t_183c54fb89b3e8 21,27-40
+openspec/changes/fix-archive-replay-findings/specs/scraper-infrastructure/spec.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-24
+packages/database/src/client.ts
+  s_9ef2d600861adf::t_36d83347d40758 7,13-18
+backend/src/modules/sheriffSale/ingest/buildListingSnapshot.ts
+  s_9ef2d600861adf::t_3f3a2eb666430e 70
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsCapeMay.html
+  s_9ef2d600861adf::t_e4d614c9250da2 1-260
+backend/src/modules/sheriffSale/parse/cleanPropertyKey.test.ts
+  s_9ef2d600861adf::t_fad75631022f16 24-28
+backend/src/shared/s3/index.ts
+  s_9ef2d600861adf::t_1fe51fcd4eef99 3
+infra/variables.tf
+  s_9ef2d600861adf::t_07abcac69cf0c6 6-15
+infra/README.md
+  s_9ef2d600861adf::t_ed7cfa3ee55037 57-66
+  s_9ef2d600861adf::t_4a0bcc653b418e 26-27
+  s_9ef2d600861adf::t_896cc686d537a1 11-15
+backend/src/modules/sheriffSale/pipeline.test.ts
+  s_9ef2d600861adf::t_8ca26dccb41346 88,91-96
+  s_9ef2d600861adf::t_f3650d3064d51d 192-223
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsBurlington.html
+  s_9ef2d600861adf::t_e4d614c9250da2 1-294
+backend/src/modules/sheriffSale/parse/listingSchema.test.ts
+  s_9ef2d600861adf::t_265a8f4999089e 4
+  s_9ef2d600861adf::t_f9d90ce4f38986 56-62
+  s_9ef2d600861adf::t_5d556ffffb00b1 97-104,160-162,289-292,294-297
+  s_9ef2d600861adf::t_e415e8b97ced92 110-159,163-188
+backend/src/modules/sheriffSale/ingest/buildListingSnapshot.test.ts
+  s_9ef2d600861adf::t_09d8f31fea5cf9 156
+  s_9ef2d600861adf::t_0d230aa1d44445 71-110
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsGloucesterUpset.html
+  s_9ef2d600861adf::t_e4d614c9250da2 1-189
+openspec/changes/fix-archive-replay-findings/specs/archive-replay/spec.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-51
+.github/workflows/cicd.yml
+  s_9ef2d600861adf::t_5111faa94883f9 116
+openspec/changes/fix-archive-replay-findings/proposal.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-46
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsHunterdon.html
+  s_9ef2d600861adf::t_e4d614c9250da2 1-203
+backend/src/modules/sheriffSale/parse/parseListingDetails.test.ts
+  s_9ef2d600861adf::t_59439073f644e2 51-73
+openspec/changes/fix-archive-replay-findings/design.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-4,15-17,25-112
+  s_9ef2d600861adf::t_5d556ffffb00b1 5-14,18-24
+openspec/changes/fix-archive-replay-findings/specs/scraper-pipeline/spec.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-35
+backend/src/modules/sheriffSale/parse/listingSchema.ts
+  s_9ef2d600861adf::t_164f6f212ddebe 3
+  s_9ef2d600861adf::t_2ee67045ce69d6 123-147
+  s_9ef2d600861adf::t_3539fb6b8d4e44 71-75,77-80,85-94
+  s_9ef2d600861adf::t_493a17d29c5a4f 12-13,15-17
+  s_9ef2d600861adf::t_5ba6eb069fa550 23-28
+  s_9ef2d600861adf::t_e42e150bb4645f 179-191,193-195,204-207
+  s_9ef2d600861adf::t_d92fb30638c3d6 158
+openspec/changes/fix-archive-replay-findings/specs/listing-validation/spec.md
+  s_d9dd02f630a83a::t_100c4d25fe6cc6 1-93
+backend/src/shared/address/parseAddress.ts
+  s_9ef2d600861adf::t_12664aed9622e9 51-55,57,62-63,65-69
+backend/src/modules/sheriffSale/parse/extractUpsetAmount.test.ts
+  s_9ef2d600861adf::t_d71a0a6ed1e0b8 57
+  s_9ef2d600861adf::t_77deb136f451c1 1-56,58-59
+infra/github-actions.tf
+  s_9ef2d600861adf::t_02beaa4e14a243 107-119
+  s_9ef2d600861adf::t_62516ec12e9c40 13-14
+backend/src/modules/sheriffSale/parse/extractUpsetAmount.ts
+  s_9ef2d600861adf::t_d08cfae09d09d9 1-27
+backend/src/modules/sheriffSale/replay/replay.test.ts
+  s_9ef2d600861adf::t_5d556ffffb00b1 183-187
+  s_9ef2d600861adf::t_97c3cb64c38c58 6,41-43,112,139-175,208,223,237,249,262,271,282,285,297-298,307,319
+backend/src/shared/address/parseAddress.test.ts
+  s_9ef2d600861adf::t_bf2012be12f00c 53-64
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsHunterdonBlankAddress.html
+  s_9ef2d600861adf::t_e4d614c9250da2 1-159
+backend/src/shared/s3/listS3Keys.ts
+  s_9ef2d600861adf::t_ee0ed0c87d3c37 1-24
+backend/src/modules/sheriffSale/replay/plan.ts
+  s_9ef2d600861adf::t_e41e3a423e1670 22-24,26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "75555e290c447e15ffd18627ee7b0e91cb2ccfe0",
+  "prompts": {},
+  "sessions": {
+    "s_9ef2d600861adf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ddfde05d-1d57-44a6-bc80-44a883d5c151",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    },
+    "s_d9dd02f630a83a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1a7d0ca-1796-40f6-9e83-59e6c0bc04a6",
+        "model": "claude-haiku-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
