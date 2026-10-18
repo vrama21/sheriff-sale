@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Sales Listing Detail</title>
+
+    <link href="/Content/bootstrap.min.css" rel="stylesheet"/>
+<link href="/Content/site.css" rel="stylesheet"/>
+
+
+<link href="/Content/County/00870.css" rel="stylesheet"/>
+
+
+    <script src="/Scripts/jquery-1.10.2.js"></script>
+
+
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+
+</head>
+<body>
+    
+    <div>
+        
+
+<script>
+    window.onload = function () {
+        var elem1 = document.getElementById("shortTable");
+        if (elem1 != null) {
+            var elem = document.getElementById("longTable");
+            elem.style.display = "none";
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "none";
+
+        }
+        else {
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "none";
+
+            var elemExpand = document.getElementById("expand");
+            elemExpand.style.display = "none";
+        }
+    }
+    function toggleTable() {
+        var elem = document.getElementById("longTable");
+        var elem1 = document.getElementById("shortTable");
+        var hide = elem.style.display == "none";
+        if (hide) {
+            elem.style.display = "table";
+            elem1.style.display = "none";
+
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "table";
+
+            var elemExpand = document.getElementById("expand");
+            elemExpand.style.display = "none";
+        }
+        else {
+            elem.style.display = "none";
+            elem1.style.display = "table";
+            var elemCollapse = document.getElementById("collapse");
+            elemCollapse.style.display = "none";
+
+            var elemExpand = document.getElementById("expand");
+            elemExpand.style.display = "table";
+        }
+    }
+    function openTab(url) {
+        window.open(url, "_blank");
+    }
+    function handleKeyDown(event, callback) {
+        if (event.key === 'Enter') {
+            callback();
+        }
+    }
+</script>
+<style>
+    .sale-detail-item:last-child {
+        border-bottom: 1px solid #ccc;
+    }
+    .sale-detail-item:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+    .sale-detail-item{
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+    .sale-detail-label{
+        font-weight: bold;
+        width: 200px;
+    }
+</style>
+<main>
+    <div class="container-fluid">
+
+    </div>
+
+    <div class="container">
+
+        <h1>Sales Listing Detail (Burlington County, NJ)</h1>
+
+        
+
+        <div class="row">
+            <p class="text-center"><a href="javascript:history.go(-1)" class="btn btn-primary" role="button">Back</a></p>
+        </div>
+
+        <br />
+
+        <div class="table-responsive">
+
+            <div class="sale-details-list">
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Sheriff #&colon;</div>
+                        <div class="sale-detail-value">
+26001077                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Court Case #&colon;</div>
+                        <div class="sale-detail-value">
+F-009252-25                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Sales Date&colon;</div>
+                        <div class="sale-detail-value">
+10/22/2026                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Plaintiff&colon;</div>
+                        <div class="sale-detail-value">
+PLAINTIFF LLC D/B/A PLAINTIFF MORTGAGE SERVICING                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Defendant&colon;</div>
+                        <div class="sale-detail-value">
+DEFENDANT NAME; DEFENDANT NAME; DEFENDANT COMPANY, INC.; DEFENDANT NAME; DEFENDANT HOSPITAL                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Address&colon;</div>
+                        <div class="sale-detail-value">
+561 INMAN AVENUE<br/>CINNAMINSON NJ 08077                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Approx. Judgment&colon;</div>
+                        <div class="sale-detail-value">
+$157,589.64                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Attorney&colon;</div>
+                        <div class="sale-detail-value">
+ATTORNEY FIRM PLACEHOLDER, PLLC                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Attorney Phone&colon;</div>
+                        <div class="sale-detail-value">
+555-555-0100                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Description&colon;</div>
+                        <div class="sale-detail-value">
+APPROXIMATE GOOD FAITH ESTIMATE OF UPSET PRICE: $174,055.95 SHERIFF’S SALE By virtue of a Writ of Execution to me directed, issued out of SUPERIOR COURT OF NEW JERSEY CHANCERY DIVISION BURLINGTON County of Burlington DOCKET NO. F-009252-25 ATTORNEY FILE NO. 08052025.67963 SHERIFF # 26001077 I will sell at public sale on Thursday 6/25/2026 (Date subject to change. Check website for recent status) at 12:00 PM Prevailing Time, at the County Court Facilities, Rancocas Road, 1st Floor, Commissioner’s Board Room, Mt. Holly, New Jersey 561 INMAN AVENUE CINNAMINSON, NJ 08077 ----- GOOD FAITH ESTIMATED UPSET: $174,055.95 PROPERTY TO BE SOLD IS LOCATED IN THE TOWNSHIP OF CINNAMINSON, COUNTY OF BURLINGTON, STATE OF NEW JERSEY. PREMISES COMMONLY KNOWN AS: 561 INMAN AVENUE, CINNAMINSON, NJ 08077. BEING KNOWN AS LOT 6.02 BLOCK 303 ON THE OFFICIAL TAX MAP OF THE TOWNSHIP OF CINNAMINSON DIMENSIONS: 99.56 FEET X 76.27 FEET X 85.69 FEET X 75.0 FEET NEAREST CROSS STREET: BROAD STREET THE SHERIFF HEREBY RESERVES THE RIGHT TO ADJOURN THIS SALE WITHOUT FURTHER NOTICE BY PUBLICATION. PLEASE BE ADVISED THAT DEFINITIVE OCCUPANCY INFORMATION IS NOT AVAILABLE AND PLAINTIFF MAKES NO REPRESENTATION REGARDING OCCUPANCY. *SUBJECT TO ANY UNPAID TAXES, MUNICIPAL LIENS OR OTHER CHARGES, AND ANY SUCH TAXES, CHARGES, LIENS, INSURANCE PREMIUMS OR OTHER ADVANCES MADE BY PLAINTIFF PRIOR TO THIS SALE. ALL INTERESTED PARTIES ARE TO CONDUCT AND RELY UPON THEIR OWN INDEPENDENT INVESTIGATION TO ASCERTAIN WHETHER ANY OUTSTANDING INTEREST REMAINS OF RECORD AND/OR HAVE PRIORITY OVER THE LIEN BEING FORECLOSED AND, IF SO, THE CURRENT AMOUNT DUE THEREON. * *IF THE SALE IS SET ASIDE FOR ANY REASON, THE PURCHASER AT THE SALE SHALL BE ENTITLED ONLY TO A RETURN OF THE DEPOSIT PAID. THE PURCHASER SHALL HAVE NO FURTHER RECOURSE AGAINST THE MORTGAGOR, THE MORTGAGEE OR THE MORTGAGEE'S ATTORNEY. NO PRIOR MORTGAGES OR LIENS ARE OUTSTANDING. Surplus Money: If after the sale and satisfaction of the mortgage debt, including                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Parcel #&colon;</div>
+                        <div class="sale-detail-value">
+costs and expenses, there remains any surplus money, the money will be deposited into the Superior Court Trust Fund and any person claiming the surplus, or any part thereof, may file a motion pursuant to Court Rules 4:64-3 and 4:57-2 stating the nature and extent of that person’s claim and asking for an order directing payment of the surplus money. The Sheriff or other person conducting the sale will have information regarding the surplus, if any. This does not constitute a full legal description, which can be found in the County Clerk’s Office or the Sheriff’s Office. The Sheriff is not responsible and makes no representation as to the accuracy of the affidavit of considerations submitted by the plaintiff in regards to this property. The purchaser will pay the costs of drawing and executing the deed, sheriff’s fees, costs, and commission. Judgment approximately $150,439.21 besides interest, costs, and fees. The right to adjourn this sale is specifically reserved by the undersigned. Seized as the property of DEFENDANT NAME; DEFENDANT NAME; DEFENDANT COMPANY, INC.; DEFENDANT NAME; DEFENDANT HOSPITAL Defendant(s) taken in execution at the suit of PLAINTIFF LLC D/B/A PLAINTIFF MORTGAGE SERVICING Plaintiff(s) NOTICE TO THE PUBLIC AT THE TIME OF THE SALE, TWENTY PERCENT OF THE AMOUNT BID WILL BE REQUIRED AS A DEPOSIT, BY THE PURCHASER, IN CASH, CERTIFIED, TREASURER’S, OR CASHIERS CHECK ONLY. THE BALANCE IS DUE TWO WEEKS FROM THE DATE OF SALE, IN CASH OR CERTIFIED, TREASURE’S, OR CASHIERS CHECK ONLY. IN CERTAIN CASES, AT THE TIME OF THE SALE THREE- AND ONE-HALF PERCENT (3.5%) OF THE AMOUNT BID AS A DEPOSIT, IN CASH, CERTIFIED TREASURER’S OR CASHIERS CHECK ONLY. THE BALANCE IS DUE NINETY DAYS (90) FROM DATE OF SALE IN CASH OR CERTIFIED, TREASURER’S OR CASHIER’S CHECK OR SHALL BE BY WIRE TRANSFER TO THE BURLINGTON COUNTY SHERIFF. IF THE BALANCE OF THE PURCHASE PRICE IS TO BE FINANCED, BIDDER MUST PRESENT AT SALE PRE-APPROVAL DOCUMENTATION FROM AN INSTITUTION REGULATED                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+                    <div class="sale-detail-item">
+                        <div class="sale-detail-label">Property Note&colon;</div>
+                        <div class="sale-detail-value">
+BY THE DEPARTMENT OF BANKING AND INSURANCE OR FEDERAL BANKING AGENCY AS DEFINED IN THE NEW JERSEY RESIDENTIAL MORTGAGE LENDING ACT. THOSE PERMITTED TO PAY THREE- AND ONE-HALF PERCENT DEPOSIT (3.5%) SHALL BE THE FOLLOWING IN ORDER OF PRIORITY: 1. THE FORECLOSED UPON DEFENDANT, THE FORECLOSED UPON DEFENDANT’S NEXT OF KIN OR TENANT, MEETING THE ABOVE REQUIREMENTS, SHALL HAVE RIGHT OF FIRST REFUSAL TO PURCHASE THE PROPERTY; (only available for the initial sale unless the sale is delayed) 2. AN INDIVIDUAL, MEETING THE ABOVE REQUIREMENTS WHO INTENDS TO OCCUPY THE PROPERTY AS HIS PRIMARY RESIDENCE FOR NO LESS THAN EIGHTY-FOUR (84) MONTHS; 3. A NONPROFIT COMMUNITY DEVELOPMENT CORPORATION WHO HAS A WRITTEN AGREEMENT WITH THE FORECLOSED UPON DEFENDANT, THE NEXT OF KIN OF THE FORECLOSED UPON DEFENDANT OR TENANT OF THE FORECLOSED UPON PROPERTY; 4. A NONPROFIT COMMUNITY DEVELOPMENT CORPORATION WHO HAS COMPLETED A 1023 FILING WITH UNITED STATES INTERNAL REVENUE SERVICE, STATING THE CORPORATION’S MISSION INCLUDES COMMUNITY REVITALIZATION AND THE CREATION OR PRESERVATION OF AFFORDABLE HOUSING. 5. A TENANT OR A SUCCESSFUL BIDDER WHO IS NEITHER THE PLAINTIFF NOR THE FORECLOSED UPON DEFENDANT OR HIS NEXT OF KIN AND WHO INTENDS TO OCCUPY THE PROPERTY AS HIS PRIMARY RESIDENCE FOR A MINIMUM OF EIGHTY FOUR (84) MONTHS AND FINANCES THE PURCHASE OF THE PROPERTY AND PAYS A THREE AND ONE HALF (3.5) PERCENT DEPOSIT SHALL HAVE RECEIVED EIGHT (8) HOURS OF HOMEBUYER EDUCATION AND COUNSELING THROUGH A UNITED STATES DEPARTMENT OF HOUSING AND URBAN DEVELOPMENT (HUD) CERTIFIED HOUSING COUNSELING AGENCY, AND SHALL PRESENT A CERTIFICATE OF COMPLETION OR PROOF OF ENROLLMENT IN THE PROGRAM TO THE SHERIFF. IF YOU INTEND TO BID UNDER THE COMMUNITY WEALTH PRESERVATION PROGRAM, WE ASK THAT YOU PLEASE SUBMIT ANY NECESSARY DOCUMENTS TO THE SHERIFF’S OFFICE THREE DAYS PRIOR TO THE SALE. To be sold by: Sheriff Name, Sheriff ATTORNEY FIRM PLACEHOLDER, PLLC Attorney (s): 555 555-0100                        </div>
+                        <div class="sale-detail-image DetailImageAlign">
+                        </div>
+                    </div>
+            </div>
+
+
+            <br />
+
+            <h2>
+                Status History
+
+
+            </h2>
+
+
+            <table class="table table-striped " id="longTable" style="display:table">
+                <thead style="word-wrap: break-word;">
+                    <tr>
+                        <th>Status </th>
+                        <th>Date  </th>
+                                                <th id="collapse">
+                            <a href="javascript:;" class="margin-left-18" onclick="toggleTable();" onkeydown="handleKeyDown(event, toggleTable);">
+                                <div class="col-sm-1 control-label text-nowrap" id="collapseLabel">[Collapse All]</div>
+                                <br />
+                                <span class="glyphicon glyphicon-chevron-up" id="collapseArrow"></span>
+                            </a>
+                        </th>
+
+                    </tr>
+                </thead>
+
+                    <tr>
+
+                        <td>Scheduled for</td>
+
+                            <td>6/25/2026</td>
+
+
+
+
+                    </tr>
+                    <tr>
+
+                        <td>1st Debtor Adjournment to</td>
+
+                            <td>7/23/2026</td>
+
+
+
+
+                    </tr>
+                    <tr>
+
+                        <td>1st Attorney Adjournment to</td>
+
+                            <td>8/20/2026</td>
+
+
+
+
+                    </tr>
+                    <tr>
+
+                        <td>2nd Debtor Adjournment to</td>
+
+                            <td>9/17/2026</td>
+
+
+
+
+                    </tr>
+                    <tr>
+
+                        <td>Adjourned by Court to</td>
+
+                            <td>10/22/2026</td>
+
+
+
+
+                    </tr>
+            </table>
+
+
+        </div>
+        
+
+            <h3><span style="color:#595959; font-size: small;"> *Excludes Judgment Interest and Sheriff Fees. </span></h3>
+
+    </div>
+</main>
+
+    </div>
+
+    <script src="/Scripts/bootstrap.min.js"></script>
+<script src="/Scripts/respond.js"></script>
+
+    
+</body>
+</html>

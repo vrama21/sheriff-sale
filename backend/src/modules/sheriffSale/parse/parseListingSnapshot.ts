@@ -1,4 +1,5 @@
 import { parse } from 'node-html-parser';
+import { joinNoticeOverflow } from './joinNoticeOverflow';
 import { RawStatusRow } from './listingSchema';
 import { parseLegacyListingDetails } from './parseLegacyListingDetails';
 import { parseListingDetails } from './parseListingDetails';
@@ -33,9 +34,9 @@ export const detectListingLayout = (html: string): ListingLayout => {
 };
 
 /**
- * Parses a details page with the parser for its layout. Both layouts keep their status history in the same
- * table. Returns `{ layout: 'unrecognised' }` rather than throwing for a page with neither layout; throws when
- * a recognised page fails to parse.
+ * Parses a details page with the parser for its layout, rejoining a notice that overflowed the description. Both
+ * layouts keep their status history in the same table. Returns `{ layout: 'unrecognised' }` rather than throwing for
+ * a page with neither layout; throws when a recognised page fails to parse.
  */
 export const parseListingSnapshot = (html: string): ParsedListingSnapshot => {
   const layout = detectListingLayout(html);
@@ -44,7 +45,9 @@ export const parseListingSnapshot = (html: string): ParsedListingSnapshot => {
     return { layout };
   }
 
-  const listing = layout === 'current' ? parseListingDetails(html) : parseLegacyListingDetails(html);
+  const listing = joinNoticeOverflow(
+    layout === 'current' ? parseListingDetails(html) : parseLegacyListingDetails(html),
+  );
 
   return { layout, listing, statusHistory: parseStatusHistory(html) };
 };

@@ -31,6 +31,20 @@ describe('parseListingSnapshot', () => {
     expect(parsed).toMatchObject({ layout: 'current', listing: { sheriffId: 'F-23001318' } });
   });
 
+  it('joins a notice that overflowed the description into Parcel # and Property Note back into the description', () => {
+    const parsed = parseListingSnapshot(readFixture('listingDetailsBurlingtonOverflow.html'));
+
+    expect(parsed).toMatchObject({
+      layout: 'current',
+      listing: {
+        sheriffId: '26001077',
+        description: expect.stringMatching(/^APPROXIMATE GOOD FAITH .* Attorney \(s\): 555 555-0100$/),
+      },
+      statusHistory: expect.arrayContaining([{ status: 'Adjourned by Court to', date: '10/22/2026' }]),
+    });
+    expect(parsed).not.toHaveProperty('listing.parcel');
+  });
+
   it('parses a legacy page with the legacy parser and reads its status history', () => {
     expect(parseListingSnapshot(readFixture('listingDetailsLegacySalem.html'))).toMatchObject({
       layout: 'legacy',

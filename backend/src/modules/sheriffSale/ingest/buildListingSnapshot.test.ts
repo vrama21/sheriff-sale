@@ -95,4 +95,29 @@ describe('buildListingSnapshot', () => {
 
     expect(snapshot.contentHash).toBe(hash);
   });
+
+  it('stores a Burlington notice that overflowed into Parcel # and Property Note as one description, with no parcel', () => {
+    const page = parseListingSnapshot(readFixture('listingDetailsBurlingtonOverflow.html'));
+
+    if (page.layout === 'unrecognised') {
+      throw new Error('listingDetailsBurlingtonOverflow.html layout not recognised');
+    }
+
+    const { snapshot, warnings } = buildListingSnapshot({
+      page,
+      county: 'Burlington',
+      propertyId: 2196778298,
+      snapshotDate: '2026-10-18',
+    });
+
+    expect(snapshot.listing).toMatchObject({
+      sheriffId: '26001077',
+      street: '561 Inman Avenue',
+      city: 'Cinnaminson',
+      judgment: 157589.64,
+      parcel: null,
+      description: expect.stringMatching(/^APPROXIMATE GOOD FAITH .* Attorney \(s\): 555 555-0100$/),
+    });
+    expect(warnings).toEqual([]);
+  });
 });
