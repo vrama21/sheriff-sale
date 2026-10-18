@@ -62,5 +62,5 @@
 
 - [x] 9.1 Run `vp test`, `vp lint` and `vp fmt --check` across the workspace
 - [x] 9.2 Run `openspec validate add-clerk-records-press --strict`
-- [ ] 9.3 After deploy, invoke `new-jersey-clerk-records` once by hand. Check the per-county summary in its log group, the objects under `clerk-records/` in the bucket, and row counts in the new tables
+- [x] 9.3 After deploy, invoke `new-jersey-clerk-records` once by hand. Check the per-county summary in its log group, the objects under `clerk-records/` in the bucket, and row counts in the new tables
 - [ ] 9.4 After the first week, run a prod query for match coverage per county (listings with a `FORECLOSED_LIS_PENDENS` match ÷ listings looked up) and the confidence split, and record the results on the change
