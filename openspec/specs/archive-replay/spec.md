@@ -3,9 +3,7 @@
 ## Purpose
 
 TBD - created by archiving change replay-archived-listings. Update Purpose after archive.
-
 ## Requirements
-
 ### Requirement: Replay command
 
 The backend SHALL provide a `replay:archive` command that takes one or more `--county` names, `--from` and `--to` dates (inclusive, `YYYY-MM-DD`), and an optional `--dry-run`. With no `--county`, it SHALL replay every NJ county. It SHALL reject an unknown county, a malformed date or `--from` after `--to` before reading anything. It SHALL process dates in ascending order.
@@ -89,7 +87,7 @@ The legacy details parser SHALL read each row of the old layout's details table 
 #### Scenario: Legacy page fields
 
 - **WHEN** a legacy page has `Sheriff #: F-24000056`, `Sales Date: 07/15/2024 02:00 PM`, `Approx. Upset*: $275,983.46` and `Address: 263 Three Bridge Road<br/>Monroeville NJ 08343`
-- **THEN** the parse has `sheriffId` `F-24000056`, `saleDate` `07/15/2024 02:00 PM`, `upsetAmount` `$275,983.46`, and an address that `cleanAddress` splits into street `263 Three Bridge Road`, city `Monroeville` and ZIP `08343`
+- **THEN** the parse has `sheriffId` `F-24000056`, `saleDate` `07/15/2024 02:00 PM`, `upsetAmount` `$275,983.46`, and an address that `parseAddress` splits into street `263 Three Bridge Road`, city `Monroeville` and ZIP `08343`
 
 ### Requirement: Dry run
 
@@ -113,3 +111,4 @@ The replay SHALL print a summary per county and for the whole run: county pages 
 
 - **WHEN** one listing's sync rejects
 - **THEN** it is logged and counted as failed, the other listings are synced, and the command exits non-zero
+

@@ -3,12 +3,15 @@
 ## Purpose
 
 The AWS resources behind the daily New Jersey sheriff sale scraper: the `nj-sheriff-sale` archive bucket, the Lambda and its IAM role, dead-letter queue, schedule, and log group, plus their names and protection rules.
-
 ## Requirements
-
 ### Requirement: Archive bucket
 
-OpenTofu SHALL manage an S3 bucket named `nj-sheriff-sale`. The name SHALL NOT be derived from the environment. The resource SHALL set `lifecycle { prevent_destroy = true }` and declare AES256 default server-side encryption.
+OpenTofu SHALL manage an S3 bucket named `nj-sheriff-sale`. The name SHALL NOT be derived from the environment. The resource SHALL set `lifecycle { prevent_destroy = true }` and SHALL declare:
+
+- AES256 default server-side encryption
+- all four S3 Block Public Access settings
+- versioning, enabled
+- a lifecycle rule that expires noncurrent versions after 30 days and aborts incomplete multipart uploads after 7 days
 
 #### Scenario: Accidental destroy
 
@@ -17,8 +20,13 @@ OpenTofu SHALL manage an S3 bucket named `nj-sheriff-sale`. The name SHALL NOT b
 
 #### Scenario: Steady state
 
-- **WHEN** `tofu plan` runs after cutover
-- **THEN** the plan shows no changes to `nj-sheriff-sale` or its encryption configuration
+- **WHEN** `tofu plan` runs after apply
+- **THEN** the plan shows no changes to `nj-sheriff-sale` or its encryption, public access block, versioning, or lifecycle configuration
+
+#### Scenario: Overwritten page is recoverable
+
+- **WHEN** an archived object is overwritten or deleted
+- **THEN** its previous version stays retrievable for 30 days
 
 ### Requirement: Archive data is preserved through the migration
 
@@ -41,7 +49,7 @@ Every object in `nj-sheriff-sale-dev` SHALL be copied into `nj-sheriff-sale` wit
 
 ### Requirement: Scraper writes to the fixed archive bucket
 
-The scraper SHALL write scraped HTML to `nj-sheriff-sale` no matter what `ENV` is set to.
+The scraper SHALL write scraped HTML to `nj-sheriff-sale`, a name fixed in code and not read from the environment.
 
 #### Scenario: Save from the deployed Lambda
 
@@ -50,12 +58,12 @@ The scraper SHALL write scraped HTML to `nj-sheriff-sale` no matter what `ENV` i
 
 ### Requirement: Scraper Lambda function
 
-OpenTofu SHALL manage a Lambda function named `new-jersey-sheriff-sale-scraper`. It SHALL use runtime `nodejs24.x`, handler `index.handler`, 512 MB memory, a 900-second timeout, and the x86_64 architecture. Its code SHALL be the esbuild bundle of `backend/src/handlers/newJerseySheriffSaleScraperHandler.ts`. Its environment SHALL contain exactly `DATABASE_URL` and `ENV`. `DATABASE_URL` SHALL come from a `sensitive` input variable, and `ENV` SHALL be `prod`.
+OpenTofu SHALL manage a Lambda function named `new-jersey-sheriff-sale-scraper`. It SHALL use runtime `nodejs24.x`, handler `index.handler`, 512 MB memory, a 900-second timeout, and the x86_64 architecture. Its code SHALL be the esbuild bundle of `backend/src/modules/sheriffSale/handler.ts`. Its environment SHALL contain exactly `DATABASE_URL`, which SHALL come from a `sensitive` input variable.
 
 #### Scenario: Function configuration after apply
 
 - **WHEN** `aws lambda get-function-configuration` is run against `new-jersey-sheriff-sale-scraper` after apply
-- **THEN** it reports runtime `nodejs24.x`, handler `index.handler`, memory 512, timeout 900, and environment keys `DATABASE_URL` and `ENV` only
+- **THEN** it reports runtime `nodejs24.x`, handler `index.handler`, memory 512, timeout 900, and environment key `DATABASE_URL` only
 
 #### Scenario: Manual invocation
 
@@ -96,18 +104,33 @@ OpenTofu SHALL manage an EventBridge rule on the default event bus named `new-je
 
 ### Requirement: Scraper log group
 
-OpenTofu SHALL create and manage the log group `/aws/lambda/new-jersey-sheriff-sale-scraper` before the function, so that Lambda does not create it outside OpenTofu. The old log group `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` SHALL be kept, outside OpenTofu, so the pre-migration history stays searchable in CloudWatch alongside the new group.
+OpenTofu SHALL create and manage the log group `/aws/lambda/new-jersey-sheriff-sale-scraper` before the function, so that Lambda does not create it outside OpenTofu. The log group SHALL retain events for 90 days. The old log group `/aws/lambda/new-jersey-sheriff-sale-scraper-dev` SHALL be kept, outside OpenTofu, so the pre-migration history stays searchable in CloudWatch alongside the new group.
 
 #### Scenario: Log group owned by OpenTofu
 
 - **WHEN** the function is first invoked after apply
 - **THEN** its logs go to the OpenTofu-managed `/aws/lambda/new-jersey-sheriff-sale-scraper`, and `tofu plan` shows no changes
 
+#### Scenario: Retention
+
+- **WHEN** the log group's attributes are read after apply
+- **THEN** `retentionInDays` is 90
+
 ### Requirement: Single environment with env-less names
 
-AWS SHALL host exactly one deployed environment. No resource name SHALL contain an environment name such as `prod` or `dev`. The environment SHALL appear only as the Lambda's `ENV` value (`prod`), taken from a single local in the root config.
+AWS SHALL host exactly one deployed environment. No resource name SHALL contain an environment name such as `prod` or `dev`, and no resource SHALL carry an environment-name variable.
 
 #### Scenario: Names after cutover
 
 - **WHEN** the scraper resources are listed after cutover
 - **THEN** the function, role, queue, rule, and log group are named `new-jersey-sheriff-sale-scraper`, `…-role`, `…-dlq`, `…-rule`, and `/aws/lambda/new-jersey-sheriff-sale-scraper`, and no OpenTofu-managed resource name ends in `-prod` or `-dev`
+
+### Requirement: No automatic async retries
+
+OpenTofu SHALL manage an event invoke config for the scraper function with `maximum_retry_attempts = 0`. A failed scheduled run SHALL go straight to the dead-letter queue, and SHALL NOT re-run against the county sites.
+
+#### Scenario: Failed scheduled run
+
+- **WHEN** a scheduled invocation throws or times out
+- **THEN** the function is not invoked again for that event, and the event appears in `new-jersey-sheriff-sale-scraper-dlq`
+
