@@ -1,0 +1,9 @@
+openspec/changes/add-clerk-records-press/tasks.md
+  ai_agent 63-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d0c290139a6d75eae29d9f61e61604fa996b0a17",
+  "prompts": {}
+}
