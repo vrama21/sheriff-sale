@@ -8,9 +8,9 @@
 
 ## 2. Database schema
 
-- [ ] 2.1 Add `packages/database/src/schema/clerkRecords.ts` with `ClerkDocument`, `ClerkDocumentParty`, `ClerkDocumentLink`, `ListingClerkDocument` and `ListingClerkLookup`, plus their enums and unique indexes and the cascade foreign keys from design D11. Export them from `schema/index.ts`
-- [ ] 2.2 Run `npm run db:generate`, review the SQL to confirm it only creates objects and changes no existing table, and commit the migration
-- [ ] 2.3 Apply the migration to the local docker-compose database and check the indexes and FKs with `\d`
+- [x] 2.1 Add `packages/database/src/schema/clerkRecords.ts` with `ClerkDocument`, `ClerkDocumentParty`, `ClerkDocumentLink`, `ListingClerkDocument` and `ListingClerkLookup`, plus their enums and unique indexes and the cascade foreign keys from design D11. Export them from `schema/index.ts`
+- [x] 2.2 Run `npm run db:generate`, review the SQL to confirm it only creates objects and changes no existing table, and commit the migration
+- [x] 2.3 Apply the migration to the local docker-compose database and check the indexes and FKs with `\d`
 
 ## 3. Module skeleton and shared pieces
 
