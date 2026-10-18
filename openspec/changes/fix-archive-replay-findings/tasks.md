@@ -16,6 +16,8 @@
 - [ ] 3.3 Make the schema's `address` optional (NULL plus a warning when missing or blank), make `Address` fields `string | null`, and have `parseAddress(null)` return NULL fields with `state: 'NJ'`; update `buildListingSnapshot` and its tests
 - [ ] 3.4 Test the blank-address fixture: the snapshot builds with a NULL address, sheriff number `F-4127`, and one `address` warning
 - [ ] 3.5 Check that `ListingTable`, `ListingDetails` and `ListingMap` in `frontend/` render a NULL address without errors
+- [x] 3.6 Add `attorneyFile` to `IGNORED_KEYS`: the full-range dry run's 225 `attorneyFile` warnings are all blank values
+- [x] 3.7 When the upset row has text that money coercion rejects, run `extractUpsetAmount` on the row before the free text, keeping its warning; test with the Hudson fixtures `listingDetailsHudsonUpsetText.html` (2025-03-29 `property-id-1535606338`, 224000) and `listingDetailsHudsonUpsetNotNeeded.html` (2026-10-18 `property-id-2196805809`, NULL)
 
 ## 4. Pipeline failure threshold
 

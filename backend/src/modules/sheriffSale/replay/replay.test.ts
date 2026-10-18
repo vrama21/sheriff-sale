@@ -239,7 +239,8 @@ describe('replayArchive', () => {
     expect(summary.total).toMatchObject({ fieldWarnings: 1, parsed: 2, inserted: 2 });
     expect(summary.failed).toBe(false);
     expect(console.warn).toHaveBeenCalledWith(
-      'Field warning for listing-html-files/2024-07-02/property-id-2.html: upsetAmount "TBD" is not a dollar amount',
+      'Field warning for listing-html-files/2024-07-02/property-id-2.html: upsetAmount "TBD" is not a dollar amount, ' +
+        "so the upset figure stated in the page's text was kept",
     );
   });
 

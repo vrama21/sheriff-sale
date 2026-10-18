@@ -23,6 +23,8 @@ A listing whose `address` is missing, or is empty after trimming, SHALL be store
 
 When a page has no upset row, or its upset row is empty, `upsetAmount` SHALL be taken from the page's free text, checked in this order: `Property Details`, `Property Note`, `Description`. In each, the upset amount SHALL be the first dollar figure that follows an upset phrase (`upset`, `good faith estimate`, `estimated bid`, `bid amount`), with or without a `$` sign, and SHALL be coerced as money. A figure that follows only a judgment phrase SHALL NOT be taken. When no source holds such a figure, `upsetAmount` SHALL be NULL without a warning. `Property Details` SHALL be read as an upset source and SHALL NOT produce an unknown-field warning.
 
+When the upset row has text that money coercion rejects, the row's own text SHALL be read first, the same way, then the free text in the order above. A warning naming `upsetAmount` and the row's full value SHALL be recorded either way. When none of them holds a figure, `upsetAmount` SHALL be NULL.
+
 #### Scenario: Upset in Property Details
 
 - **WHEN** a Hunterdon page has no upset row and `Property Details` is `APPROX. UPSET: $1,108,438.48`
@@ -48,6 +50,16 @@ When a page has no upset row, or its upset row is empty, `upsetAmount` SHALL be 
 - **WHEN** a page has `Upset Amount: $41,000.00` and `Description` mentions an upset price of `$45,000.00`
 - **THEN** `upsetAmount` is `41000`
 
+#### Scenario: Upset row states its amount after the phrase
+
+- **WHEN** a Hudson page's upset row is `ESTIMATED UPSET BID AMOUNT: $224,000.00, PLUS ANY ADDITIONAL SUMS AS ORDERED BY THE COURT.` and its `Description` doesn't repeat it
+- **THEN** `upsetAmount` is `224000`, and a warning names `upsetAmount` and the full row value
+
+#### Scenario: Upset row with no figure
+
+- **WHEN** a page's upset row is `COMMERCIAL PROPERTY - UPSET NOT NEEDED`, and no upset phrase in its free text is followed by a figure
+- **THEN** `upsetAmount` is NULL, and a warning names `upsetAmount` and the row value
+
 #### Scenario: Blank free text
 
 - **WHEN** a page has no upset row and `Property Details`, `Property Note` and `Description` are empty
@@ -57,7 +69,7 @@ When a page has no upset row, or its upset row is empty, `upsetAmount` SHALL be 
 
 ### Requirement: Money coercion
 
-`upsetAmount` and `judgment` SHALL be coerced from the site's `$D,DDD.DD` text to a number, after stripping `$`, commas and whitespace (including `\r`). `$0.00` SHALL become `0`. A value that is empty or whitespace-only SHALL become NULL without a warning. A value that starts with a dollar amount followed by other text SHALL become that leading amount, with a warning naming the field and the full value. Any other value that isn't a non-negative decimal with at most two fraction digits SHALL become NULL with a warning.
+`upsetAmount` and `judgment` SHALL be coerced from the site's `$D,DDD.DD` text to a number, after stripping `$`, commas and whitespace (including `\r`). `$0.00` SHALL become `0`. A value that is empty or whitespace-only SHALL become NULL without a warning. A value that starts with a dollar amount followed by other text SHALL become that leading amount, with a warning naming the field and the full value. Any other value that isn't a non-negative decimal with at most two fraction digits SHALL become NULL with a warning, except that an `upsetAmount` SHALL be taken from text per "Upset amount from free text" when that finds a figure.
 
 #### Scenario: Dirty money string
 
@@ -83,6 +95,20 @@ When a page has no upset row, or its upset row is empty, `upsetAmount` SHALL be 
 
 - **WHEN** `upsetAmount` is `TBD`
 - **THEN** it is stored as NULL, and a warning names `upsetAmount`
+
+### Requirement: Unknown fields are dropped
+
+A detail-table key that doesn't map to a known listing field SHALL NOT be passed to the database insert, and SHALL produce a warning naming the key. The expected labels `Property Note` and `Property Details`, read only as upset sources, and `Attorney File`, which Middlesex and Cape May publish blank, SHALL be dropped without a warning.
+
+#### Scenario: New row on the site
+
+- **WHEN** the detail table has a `Township` row that the scraper doesn't know
+- **THEN** the saved listing has no `township` property, and a warning names `township`
+
+#### Scenario: Blank Attorney File row
+
+- **WHEN** a Middlesex or Cape May details page has an `Attorney File #` row
+- **THEN** the saved listing has no `attorneyFile` property, and no warning names `attorneyFile`
 
 ## REMOVED Requirements
 

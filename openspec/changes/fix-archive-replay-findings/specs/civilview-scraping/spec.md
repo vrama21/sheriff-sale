@@ -26,8 +26,13 @@ The scraper SHALL parse listing details from the `sale-detail-item` label/value 
 
 #### Scenario: Unknown label
 
-- **WHEN** a details page shows a label that isn't a listing field, such as `Attorney File #`
+- **WHEN** a details page shows a label that isn't a listing field, such as `Township`
 - **THEN** the label is logged and left out of the result, and the other fields still parse
+
+#### Scenario: Expected label that isn't a listing field
+
+- **WHEN** a Middlesex or Cape May details page shows a blank `Attorney File #`
+- **THEN** the label is left out of the result without being logged
 
 #### Scenario: Unrecognised page
 

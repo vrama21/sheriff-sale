@@ -94,19 +94,15 @@ describe('validateListingDetails', () => {
       expect(validate({ upsetAmount: value })).toMatchObject({ details: { upsetAmount: null }, warnings: [] });
     });
 
-    it.each([
-      'TBD',
-      '$1,585.955',
-      '-$5.00',
-      '$1.585,95',
-      '2024 TAXES $5,000.00',
-      'ESTIMATED UPSET BID AMOUNT: $224,000.00',
-    ])('stores %j as null with a warning', (value) => {
-      expect(validate({ upsetAmount: value })).toMatchObject({
-        details: { upsetAmount: null },
-        warnings: [{ field: 'upsetAmount', value, reason: 'not a dollar amount' }],
-      });
-    });
+    it.each(['TBD', '$1,585.955', '-$5.00', '$1.585,95', '2024 TAXES $5,000.00'])(
+      'stores %j as null with a warning',
+      (value) => {
+        expect(validate({ upsetAmount: value })).toMatchObject({
+          details: { upsetAmount: null },
+          warnings: [{ field: 'upsetAmount', value, reason: 'not a dollar amount' }],
+        });
+      },
+    );
 
     it.each([
       ['$384,211.73 GOOD THROUGH JULY 19, 2024, AND ANY ADDITIONAL SUMS AS ORDERED BY THE COURT.', 384211.73],
@@ -121,6 +117,13 @@ describe('validateListingDetails', () => {
           { field: 'judgment', value, reason: expect.stringContaining('followed by other text') },
           { field: 'upsetAmount', value, reason: expect.stringContaining('followed by other text') },
         ],
+      });
+    });
+
+    it('doesn’t look for an upset figure in a judgment that isn’t an amount', () => {
+      expect(validate({ judgment: 'ESTIMATED UPSET BID AMOUNT: $224,000.00' })).toMatchObject({
+        details: { judgment: null },
+        warnings: [{ field: 'judgment', reason: 'not a dollar amount' }],
       });
     });
   });
@@ -140,6 +143,7 @@ describe('validateListingDetails', () => {
       expect(details.upsetAmount).toBe(upsetAmount);
       expect(warnings.map(({ field }) => field)).not.toContain('upsetAmount');
       expect(warnings.map(({ field }) => field)).not.toContain('propertyDetails');
+      expect(warnings.map(({ field }) => field)).not.toContain('attorneyFile');
     });
 
     it('takes Cape May’s Minimum Bid over the upset price in its Description', () => {
@@ -167,6 +171,51 @@ describe('validateListingDetails', () => {
         validate({ upsetAmount: '$41,000.00', description: 'The approximate upset price is $45,000.00.' }).details
           .upsetAmount,
       ).toBe(41000);
+    });
+
+    describe('an upset row that isn’t an amount', () => {
+      const UPSET_ROW = 'ESTIMATED UPSET BID AMOUNT: $224,000.00, PLUS ANY ADDITIONAL SUMS AS ORDERED BY THE COURT.';
+      const keptFigure = { field: 'upsetAmount', value: UPSET_ROW, reason: expect.stringContaining('figure') };
+
+      it('takes the figure after its own upset phrase, with a warning, when the Description doesn’t repeat it', () => {
+        const { description, ...raw } = parseListingDetails(readFixture('listingDetailsHudsonUpsetText.html'));
+
+        expect(description).toContain(UPSET_ROW);
+        expect(raw.upsetAmount).toBe(UPSET_ROW);
+        expect(validateListingDetails(raw)).toMatchObject({
+          details: { sheriffId: '20054473', upsetAmount: 224000, judgment: 204422.17, description: null },
+          warnings: [keptFigure],
+        });
+      });
+
+      it('takes the figure for the whole archived page', () => {
+        expect(validateFixture('listingDetailsHudsonUpsetText.html')).toMatchObject({
+          details: { upsetAmount: 224000 },
+          warnings: [keptFigure],
+        });
+      });
+
+      it('takes its own figure over an upset price in the Description', () => {
+        expect(validate({ upsetAmount: UPSET_ROW, description: 'UPSET PRICE: $45,000.00' }).details.upsetAmount).toBe(
+          224000,
+        );
+      });
+
+      it('reads the free text, with a warning, when it states no figure', () => {
+        expect(validate({ upsetAmount: 'SEE DESCRIPTION', description: 'UPSET PRICE: $45,000.00' })).toMatchObject({
+          details: { upsetAmount: 45000 },
+          warnings: [{ field: 'upsetAmount', value: 'SEE DESCRIPTION', reason: expect.stringContaining('figure') }],
+        });
+      });
+
+      it('stays null, with a warning, when neither it nor the free text states a figure', () => {
+        expect(validateFixture('listingDetailsHudsonUpsetNotNeeded.html')).toMatchObject({
+          details: { sheriffId: '20061009', upsetAmount: null, judgment: 585314.42 },
+          warnings: [
+            { field: 'upsetAmount', value: 'COMMERCIAL PROPERTY - UPSET NOT NEEDED', reason: 'not a dollar amount' },
+          ],
+        });
+      });
     });
 
     it('reads the free text when the upset row is blank', () => {
@@ -295,6 +344,13 @@ describe('validateListingDetails', () => {
         expect(warnings).toEqual([]);
       },
     );
+
+    it('drops Middlesex and Cape May’s Attorney File row without a warning', () => {
+      const raw = parseListingDetails(readFixture('listingDetailsMiddlesex.html'));
+
+      expect(raw).toHaveProperty('attorneyFile');
+      expect(validateListingDetails(raw).warnings.map(({ field }) => field)).not.toContain('attorneyFile');
+    });
   });
 
   it('collects a warning per bad field and still returns the listing', () => {
