@@ -21,7 +21,7 @@ The CI workflow SHALL run `tofu init` and `tofu apply -auto-approve` in `infra/`
 
 ### Requirement: Single prod GitHub environment
 
-CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the GitHub environment `prod`. It SHALL hold the secrets `DATABASE_URL` and `VERCEL_TOKEN`, the variables `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` (identifiers, not credentials), and optionally the variable `ALARM_EMAIL`. It SHALL NOT hold AWS credentials. The `dev` GitHub environment SHALL be deleted once `prod` is in use. The `prod` environment's deployment branch policy is the boundary that guards the prod secrets and the AWS role, because a job's `if:` condition is controlled by whoever pushes the workflow. The policy SHALL allow `main` only.
+CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the GitHub environment `prod`. It SHALL hold the secrets `DATABASE_URL` and `VERCEL_TOKEN`, and the variables `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` (identifiers, not credentials). It SHALL NOT hold AWS credentials. The `dev` GitHub environment SHALL be deleted once `prod` is in use. The `prod` environment's deployment branch policy is the boundary that guards the prod secrets and the AWS role, because a job's `if:` condition is controlled by whoever pushes the workflow. The policy SHALL allow `main` only.
 
 #### Scenario: Deploy jobs use prod
 
@@ -37,40 +37,3 @@ CI deploy jobs (`migrate`, `deploy-backend`, `deploy-frontend`) SHALL use the Gi
 
 - **WHEN** a workflow on a branch other than `main` declares `environment: prod`
 - **THEN** GitHub refuses to run the job in that environment
-
-### Requirement: CI authenticates to AWS with OIDC
-
-CI SHALL get AWS credentials only by assuming the IAM role `sheriff-sale-github-actions` through GitHub's OIDC provider. The role SHALL trust only tokens with audience `sts.amazonaws.com` and subject `repo:vrama21/sheriff-sale:environment:prod`. Its permissions SHALL be limited to this project's resource ARNs:
-
-- the state bucket and its objects
-- the archive bucket's configuration (no object access)
-- the scraper function
-- the scraper and CI roles
-- the OIDC provider
-- the DLQ
-- the schedule rule
-- the scraper log group
-- the alarm SNS topic and its subscriptions
-- the scraper's CloudWatch alarms
-
-The exceptions are read-only describe actions that have no resource-level permissions. No long-lived AWS access keys SHALL be stored in GitHub, and the `cicd-pipeline-deployer` IAM user SHALL be deleted. A statement for a new resource type SHALL be applied from a developer machine before CI first applies that resource.
-
-#### Scenario: Deploy job assumes the role
-
-- **WHEN** `deploy-backend` runs on `main`
-- **THEN** its AWS identity is `assumed-role/sheriff-sale-github-actions/…`, and `tofu apply` completes without access errors
-
-#### Scenario: Other contexts cannot assume the role
-
-- **WHEN** a job outside the repo's `prod` environment (e.g. a feature-branch job with no environment) requests credentials for the role
-- **THEN** `AssumeRoleWithWebIdentity` is denied
-
-#### Scenario: No AWS keys remain
-
-- **WHEN** the repository's secrets (repository and environment level) and the account's IAM users are listed after handover
-- **THEN** no `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` secrets exist and `cicd-pipeline-deployer` does not exist
-
-#### Scenario: Alarm resources are within the policy
-
-- **WHEN** CI applies a change to the alarm topic, its subscription, or the scraper alarms
-- **THEN** the apply completes without access errors

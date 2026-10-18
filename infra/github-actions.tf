@@ -10,8 +10,6 @@ locals {
   scraper_dlq_arn       = "arn:aws:sqs:${local.region}:${local.account_id}:${local.scraper_name}-dlq"
   scraper_rule_arn      = "arn:aws:events:${local.region}:${local.account_id}:rule/${local.scraper_name}-rule"
   scraper_log_group_arn = "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/${local.scraper_name}"
-  scraper_alarms_arn    = "arn:aws:sns:${local.region}:${local.account_id}:${local.scraper_name}-alarms"
-  scraper_alarm_arns    = "arn:aws:cloudwatch:${local.region}:${local.account_id}:alarm:${local.scraper_name}-*"
   github_actions_role   = "sheriff-sale-github-actions"
 }
 
@@ -108,26 +106,6 @@ data "aws_iam_policy_document" "github_actions_tofu" {
   statement {
     sid       = "DescribeLogGroups"
     actions   = ["logs:DescribeLogGroups"]
-    resources = ["*"]
-  }
-
-  # The topic and its subscriptions, whose ARNs are the topic ARN plus a suffix.
-  statement {
-    sid       = "AlarmTopic"
-    actions   = ["sns:*"]
-    resources = [local.scraper_alarms_arn, "${local.scraper_alarms_arn}:*"]
-  }
-
-  statement {
-    sid       = "ScraperAlarms"
-    actions   = ["cloudwatch:*"]
-    resources = [local.scraper_alarm_arns]
-  }
-
-  # Read-only, and the provider may call it without an alarm-name filter.
-  statement {
-    sid       = "DescribeAlarms"
-    actions   = ["cloudwatch:DescribeAlarms"]
     resources = ["*"]
   }
 }

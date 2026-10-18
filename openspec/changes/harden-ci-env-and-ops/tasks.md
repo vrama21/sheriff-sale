@@ -1,4 +1,4 @@
-> **Before merging, the user must complete section 9 (manual steps).** In particular, 9.2, applying the CI IAM policy locally with `tofu`, must happen before the merge, or CI's first `tofu apply` fails on the new SNS and CloudWatch resources.
+> **Before merging, the user must complete section 9 (manual steps).** In particular, 9.1, the Vercel env var rename.
 
 ## 1. Env consolidation (thread A)
 
@@ -28,7 +28,7 @@
 - [x] 3.2 Add the branch-level `infra-check` job (mise opentofu, then `fmt -check -recursive`, `init -backend=false -lockfile=readonly`, `validate`), and make `migrate` need `[build, infra-check]`
 - [x] 3.3 Pin every action to its commit SHA with a version comment (design decision 9)
 - [x] 3.4 Pin the Vercel CLI to `vercel@64.5.0`, and pass `VERCEL_TOKEN` through the step env instead of `--token=`
-- [x] 3.5 `deploy-backend`: `tofu init -input=false -lockfile=readonly`, and pass `TF_VAR_alarm_email: ${{ vars.ALARM_EMAIL }}`
+- [x] 3.5 `deploy-backend`: `tofu init -input=false -lockfile=readonly`
 - [x] 3.6 Split the `build` job's Build step into Build and Test
 - [x] 3.7 Remove workflow-level and build-job `ENV`
 - [x] 3.8 Correct the `prod`-environment branch-policy comments in `cicd.yml` and `infra/github-actions.tf`
@@ -37,10 +37,10 @@
 
 - [x] 4.1 `infra/scraper.tf`: `retention_in_days = 90` on the log group, an `aws_lambda_function_event_invoke_config` with `maximum_retry_attempts = 0`, and remove `ENV` from the Lambda environment
 - [x] 4.2 `infra/locals.tf`: remove `env` (and its comment)
-- [x] 4.3 `infra/variables.tf`: optional `alarm_email` (string, default `""`)
-- [x] 4.4 New `infra/alarms.tf`: SNS topic, a conditional email subscription, the DLQ-messages alarm, and the Lambda-errors alarm
+- [x] 4.3 ~~`infra/variables.tf`: optional `alarm_email`~~ Removed: alarms are scoped out to a separate change
+- [x] 4.4 ~~New `infra/alarms.tf`~~ Removed: alarms are scoped out to a separate change
 - [x] 4.5 `infra/storage.tf`: archive bucket public access block, versioning, and noncurrent-version lifecycle
-- [x] 4.6 `infra/github-actions.tf`: `AlarmTopic`, `ScraperAlarms`, and `DescribeAlarms` statements, plus locals for the new ARNs
+- [x] 4.6 `infra/github-actions.tf`: confirm the existing statements cover every new resource (no new statements needed once alarms are out), and update the comments
 - [x] 4.7 `tofu fmt -check -recursive`, `tofu init -backend=false`, `tofu validate`
 - [x] 4.8 Read-only `tofu plan`, if AWS credentials and the prod `DATABASE_URL` are available: confirm only the expected adds and in-place updates (no destroys or replacements). Otherwise record that it was skipped.
 
@@ -54,7 +54,7 @@
 
 - [x] 6.1 Root README: fix the `packages/` line (no `config` package); add a "Local database" section (`.env.example`, `docker compose up -d`, `db:migrate`, `POSTGRES_PORT`, recreating an incompatible volume); add the expand-only rule and the explicit `db:generate` workflow to "Deploying"
 - [x] 6.2 Backend README: note that local scripts read `<root>/.env`
-- [x] 6.3 infra README: drop the `ENV=prod` line, list the alarms, topic, `alarm_email`/`ALARM_EMAIL`, archive bucket protections, the branch `infra-check`, and the "apply new IAM statements locally first" rule
+- [x] 6.3 infra README: drop the `ENV=prod` line, list the archive bucket protections, log retention, no-retry behaviour, the branch `infra-check`, and the "apply new IAM statements locally first" rule
 
 ## 7. Cleanup
 
@@ -71,8 +71,8 @@
 ## 9. Manual steps (user, before merging; not done by the agent)
 
 - [ ] 9.1 **Vercel:** rename the project env var `NEXT_GOOGLE_MAPS_API_KEY` to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` for Production (and Preview/Development if set). If the variable doesn't exist, add it. Restrict the key by HTTP referrer in Google Cloud.
-- [ ] 9.2 **AWS / OpenTofu, before merging:** from `infra/` with prod credentials and `TF_VAR_database_url` set, run `tofu plan`, then `tofu apply -target=aws_iam_role_policy.github_actions_tofu`, so the CI role can manage the SNS topic and alarms. A full local `tofu apply` after `npm run build` also works.
-- [ ] 9.3 **GitHub (optional):** set `prod` environment variable `ALARM_EMAIL` (and `TF_VAR_alarm_email` in `mise.local.toml` for local plans), then confirm the SNS subscription email after the first apply
+- [ ] 9.2 **AWS / OpenTofu (optional, recommended):** after `aws sso login`, run a read-only `tofu plan` from `infra/` and confirm 4 to add, 2 to change, 0 to destroy. No local apply is needed: the CI role policy is unchanged.
+- [ ] 9.3 **Follow-up change:** scope the scraper failure alarms (SNS topic, DLQ and Lambda-error alarms, recipients and channel) separately
 - [ ] 9.4 **GitHub:** delete the unused `prod` environment variable `ENV`
 - [ ] 9.5 **GitHub:** narrow the `prod` environment's deployment branch policy from `main` + `cicd*` to `main` only
 - [ ] 9.6 **Local:** move any values from `.env.local` into `.env` and delete `.env.local`. This worktree's `.env` (and probably the main checkout's) sets `DATABASE_URL` to the **prod** Railway database, so `db:migrate`, `db:push`, `start:newJerseyScraper` and `replay:archive` run locally all write to prod. Point it at the local container (see `.env.example`), and keep the prod URL only in `mise.local.toml` (`PROD_DATABASE_URL` / `TF_VAR_database_url`). If `docker compose up` reports incompatible data files, run `docker compose down -v`, then `docker compose up -d && npm run db:migrate`.

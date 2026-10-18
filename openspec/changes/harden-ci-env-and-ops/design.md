@@ -28,7 +28,7 @@ Constraints:
 - No path by which CI writes a migration. A branch that changes the schema without committing its migration fails CI.
 - A written deploy-order rule for destructive migrations.
 - Infra syntax and format checked on every branch. CI dependencies are pinned and reproducible.
-- Scraper failures notify someone. The archive bucket is protected like the state bucket.
+- The archive bucket is protected like the state bucket. A failed scrape isn't silently retried.
 - A local Postgres that matches prod's major and doesn't collide with other projects.
 
 **Non-Goals:**
@@ -37,7 +37,7 @@ Constraints:
 - **Enforcing `packageManager: npm@11.19.1` in CI.** Node 24 from mise bundles npm 11, which reads the v3 lockfile the same way. Corepack is being dropped from Node after 24, and installing a second npm globally adds a moving part for a patch-level difference. Turbo only needs the field to resolve workspaces, per the node-toolchain spec. The decision is to leave it as is.
 - **Changing what `deploy-frontend` hands to Vercel.** See decision 9.
 - **Dependency bumps, and backend test tooling** (`@types/mocha` alongside `@types/jest`, Jest `testEnvironment: 'jsdom'`). Left as follow-ups for `upgrade-backend-dependencies`.
-- **KMS-encrypting the SNS topic.** CloudWatch alarms publishing to a KMS-encrypted topic need a customer-managed key with a key policy. The alarm payload is just alarm metadata.
+- **Failure alarms.** The audit proposed an SNS topic with CloudWatch alarms on DLQ messages and Lambda errors. They're scoped out of this change, to be designed separately (recipients, channel, and whether to alert on the DLQ, errors, or both).
 
 ## Decisions
 
@@ -144,15 +144,7 @@ A new `infra-check` job runs on every branch, outside any environment and with n
 - **Build and test are separate steps** in the `build` job.
 - **`deploy-frontend` keeps downloading `packages/database/dist`.** The linked project (`.vercel/project.json`) has Root Directory `frontend` and null install and build commands. The last `builds.json` shows the zero-config `@vercel/next` builder, which runs `frontend`'s `build` script (`next build`). Nothing in that path builds `@sheriff-sale/database`, whose `main` is `dist/index.cjs`, so the downloaded `dist` is very likely load-bearing. Behaviour stays unchanged, and the dashboard settings are an open question.
 
-### 10. Alarms and Lambda async behaviour
-
-A new `infra/alarms.tf` adds:
-
-- **SNS topic** `new-jersey-sheriff-sale-scraper-alarms`.
-- **Optional email subscription** from the variable `alarm_email`, which defaults to `""`, with `count = var.alarm_email == "" ? 0 : 1`. CI passes `TF_VAR_alarm_email: ${{ vars.ALARM_EMAIL }}`, so CI and local applies agree. An empty GitHub variable means no subscription. Without this, a subscription created locally would be destroyed by the next CI apply. No address is hardcoded.
-- **`…-dlq-messages`:** `AWS/SQS` `ApproximateNumberOfMessagesVisible`, Maximum > 0 over one 300-second period. It stays in ALARM while the DLQ holds anything.
-- **`…-errors`:** `AWS/Lambda` `Errors` for the function, Sum > 0 over one 300-second period. It fires once per failed run, timeouts included.
-- **Both alarms:** `treat_missing_data = "notBreaching"` and `alarm_actions = [topic]`. A failed run triggers both alarms. That's accepted: one says it failed, and the other says the event is waiting in the DLQ.
+### 10. Log retention and Lambda async behaviour
 
 `infra/scraper.tf` adds:
 
@@ -169,20 +161,14 @@ A new `infra/alarms.tf` adds:
 
 Keys are dated, and a same-day re-run overwrites an object. Versioning protects against accidental deletes and overwrites, and the lifecycle rule bounds its cost. Versioning can be suspended later but never fully removed. That's acceptable for an archive that already sets `prevent_destroy`.
 
-### 12. CI IAM policy additions
+### 12. CI IAM policy: no new statements
 
-New statements in `data.aws_iam_policy_document.github_actions_tofu`:
-
-- **`AlarmTopic`:** `sns:*` on the topic ARN and `<topic ARN>:*`, which covers subscriptions.
-- **`ScraperAlarms`:** `cloudwatch:*` on `arn:aws:cloudwatch:us-east-2:590184139982:alarm:new-jersey-sheriff-sale-scraper-*`.
-- **`DescribeAlarms`:** `cloudwatch:DescribeAlarms` on `*`. It's read-only, and the provider's refresh path may call it unscoped, like the existing `DescribeLogGroups`.
-
-Already covered, and verified against the existing statements:
+Every new resource is already covered by the CI role's existing statements, so the policy document doesn't change and no local apply is needed before merging:
 
 - Versioning, Block Public Access, and lifecycle on the archive bucket are bucket-level `s3:*`, which `ArchiveBucket` grants.
 - The event invoke config and log retention fall under `lambda:*` on the function ARN and `logs:*` on the log group.
 
-CI can't create the topic and alarms until the widened policy exists, so the policy must be applied locally first. That's a manual step, done with a targeted apply before merging.
+Only the policy's comments change: they now spell out the targeted local apply that a future new resource type will need.
 
 ### 13. Docker compose
 
@@ -205,29 +191,23 @@ Every prod job is gated by `if: github.ref == 'refs/heads/main'`. But that check
 - **The drift check can hang on an interactive rename prompt** → bounded by `timeout-minutes`, and it fails safe (CI red).
 - **Removing `.env.local` loading silently changes which DB a developer's tools hit** → the proposal and README call it out. After this change every tool agrees, which is the point.
 - **The developer `.env` currently holds the prod `DATABASE_URL`.** This was found during apply, by comparing it to `PROD_DATABASE_URL` without printing it. Every local tool already writes to prod, and that includes `db:migrate`, because this worktree has no `.env.local`. This change doesn't make it worse, but the single-file rule makes it the only answer → `.env.example` and the README default to the local container. Repointing `.env` is a manual step, because the agent doesn't edit a developer's gitignored secrets.
-- **Merging before the IAM policy is applied** → CI's `tofu apply` fails with AccessDenied on SNS or CloudWatch, after `migrate` has already run. The failure is loud, and re-running after a local targeted apply recovers.
 - **Merging before the Vercel rename** → the Maps key stays undefined in the browser, as it is today. No regression, just no fix yet.
 - **Enabling versioning is one-way** → the lifecycle rule bounds storage. Prod can suspend it later if needed.
-- **0 async retries means a transient county-site failure isn't retried automatically** → the DLQ alarm now makes it visible, and a manual re-invoke is cheap. Before this change, retries were silent.
+- **0 async retries means a transient county-site failure isn't retried automatically** → the event lands in the DLQ, and a manual re-invoke is cheap. Failures stay as silent as they are today until the separate alarms change lands.
 - **Spec overlap with the unarchived `isolate-sheriff-sale-module` change**, which also modifies "Scraper Lambda function" → this change's MODIFIED text already uses that change's handler path. Archive `isolate-sheriff-sale-module` first, or its older text, still with `ENV`, would overwrite this one.
 
 ## Migration Plan
 
-1. Before merge, done by the user:
-   - Rename the Vercel env var.
-   - Run a targeted local `tofu apply` of `aws_iam_role_policy.github_actions_tofu`.
-   - Optionally set `ALARM_EMAIL`.
+1. Before merge, the user renames the Vercel env var.
 2. Merge to `main`. CI then:
    - runs `build` (drift check, build, test) and `infra-check`
    - runs `migrate`, which applies committed migrations only
-   - runs `deploy-backend`: `tofu apply` creates the topic, alarms, event invoke config, and bucket protections, and updates the Lambda environment and log retention
+   - runs `deploy-backend`: `tofu apply` creates the event invoke config and bucket protections, and updates the Lambda environment and log retention
    - runs `deploy-frontend` with the pinned CLI
-3. Confirm the SNS subscription email if one was set.
-4. **Rollback:** revert the commit. `tofu apply` then removes the alarms, topic, and invoke config, and restores `ENV`. Bucket versioning can only go to Suspended, which is the one non-reversible step.
+3. **Rollback:** revert the commit. `tofu apply` then removes the invoke config, and restores `ENV`. Bucket versioning can only go to Suspended, which is the one non-reversible step.
 
 ## Open Questions
 
 - **Does the Vercel project currently have the Maps key under any name?** A local `vercel pull` shows only system variables, though sensitive variables may be omitted. If the key was never set, the manual step becomes "add `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`" rather than "rename".
 - **Vercel dashboard build settings.** The repo's `.vercel/project.json` shows null install and build commands with Root Directory `frontend`. If the dashboard overrides the build command (for example, to a turbo build that builds `@sheriff-sale/database`), the `dist` download in `deploy-frontend` is redundant and could be dropped.
-- **`ALARM_EMAIL` recipient**, and whether email is the right channel at all. An SNS-to-Slack or SMS subscription would also work.
 - **Branch `tofu plan`.** Deferred, as described under Non-Goals. Revisit if contributors grow.

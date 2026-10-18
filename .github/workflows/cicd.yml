@@ -113,8 +113,6 @@ jobs:
       id-token: write # OIDC token for assuming the AWS role
     env:
       TF_VAR_database_url: ${{ secrets.DATABASE_URL }}
-      # Optional; empty means the alarm topic gets no email subscription.
-      TF_VAR_alarm_email: ${{ vars.ALARM_EMAIL }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Download Lambda bundle

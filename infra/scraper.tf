@@ -97,7 +97,7 @@ resource "aws_lambda_function" "scraper" {
   ]
 }
 
-# A failed run goes straight to the DLQ (and its alarm) instead of the default 2 retries, each another
+# A failed run goes straight to the DLQ instead of the default 2 retries, each another
 # 15-minute scrape against the county sites. Re-running is a deliberate manual invoke.
 resource "aws_lambda_function_event_invoke_config" "scraper" {
   function_name          = aws_lambda_function.scraper.function_name
