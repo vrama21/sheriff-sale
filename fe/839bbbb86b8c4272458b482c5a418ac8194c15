@@ -1,0 +1,9 @@
+openspec/changes/harden-ci-env-and-ops/tasks.md
+  ai_agent 73,76-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fe839bbbb86b8c4272458b482c5a418ac8194c15",
+  "prompts": {}
+}
