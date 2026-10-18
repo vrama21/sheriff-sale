@@ -2,7 +2,8 @@
 # dead-letter queue for failed async invocations.
 
 resource "aws_cloudwatch_log_group" "scraper" {
-  name = "/aws/lambda/${local.scraper_name}"
+  name              = "/aws/lambda/${local.scraper_name}"
+  retention_in_days = 90
 }
 
 resource "aws_sqs_queue" "scraper_dlq" {
@@ -84,7 +85,6 @@ resource "aws_lambda_function" "scraper" {
   environment {
     variables = {
       DATABASE_URL = var.database_url
-      ENV          = local.env
     }
   }
 
@@ -95,6 +95,13 @@ resource "aws_lambda_function" "scraper" {
     aws_iam_role_policy.scraper_s3_archive_access,
     aws_iam_role_policy_attachment.scraper_basic_execution,
   ]
+}
+
+# A failed run goes straight to the DLQ instead of the default 2 retries, each another
+# 15-minute scrape against the county sites. Re-running is a deliberate manual invoke.
+resource "aws_lambda_function_event_invoke_config" "scraper" {
+  function_name          = aws_lambda_function.scraper.function_name
+  maximum_retry_attempts = 0
 }
 
 resource "aws_cloudwatch_event_rule" "scraper_schedule" {

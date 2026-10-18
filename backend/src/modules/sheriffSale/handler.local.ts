@@ -1,8 +1,11 @@
 import { config } from 'dotenv';
-import { newJerseySheriffSaleCountyParser } from './pipeline';
+import { join } from 'path';
 
 async function local() {
-  config({ quiet: true });
+  config({ path: join(__dirname, '../../../../.env'), quiet: true });
+
+  // Imported after config(): the pipeline loads the database client, which reads DATABASE_URL on import.
+  const { newJerseySheriffSaleCountyParser } = await import('./pipeline');
 
   try {
     await newJerseySheriffSaleCountyParser('Atlantic');

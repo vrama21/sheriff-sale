@@ -4,9 +4,9 @@
 # Usage: query.sh --env local|prod [--json] <sql>
 #        query.sh --env local|prod [--json] < file.sql
 #
-#   local  The docker-compose `postgres` container. Uses LOCAL_DATABASE_URL if set,
-#          otherwise postgres:$POSTGRES_PASSWORD@localhost:5432/postgres, reading
-#          POSTGRES_PASSWORD from the repo-root .env.
+#   local  The docker-compose container (sheriff-sale-postgres). Uses LOCAL_DATABASE_URL if
+#          set, otherwise builds the URL from POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT
+#          and POSTGRES_DB in the repo-root .env (defaults: postgres, -, 5432, postgres).
 #   prod   The Railway database at PROD_DATABASE_URL (set it in mise.local.toml).
 #
 # Every session starts read-only (default_transaction_read_only) and the SQL runs in a
@@ -53,7 +53,10 @@ case "$env_name" in
     if [[ -z "$url" ]]; then
       password="$(read_dotenv POSTGRES_PASSWORD)"
       [[ -n "$password" ]] || { echo "POSTGRES_PASSWORD not found in $repo_root/.env; set LOCAL_DATABASE_URL instead." >&2; exit 1; }
-      url="postgresql://postgres:${password}@localhost:5432/postgres"
+      user="$(read_dotenv POSTGRES_USER)"
+      port="$(read_dotenv POSTGRES_PORT)"
+      db="$(read_dotenv POSTGRES_DB)"
+      url="postgresql://${user:-postgres}:${password}@localhost:${port:-5432}/${db:-postgres}"
     fi
     ;;
   prod)

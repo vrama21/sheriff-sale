@@ -24,19 +24,19 @@ Resolve the environment in this order:
    - Question: "Which database environment should I query?"
    - Header: "DB env"
    - Options:
-     - `Local` — The docker-compose `postgres` container on `localhost:5432`. Safe for experimentation.
+     - `Local` — The docker-compose `sheriff-sale-postgres` container on `localhost` (`POSTGRES_PORT`, default 5432). Safe for experimentation.
      - `Prod` — The Railway production database. Read-only, but real data — keep queries cheap.
 
 Remember the choice for the rest of the session. Switch only when the user passes a different flag or says so ("use prod", "switch to local"); confirm in one short sentence ("Switched to prod.") and continue.
 
 ## Connections
 
-| Env     | Source                                                                                                                                                                                                  |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `local` | `LOCAL_DATABASE_URL` if set, else `postgresql://postgres:$POSTGRES_PASSWORD@localhost:5432/postgres` with `POSTGRES_PASSWORD` read from the repo-root `.env` (the same file `docker-compose.yml` uses). |
-| `prod`  | `PROD_DATABASE_URL`, set in `mise.local.toml` under `[env]` (gitignored).                                                                                                                               |
+| Env     | Source                                                                                                                                                                                                                                                                                        |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `local` | `LOCAL_DATABASE_URL` if set, else `postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:$POSTGRES_PORT/$POSTGRES_DB`, read from the repo-root `.env` (the same file `docker-compose.yml` uses; see `.env.example`). User, port and database default to `postgres`, `5432` and `postgres`. |
+| `prod`  | `PROD_DATABASE_URL`, set in `mise.local.toml` under `[env]` (gitignored).                                                                                                                                                                                                                     |
 
-If `local` fails to connect, the container is probably down — tell the user to run `docker compose up -d postgres` rather than retrying. If `prod` says `PROD_DATABASE_URL is not set`, tell the user to add it to `mise.local.toml`; never read it out of `.env` or echo the URL.
+If `local` fails to connect, the container is probably down — tell the user to run `docker compose up -d` rather than retrying. If `prod` says `PROD_DATABASE_URL is not set`, tell the user to add it to `mise.local.toml`; never read it out of `.env` or echo the URL.
 
 ## Schema overview
 

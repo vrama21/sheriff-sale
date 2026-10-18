@@ -19,8 +19,9 @@ The handler is `src/modules/sheriffSale/handler.ts`. The Lambda and the rest of 
 | `npm run lint`                   | Lint `src/`                                            |
 | `npm run start:newJerseyScraper` | Run the scraper locally                                |
 
-`start:newJerseyScraper` writes to the same S3 bucket and database as the deployed Lambda, so local runs change real
-data.
+`start:newJerseyScraper` and `replay:archive` read `DATABASE_URL` from the repo-root `.env` (see the root README's
+"Local database"). `start:newJerseyScraper` always writes to the same S3 bucket as the deployed Lambda, and to whichever
+database `.env` points at, so with a prod `DATABASE_URL` a local run changes real data.
 
 ## Deploying
 

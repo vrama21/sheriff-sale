@@ -34,7 +34,7 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
     <Component {...pageProps}>
       <ThemeProvider theme={theme}>
         <div className={classes.container}>
-          <LoadScript googleMapsApiKey={process.env.NEXT_GOOGLE_MAPS_API_KEY as string}>
+          <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}>
             <Component {...pageProps} />
           </LoadScript>
         </div>
