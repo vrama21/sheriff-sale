@@ -29,5 +29,15 @@ export const cleanPropertyKey = (key: string): string => {
     return 'saleDate';
   }
 
+  // Middlesex and Cape May.
+  if (cleanKey === 'Property Address') {
+    return 'address';
+  }
+
+  // Cape May's lowest acceptable bid, which other counties publish as the upset price.
+  if (cleanKey === 'Minimum Bid') {
+    return 'upsetAmount';
+  }
+
   return camelCase(cleanKey);
 };

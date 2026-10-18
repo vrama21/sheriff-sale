@@ -18,10 +18,26 @@ The handler is `src/modules/sheriffSale/handler.ts`. The Lambda and the rest of 
 | `npm run test`                   | Run the Jest tests                                     |
 | `npm run lint`                   | Lint `src/`                                            |
 | `npm run start:newJerseyScraper` | Run the scraper locally                                |
+| `npm run replay:archive`         | Replay archived pages into the database (see below)    |
 
 `start:newJerseyScraper` and `replay:archive` read `DATABASE_URL` from the repo-root `.env` (see the root README's
 "Local database"). `start:newJerseyScraper` always writes to the same S3 bucket as the deployed Lambda, and to whichever
 database `.env` points at, so with a prod `DATABASE_URL` a local run changes real data.
+
+## Replaying the archive
+
+```sh
+AWS_PROFILE=sheriff-sale npm run replay:archive -- [--county <name>]... --from <YYYY-MM-DD> --to <YYYY-MM-DD> [--dry-run]
+```
+
+Parses the archived pages for each day in the range through the same path as the daily scrape, and syncs them.
+Re-running a range writes nothing new. The AWS profile needs `s3:GetObject` and `s3:ListBucket` on `nj-sheriff-sale`:
+each day's detail pages are listed once, and only archived ones are read. `--dry-run` reads and parses only, and never
+connects to the database.
+
+A real run opens `DATABASE_POOL_MAX` database connections, default 8 (one per detail page in flight), so its syncs run
+in parallel. The Lambda leaves `DATABASE_POOL_MAX` unset and keeps one connection. The replay loads
+`@sheriff-sale/database` from its build, so run `npm run build` at the root after changing that package.
 
 ## Deploying
 

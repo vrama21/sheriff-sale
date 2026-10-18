@@ -50,6 +50,18 @@ describe('parseAddress', () => {
     });
   });
 
+  it('gives null parts and NJ for a listing without an address', () => {
+    expect(parseAddress(null)).toEqual({
+      address: null,
+      street: null,
+      city: null,
+      state: 'NJ',
+      zipcode: null,
+      unit: null,
+      secondaryUnit: null,
+    });
+  });
+
   it('keeps the whole address when it cannot find the parts', () => {
     expect(parseAddress('16 Rue Chagall Hamilton Township NJ 08330')).toEqual({
       address: '16 Rue Chagall Hamilton Township NJ 08330',

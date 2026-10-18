@@ -85,12 +85,15 @@ describe('scrapeListing', () => {
     ]);
   });
 
-  it('rejects a page without an address', async () => {
+  it('builds a page without an address, with a null address and a warning', async () => {
     stages.parseListingSnapshot.mockReturnValue({ ...parsedPage(), listing: { sheriffId: 'F-1' } });
 
-    await expect(scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Atlantic', 7)).rejects.toThrow(
-      'Listing has no address',
-    );
+    const { snapshot, warnings } = await scrapeListing({} as NewJerseySheriffSaleHttpClient, 'Atlantic', 7);
+
+    expect(snapshot.listing).toMatchObject({ sheriffId: 'F-1', address: null, street: null, state: 'NJ' });
+    expect(warnings).toEqual([
+      { field: 'address', value: '', reason: 'missing or blank', county: 'Atlantic', propertyId: 7 },
+    ]);
   });
 
   it('rejects a page with no recognised layout', async () => {
@@ -184,6 +187,38 @@ describe('newJerseySheriffSaleCountyParser', () => {
       'All 2 listings in Camden County failed to parse.',
     );
     expect(sync).not.toHaveBeenCalled();
+  });
+
+  it('writes the listings that parsed, then rejects when fewer than half of them parsed', async () => {
+    stages.parseCountyPropertyIds.mockResolvedValue(range(1, 100));
+    stages.parseListingSnapshot.mockImplementation((html) => {
+      const propertyId = Number(html.replace('listing-', ''));
+
+      return propertyId <= 22 ? parsedPage(`F-${propertyId}`) : { layout: 'unrecognised' };
+    });
+
+    await expect(newJerseySheriffSaleCountyParser('Morris')).rejects.toThrow(
+      'Only 22 of 100 listings in Morris County parsed, fewer than half.',
+    );
+    expect(sync).toHaveBeenCalledTimes(22);
+  });
+
+  it('resolves when exactly half of the listings parse', async () => {
+    stages.parseCountyPropertyIds.mockResolvedValue(range(1, 10));
+    stages.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => {
+      if (propertyId > 5) {
+        throw new Error('Session rejected');
+      }
+
+      return `listing-${propertyId}`;
+    });
+
+    await expect(newJerseySheriffSaleCountyParser('Ocean')).resolves.toMatchObject({
+      found: 10,
+      parsed: 5,
+      failedListings: 5,
+      inserted: 5,
+    });
   });
 
   it('rejects when every database write fails', async () => {

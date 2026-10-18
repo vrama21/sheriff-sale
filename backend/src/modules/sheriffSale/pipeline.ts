@@ -32,8 +32,8 @@ export type CountyParseSummary = {
 
 /**
  * Fetches and parses a listing's details page into a snapshot dated with the day it's archived under, the same
- * snapshot an archive replay of that page builds. Rejects a page with no recognised layout, no address or no sheriff
- * number, which fails just this listing; any other bad field is a warning.
+ * snapshot an archive replay of that page builds. Rejects a page with no recognised layout or no sheriff number, which
+ * fails just this listing; any other bad field, a missing address included, is a warning.
  */
 export const scrapeListing = async (
   client: NewJerseySheriffSaleHttpClient,
@@ -135,6 +135,14 @@ export const newJerseySheriffSaleCountyParser = async (county: NJCounty): Promis
 
   if (saveResults.length > 0 && failedWrites === saveResults.length) {
     throw new Error(`All ${saveResults.length} listing writes in ${county} County failed.`);
+  }
+
+  // A partial breakage, such as the site serving its home page for most listings, fails the run too; the listings
+  // that did parse are written first.
+  if (scrapedListings.length < propertyIds.length / 2) {
+    throw new Error(
+      `Only ${scrapedListings.length} of ${propertyIds.length} listings in ${county} County parsed, fewer than half.`,
+    );
   }
 
   const summary: CountyParseSummary = {

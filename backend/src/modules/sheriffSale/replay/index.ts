@@ -4,16 +4,17 @@
  *
  * Usage: npm run replay:archive -- [--county <name>]... --from <YYYY-MM-DD> --to <YYYY-MM-DD> [--dry-run]
  *
- * Reads S3 with the ambient AWS credentials: use a profile that can read the bucket and list it, or a missing page
- * counts as a failed read instead of missing. Writes to DATABASE_URL from the repo-root .env. --dry-run reads and
- * parses only, and never connects to the database.
+ * Reads S3 with the ambient AWS credentials: use a profile that can read the bucket and list it (each day's detail
+ * pages are listed once, and only archived ones are read). Writes to DATABASE_URL from the repo-root .env, over
+ * DATABASE_POOL_MAX connections, default DETAIL_PAGE_CONCURRENCY, so syncs run in parallel. --dry-run reads and parses
+ * only, and never connects to the database.
  */
 import { config } from 'dotenv';
 import { join } from 'path';
-import { getS3Text } from '../../../shared/s3';
+import { getS3Text, listS3Keys } from '../../../shared/s3';
 import { ARCHIVE_BUCKET_NAME } from '../scrape/saveHtmlToS3';
 import { parseReplayArgs, ReplayArgs, USAGE } from './args';
-import { formatReplaySummary, replayArchive, ReplayDeps } from './replay';
+import { DETAIL_PAGE_CONCURRENCY, formatReplaySummary, replayArchive, ReplayDeps } from './replay';
 
 const parseArgsOrExit = (): ReplayArgs => {
   try {
@@ -32,10 +33,14 @@ const main = async () => {
 
   const deps: ReplayDeps = {
     readText: (key) => getS3Text({ bucketName: ARCHIVE_BUCKET_NAME, key }),
+    listKeys: (prefix) => listS3Keys(ARCHIVE_BUCKET_NAME, prefix),
   };
   let closeDatabase: () => Promise<void> = async () => undefined;
 
   if (!args.dryRun) {
+    // A connection per detail page in flight; the database client reads this when it's imported below.
+    process.env.DATABASE_POOL_MAX ??= String(DETAIL_PAGE_CONCURRENCY);
+
     // Loaded only for a real run: importing the database package creates its client from DATABASE_URL.
     const [{ sql }, { syncListing }] = await Promise.all([
       import('@sheriff-sale/database'),

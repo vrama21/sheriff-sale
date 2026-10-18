@@ -48,6 +48,29 @@ describe('parseListingDetails', () => {
     });
   });
 
+  it('reads Property Address as the address, for a Middlesex page', () => {
+    expect(parseListingDetails(readFixture('listingDetailsMiddlesex.html'))).toMatchObject({
+      sheriffId: 'F-26002454',
+      address: '260 PEARL PLACE\nSOUTH PLAINFIELD NJ 07080',
+      upsetAmount: '',
+      judgment: '$354,162.61',
+      propertyNote: expect.stringContaining("The Plaintiff's Upset Bid presently approximates $377,000.00"),
+    });
+  });
+
+  it('reads Property Address as the address and Minimum Bid as the upset amount, for a Cape May page', () => {
+    const listing = parseListingDetails(readFixture('listingDetailsCapeMay.html'));
+
+    expect(listing).toMatchObject({
+      sheriffId: 'F-25000149',
+      address: '15 OSPREY Drive\nNorth Cape May NJ 08204',
+      upsetAmount: '$380,000.00',
+      judgment: '$341,563.55',
+    });
+    expect(listing).not.toHaveProperty('propertyAddress');
+    expect(listing).not.toHaveProperty('minimumBid');
+  });
+
   it('keys a label that is not a listing field by its camelCase name, for listingSchema to drop', () => {
     const listing = parseListingDetails(
       detailsPage(

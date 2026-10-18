@@ -21,13 +21,17 @@ describe('cleanPropertyKey', () => {
     ['Priors', 'priors'],
     ['Deed', 'deed'],
     ['Deed Address', 'deedAddress'],
+    ['Property Address', 'address'],
+    ['Minimum Bid', 'upsetAmount'],
+    ['Attorney Phone', 'attorneyPhone'],
+    ['Attorney File #', 'attorneyFile'],
+    ['Property Details', 'propertyDetails'],
   ])('maps the fixture label %j to %j', (label, key) => {
     expect(cleanPropertyKey(label)).toBe(key);
   });
 
   it.each([
     ['Sheriff #:', 'sheriffId'],
-    ['Attorney Phone', 'attorneyPhone'],
     ['  Deed Address  ', 'deedAddress'],
     ['PROPERTY NOTE', 'propertyNote'],
     ['Deed Book/Page', 'deedBookPage'],
