@@ -27,7 +27,9 @@ describe('extractParcel', () => {
   });
 
   it('returns null for disclaimer text', () => {
-    expect(extractParcel('the surplus, if any. This does not constitute a title search', 'Occupancy: Unknown')).toBeNull();
+    expect(
+      extractParcel('the surplus, if any. This does not constitute a title search', 'Occupancy: Unknown'),
+    ).toBeNull();
     expect(extractParcel(null, null)).toBeNull();
   });
 
@@ -38,7 +40,10 @@ describe('extractParcel', () => {
     ['Tax lot(s) 3-4 in Block 3613', { block: '3613', lot: '3', extraLots: ['4'] }],
     ['Lot 6 fka 00006, Block 44 fka 00044', { block: '44', lot: '6' }],
     ['Lot and Block: Lot 7, Block 76 Tax Map of Borough of Union Beach', { block: '76', lot: '7' }],
-    ['Lot and Block: Lot 7.22 C1000, Block 164.01 Tax Map of Township of Howell', { block: '164.01', lot: '7.22', qualifier: 'C1000' }],
+    [
+      'Lot and Block: Lot 7.22 C1000, Block 164.01 Tax Map of Township of Howell',
+      { block: '164.01', lot: '7.22', qualifier: 'C1000' },
+    ],
     ['Tax Lot 21 & 22 Block 161 Tax Map of Township of Aberdeen', { block: '161', lot: '21', extraLots: ['22'] }],
     ['Lot 4, Block 446 on the official Tax Map of the Township of Middletown', { block: '446', lot: '4' }],
     ['BLOCK 5806 LOT 63', { block: '5806', lot: '63' }],
@@ -89,7 +94,9 @@ describe('sameParcel', () => {
   });
 
   it('matches an extra lot', () => {
-    expect(sameParcel({ block: '47.02', lot: '11', extraLots: ['11.01'] }, { block: '47.02', lot: '11.01' })).toBe(true);
+    expect(sameParcel({ block: '47.02', lot: '11', extraLots: ['11.01'] }, { block: '47.02', lot: '11.01' })).toBe(
+      true,
+    );
   });
 
   it('never matches an unknown parcel', () => {

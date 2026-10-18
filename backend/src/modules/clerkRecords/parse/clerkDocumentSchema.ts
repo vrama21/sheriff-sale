@@ -60,8 +60,7 @@ export const validateClerkDocument = (
   rows: PressDocumentRows,
   { county, platform, docTypes }: ValidateClerkDocumentArgs,
 ): ClerkDocumentValidation => {
-  const instrumentNumber =
-    rows.instrumentNumber ?? (rows.book && rows.page ? `BK:${rows.book}/${rows.page}` : null);
+  const instrumentNumber = rows.instrumentNumber ?? (rows.book && rows.page ? `BK:${rows.book}/${rows.page}` : null);
 
   if (!instrumentNumber) {
     return { ok: false, reason: 'no instrument number and no book/page' };
@@ -76,7 +75,10 @@ export const validateClerkDocument = (
   const parsed = groupedSchema.safeParse(rows);
 
   if (!parsed.success) {
-    return { ok: false, reason: parsed.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ') };
+    return {
+      ok: false,
+      reason: parsed.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; '),
+    };
   }
 
   const warnings: ClerkFieldWarning[] = [];

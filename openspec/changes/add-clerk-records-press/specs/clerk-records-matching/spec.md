@@ -70,7 +70,7 @@ The module SHALL extract `{ block, lot, extraLots, qualifier }` from a listing's
 
 ### Requirement: Party-name normalization
 
-The module SHALL normalize party names by uppercasing, removing punctuation and collapsing whitespace. It SHALL remove entity suffixes (LLC, INC, CORP, CO, NA, FSB) and role phrases (`AS TRUSTEE FOR …`, `ET AL`, `ET UX`, `H/W`, `HIS WIFE`, `AKA …`, `INDIVIDUALLY`). A MERS nominee phrase SHALL be replaced by the nominee's name. Two person names SHALL match when their normalized token sets are equal, regardless of order. Two entity names SHALL match when their token-set Jaccard similarity is at least the configured threshold. A listing's `defendant` SHALL be split into individual defendants on `;` and ` AND `, and on `, ` only after role phrases have been removed.
+The module SHALL normalize party names by uppercasing, removing punctuation and collapsing whitespace. It SHALL remove entity suffixes (LLC, INC, CORP, CO, NA, FSB) and role phrases (`AS TRUSTEE FOR …`, `ET AL`, `ET UX`, `H/W`, `HIS WIFE`, `AKA …`, `INDIVIDUALLY`). A MERS nominee phrase SHALL be replaced by the nominee's name. Two person names SHALL match when their normalized token sets are equal, regardless of order. Two entity names SHALL match when their token-set Jaccard similarity is at least the configured threshold. A listing's `defendant` SHALL be split into individual defendants on `;` and `AND`, and on `, ` only after role phrases have been removed.
 
 #### Scenario: Order-insensitive person match
 

@@ -42,7 +42,11 @@ const RULES: Rule[] = [
     unless: /LEASE|DEDICATION|MASTER|EASEMENT|RESTRICTION/,
     category: 'DEED',
   },
-  { test: /LIEN/, unless: /RELEAS|DISCHARG|WITHDRAW|WAIVER|SATISF|REVOC|REVOK|CANCEL|BOND|AMEND|PARTIAL/, category: 'LIEN' },
+  {
+    test: /LIEN/,
+    unless: /RELEAS|DISCHARG|WITHDRAW|WAIVER|SATISF|REVOC|REVOK|CANCEL|BOND|AMEND|PARTIAL/,
+    category: 'LIEN',
+  },
 ];
 
 /** The category a doc type description belongs to; OTHER when no rule claims it. */
@@ -94,4 +98,6 @@ const SHERIFF_GRANTOR = /\bSHERIFF\b/;
  * grantor names a sheriff is a sheriff's deed.
  */
 export const refineDeedCategory = (category: DocCategory, directParties: string[]): DocCategory =>
-  category === 'DEED' && directParties.some((party) => SHERIFF_GRANTOR.test(party.toUpperCase())) ? 'SHERIFF_DEED' : category;
+  category === 'DEED' && directParties.some((party) => SHERIFF_GRANTOR.test(party.toUpperCase()))
+    ? 'SHERIFF_DEED'
+    : category;

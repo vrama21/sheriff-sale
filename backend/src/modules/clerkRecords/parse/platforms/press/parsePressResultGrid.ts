@@ -243,7 +243,12 @@ export const groupPressRows = (rows: PressGridRow[]): { documents: PressDocument
     if (!document.block && row.block) {
       document.block = row.block;
       document.lot = row.lot;
-    } else if (row.lot && row.block === document.block && row.lot !== document.lot && !document.extraLots.includes(row.lot)) {
+    } else if (
+      row.lot &&
+      row.block === document.block &&
+      row.lot !== document.lot &&
+      !document.extraLots.includes(row.lot)
+    ) {
       document.extraLots.push(row.lot);
     }
 

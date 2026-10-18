@@ -1,5 +1,11 @@
 import { NJCounty } from '../../../../../shared/nj';
-import { BURLINGTON_DOC_TYPES, DocTypeOption, ESSEX_DOC_TYPES, MONMOUTH_DOC_TYPES, PASSAIC_DOC_TYPES } from './docTypeOptions';
+import {
+  BURLINGTON_DOC_TYPES,
+  DocTypeOption,
+  ESSEX_DOC_TYPES,
+  MONMOUTH_DOC_TYPES,
+  PASSAIC_DOC_TYPES,
+} from './docTypeOptions';
 
 // The four PRESS counties (press-scraping spec). Findings behind each value are in the change's design.md, "Spike
 // findings".

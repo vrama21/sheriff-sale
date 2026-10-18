@@ -34,9 +34,9 @@ describe('namesMatch', () => {
   });
 
   it('strips trustee boilerplate from an entity', () => {
-    expect(namesMatch('U.S. Bank National Association, as Trustee for XYZ Trust 2006-1', 'U S BANK NATIONAL ASSOCIATION')).toBe(
-      true,
-    );
+    expect(
+      namesMatch('U.S. Bank National Association, as Trustee for XYZ Trust 2006-1', 'U S BANK NATIONAL ASSOCIATION'),
+    ).toBe(true);
   });
 
   it('does not match different people with the same surname', () => {
@@ -130,6 +130,8 @@ describe('searchTermFor', () => {
   });
 
   it('prefers the first person over an earlier entity', () => {
-    expect(primaryDefendant(splitDefendants('IRUKA CAPITAL GROUP LLC; DANIEL M. BERKEY'))?.name).toBe('DANIEL M. BERKEY');
+    expect(primaryDefendant(splitDefendants('IRUKA CAPITAL GROUP LLC; DANIEL M. BERKEY'))?.name).toBe(
+      'DANIEL M. BERKEY',
+    );
   });
 });

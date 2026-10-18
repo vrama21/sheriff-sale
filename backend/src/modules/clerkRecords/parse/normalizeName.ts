@@ -9,10 +9,12 @@ const ROLE_TAIL =
   /\b(?:AS\s+(?:OWNER\s+|INDENTURE\s+|SUCCESSOR\s+|CO\s+)*(?:TRUSTEE|EXECUT(?:OR|RIX)|ADMINISTRAT(?:OR|RIX)|NOMINEE|SERVICER|ATTORNEY|AGENT|CUSTODIAN|HEIR|BENEFICIARY|PERSONAL\s+REPRESENTATIVE|SUCCESSOR)|NOT\s+IN\s+ITS\s+INDIVIDUAL|SOLELY\s+AS|INDIVIDUALLY|SUCCESSOR\s+(?:BY|IN|TO)|F\s*K\s*A|A\s*K\s*A|D\s*B\s*A|FORMERLY\s+KNOWN)\b.*$/;
 const ET_AL = /\bET\s+(?:ALS?|UX|VIR)\b.*$/;
 const SPOUSE_PHRASES = /\b(?:H\s*W|HIS\s+WIFE|HER\s+HUSBAND|HUSBAND\s+AND\s+WIFE|WIFE\s+AND\s+HUSBAND|DECEASED)\b/g;
-const MERS_NOMINEE = /^.*\bMORTGAGE\s+ELEC(?:TRONIC)?\s+REGISTRATION\s+SYS(?:TEMS?)?\b(?:\s+INC)?\s+AS\s+NOMINEE\s+FOR\s+/;
+const MERS_NOMINEE =
+  /^.*\bMORTGAGE\s+ELEC(?:TRONIC)?\s+REGISTRATION\s+SYS(?:TEMS?)?\b(?:\s+INC)?\s+AS\s+NOMINEE\s+FOR\s+/;
 const MERS = /\bMORTGAGE\s+ELEC(?:TRONIC)?\s+REGISTRATION\s+SYS(?:TEMS?)?(?:\s+INC)?\b/;
 const NATIONAL_ASSOCIATION_TAIL = /\bNATIONAL\s+ASSOCIATION$/;
-const ENTITY_SUFFIX_TAIL = /(?:\s+(?:LLC|L\s+L\s+C|INC|INCORPORATED|CORP|CORPORATION|CO|COMPANY|NA|N\s+A|FSB|LP|LLP|LTD|PLLC|PC))+$/;
+const ENTITY_SUFFIX_TAIL =
+  /(?:\s+(?:LLC|L\s+L\s+C|INC|INCORPORATED|CORP|CORPORATION|CO|COMPANY|NA|N\s+A|FSB|LP|LLP|LTD|PLLC|PC))+$/;
 
 // Clerks abbreviate; listings mostly don't.
 const ABBREVIATIONS: Record<string, string> = {
@@ -88,7 +90,11 @@ export const normalizeName = (name: string): string => {
     .filter(Boolean)
     .map((token) => ABBREVIATIONS[token] ?? token)
     .join(' ');
-  text = text.replace(MERS, 'MERS').replace(/\bTHE\b/g, ' ').replace(/\s+/g, ' ').trim();
+  text = text
+    .replace(MERS, 'MERS')
+    .replace(/\bTHE\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 
   if (ENTITY_WORDS.test(text)) {
     text = joinLeadingInitials(text).replace(NATIONAL_ASSOCIATION_TAIL, '').trim();
@@ -167,7 +173,10 @@ export type Defendant = {
 /** Removes the capacity phrases that a listing's defendant text attaches to a name, keeping its punctuation. */
 const stripDefendantRoles = (part: string): string =>
   part
-    .replace(/,?\s*\b(?:individually|as\s+(?:co-?)?(?:execut|administrat|trustee|heir|personal)|et\.?\s*(?:als?|ux|vir)\b|a\/?k\/?a\b|f\/?k\/?a\b|his\s+wife|her\s+husband|h\/w\b|husband\s+and\s+wife|deceased).*$/i, '')
+    .replace(
+      /,?\s*\b(?:individually|as\s+(?:co-?)?(?:execut|administrat|trustee|heir|personal)|et\.?\s*(?:als?|ux|vir)\b|a\/?k\/?a\b|f\/?k\/?a\b|his\s+wife|her\s+husband|h\/w\b|husband\s+and\s+wife|deceased).*$/i,
+      '',
+    )
     .replace(/[,.\s]+$/, '')
     .trim();
 

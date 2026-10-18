@@ -29,7 +29,8 @@ const QUALIFIER = /\b(?:QUAL(?:IFIER)?\.?(?:\s+NO\.?)?\s*:?\s*([A-Z0-9.]+)|(C\.?
 
 // Metes-and-bounds descriptions name the neighbours' lots: "ALONG THE LINE OF LOT: 7 IN BLOCK: 1104". A match right
 // after these words describes a boundary, not the property.
-const BOUNDARY_CONTEXT = /\b(?:LINE|LINES|ALONG|BETWEEN|ADJOINING|CORNER|DIVIDING|DIVISION|BOUNDED|THENCE)\b[^.;]{0,30}$/i;
+const BOUNDARY_CONTEXT =
+  /\b(?:LINE|LINES|ALONG|BETWEEN|ADJOINING|CORNER|DIVIDING|DIVISION|BOUNDED|THENCE)\b[^.;]{0,30}$/i;
 
 const splitLots = (lots: string): string[] =>
   lots

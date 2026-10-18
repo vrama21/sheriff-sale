@@ -4,12 +4,12 @@ The backend has one module, `modules/sheriffSale`. It scrapes civilview's sherif
 
 We surveyed the clerk record portals for the 16 counties we list. Four of them run **PRESS**, an ASP.NET WebForms app, at these addresses:
 
-| County | Entry point | Notes |
-|---|---|---|
-| Essex (Register of Deeds) | `press.essexregister.com/ProdPRESS/Clerk/ClerkHome.aspx?op=basic` | Block is often `N/A` on notices of settlement |
-| Passaic | `records.passaiccountynj.org/PRESS/clerk/ClerkHome.aspx?op=basic` | Older build: `_ctl0:PageContent:` field prefix, needs `hidDiv=NewSearch` |
-| Monmouth ("OPRS") | `oprs.co.monmouth.nj.us/oprs/clerk/clerkhome.aspx?op=basic` | 90-day maximum search window; needs the session cookie from a first GET |
-| Burlington | `press.burlingtoncountynj.gov/Press/clerk/ClerkHome.aspx?op=basic` | Has a `txtQualifierTab4` field; block/lot index starts 3/2012; strict TLS chain (the spike found Node's default store verifies it) |
+| County                    | Entry point                                                        | Notes                                                                                                                              |
+| ------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Essex (Register of Deeds) | `press.essexregister.com/ProdPRESS/Clerk/ClerkHome.aspx?op=basic`  | Block is often `N/A` on notices of settlement                                                                                      |
+| Passaic                   | `records.passaiccountynj.org/PRESS/clerk/ClerkHome.aspx?op=basic`  | Older build: `_ctl0:PageContent:` field prefix, needs `hidDiv=NewSearch`                                                           |
+| Monmouth ("OPRS")         | `oprs.co.monmouth.nj.us/oprs/clerk/clerkhome.aspx?op=basic`        | 90-day maximum search window; needs the session cookie from a first GET                                                            |
+| Burlington                | `press.burlingtoncountynj.gov/Press/clerk/ClerkHome.aspx?op=basic` | Has a `txtQualifierTab4` field; block/lot index starts 3/2012; strict TLS chain (the spike found Node's default store verifies it) |
 
 All four share one form:
 
@@ -84,7 +84,7 @@ pipeline.ts, handler.ts, handler.local.ts, index.ts, __fixtures__/
 
 Each search returns parsed rows, already grouped into documents. PRESS's quirks stay inside the PRESS client: field prefixes, the `NewSearch` flag, the qualifier field and date windows.
 
-*Alternative considered:* one module per platform, each with its own tables. We rejected it because matching and storage are the bulk of the logic and are identical across platforms.
+_Alternative considered:_ one module per platform, each with its own tables. We rejected it because matching and storage are the bulk of the logic and are identical across platforms.
 
 ### D2. Identify documents by county and instrument number
 
@@ -108,7 +108,7 @@ Each document comes back as several grid rows, one per direct/indirect party pai
 
 ### D5. Matching starts from the lis pendens
 
-*Revised after the spike (see "Spike findings" below). The changes from the first draft: the name search runs once, across all doc types and with no dates, and is filtered locally; the docket-year window is a filter on recorded dates, not a search range; the cross-reference path doesn't exist on PRESS; Passaic has no block/lot index, so it gets no parcel sweep.*
+_Revised after the spike (see "Spike findings" below). The changes from the first draft: the name search runs once, across all doc types and with no dates, and is filtered locally; the docket-year window is a filter on recorded dates, not a search range; the cross-reference path doesn't exist on PRESS; Passaic has no block/lot index, so it gets no parcel sweep._
 
 For each candidate listing:
 
@@ -127,11 +127,13 @@ For each candidate listing:
    - the listing text (D7)
 
    Run one Block/Lot search with no dates and no doc type, and filter locally. Documents whose parties overlap the listing's defendants are matched `parcel`/high. The rest of the parcel's documents are matched `parcel`/medium. If block/lot came only from the listing text and none of the parcel's documents has a defendant as a party, the sweep is discarded as a likely wrong parcel. Burlington's metes-and-bounds descriptions mention neighbouring lots, which is how this happens. Burlington's parcel index starts in 3/2012, and Essex's block/lot index in practice holds only deeds, so documents missing there come only from steps 1 and 3.
+
 3. **Foreclosed mortgage.** The spike found no cross-reference in PRESS: Passaic's detail view repeats the grid row, and the others' "View" opens the document image. So the `cross_reference` path isn't implemented for PRESS. `getDetail` stays an optional interface method for later platforms. Pick the method in this order:
    - the latest mortgage from step 2 recorded before the lis pendens whose mortgagor matches a defendant (`parcel`/high)
    - otherwise, the mortgages in step 1's name-search results that were recorded before the lis pendens and whose mortgagor matches a defendant. No extra request is needed. Pick by mortgagee similarity to the plaintiff, to the lis pendens plaintiff, or to an assignee of the parcel's or the name search's assignments (`mortgage_party`/medium). If more than one candidate is still plausible, store each at **low** confidence.
 
    Assignments in the name-search results that a defendant is a party to, recorded after the chosen mortgage, are matched `MORTGAGE_ASSIGNMENT` by `mortgage_party`/medium.
+
 4. **After the sale.** Once the sale date has passed, steps 1 and 2 run again on each re-check, so a `SHERIFF_DEED` on the parcel shows up when it's recorded. Passaic has no parcel sweep, so its sheriff's deeds aren't matched in this change. Its post-sale checks follow the D10 schedule and stop at sale + 90 days.
 
 Each match gets a role:
@@ -140,7 +142,7 @@ Each match gets a role:
 - `PRIOR_DEED`, `SHERIFF_DEED`
 - `RELATED`, for anything else on the parcel
 
-*Alternative considered:* parcel-first matching. It would fail for most Essex and Burlington listings because their block/lot is missing, and it wouldn't tell the foreclosed mortgage apart from other loans on the parcel.
+_Alternative considered:_ parcel-first matching. It would fail for most Essex and Burlington listings because their block/lot is missing, and it wouldn't tell the foreclosed mortgage apart from other loans on the parcel.
 
 ### D6. Party-name normalization is shared by matching and storage
 
@@ -154,7 +156,7 @@ Each match gets a role:
 
 Two names match when their token sets agree. The order of tokens doesn't matter, because listings say "John Smith" and the clerk says "SMITH JOHN". For entity names, the overlap must clear a threshold, tuned against fixtures and starting at 0.8 Jaccard.
 
-The listing's `defendant` string splits on `;`, ` AND ` and `, ` into a defendant list. Splitting on `, ` happens only after role phrases are removed, so "SMITH, JOHN" stays one name.
+The listing's `defendant` string splits on `;`, `AND` and `, ` into a defendant list. Splitting on `, ` happens only after role phrases are removed, so "SMITH, JOHN" stays one name.
 
 The search term sent to PRESS is the first person defendant's surname in the last-name field and their first given name in the first-name field. For an entity, it's the full normalized name in the last-name field. The spike showed the first name is optional and matched as a prefix (`ANDREW` found `HAMILTON ANDREW L`, and `NICHOLAS` found `HUBBARD NICHOLAS JR`), and it cuts a common surname's results from hundreds of rows to one page. Matching then filters the results. The normalized name is stored on each party row, so later adapters and queries compare names the same way.
 
@@ -196,14 +198,14 @@ Only Passaic's results page carries the search form, so every search starts with
 
 `ListingClerkLookup` stores `nextCheckAt`, and the run selects candidates where `nextCheckAt <= now`. A listing with no row is due immediately.
 
-| Outcome | Next check |
-|---|---|
-| Lis pendens matched, sale upcoming | in 14 days, and no later than the sale date |
-| No lis pendens found | in 7 days. After 6 consecutive misses, every 30 days until the sale date |
-| Sale date passed, no sheriff deed yet | sale + 30 days, + 60 days, + 90 days, then stop |
-| Sheriff deed matched | stop |
-| County unsupported | never |
-| Error | in 1 day. After 5 consecutive errors, back off to 7 days |
+| Outcome                               | Next check                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------ |
+| Lis pendens matched, sale upcoming    | in 14 days, and no later than the sale date                              |
+| No lis pendens found                  | in 7 days. After 6 consecutive misses, every 30 days until the sale date |
+| Sale date passed, no sheriff deed yet | sale + 30 days, + 60 days, + 90 days, then stop                          |
+| Sheriff deed matched                  | stop                                                                     |
+| County unsupported                    | never                                                                    |
+| Error                                 | in 1 day. After 5 consecutive errors, back off to 7 days                 |
 
 ### D11. Storage tables
 
@@ -244,7 +246,7 @@ Foreign keys: party and link rows reference `ClerkDocument` with cascade delete,
 - It reuses `new-jersey-sheriff-sale-scraper-role` and its DLQ. Raw pages go to `nj-sheriff-sale` under the `clerk-records/` prefix, which the existing `nj-sheriff-sale/*` policy already allows.
 - The handler runs a DB health check, then the four counties under `Promise.allSettled`. It throws if any county fails as a whole, the same as the scraper.
 
-*Alternative considered:* running clerk lookups at the end of the existing handler. We rejected it because both jobs would share one 900 s budget and fail together, and a clerk portal outage would mark the sheriff-sale run failed.
+_Alternative considered:_ running clerk lookups at the end of the existing handler. We rejected it because both jobs would share one 900 s budget and fail together, and a clerk portal outage would mark the sheriff-sale run failed.
 
 ### D13. Archive raw result pages on a best-effort basis
 
