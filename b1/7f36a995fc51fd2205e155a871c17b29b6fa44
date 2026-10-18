@@ -1,0 +1,42 @@
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsHudsonUpsetNotNeeded.html
+  s_e1037235949068::t_dd35bf5baae8ae 1-206
+openspec/changes/fix-archive-replay-findings/specs/civilview-scraping/spec.md
+  s_e1037235949068::t_4d61b47ffa4026 29,32-35
+backend/src/modules/sheriffSale/parse/listingSchema.ts
+  s_e1037235949068::t_48ac3a92991752 23-24,29,124-128,148-150,152-155,168,184,191-192,207-209,218-222,224
+  s_e1037235949068::t_bcb19e76ff2ca9 151
+  s_e1037235949068::t_f5018436c145dd 28
+  s_e1037235949068::t_cd162b39c8a529 193-194
+openspec/changes/fix-archive-replay-findings/design.md
+  s_e1037235949068::t_4d61b47ffa4026 60-61
+backend/src/modules/sheriffSale/parse/listingSchema.test.ts
+  s_e1037235949068::t_f5018436c145dd 348,351
+  s_e1037235949068::t_867cefdba1f86a 122-128,146,176-220,347,349-350,352-353
+  s_e1037235949068::t_ec686a6767cb3e 97-105
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsHudsonUpsetText.html
+  s_e1037235949068::t_dd35bf5baae8ae 1-255
+openspec/changes/fix-archive-replay-findings/specs/listing-validation/spec.md
+  s_e1037235949068::t_4d61b47ffa4026 26-27,53-62,72,99-111
+openspec/changes/fix-archive-replay-findings/proposal.md
+  s_e1037235949068::t_4d61b47ffa4026 15-16
+backend/src/modules/sheriffSale/replay/replay.test.ts
+  s_e1037235949068::t_fb2a3209200232 242-243
+openspec/changes/fix-archive-replay-findings/tasks.md
+  s_e1037235949068::t_4d61b47ffa4026 19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b17f36a995fc51fd2205e155a871c17b29b6fa44",
+  "prompts": {},
+  "sessions": {
+    "s_e1037235949068": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ba466a7f-ae27-4824-b19a-b584744bc66d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
