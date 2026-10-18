@@ -1,0 +1,27 @@
+infra/locals.tf
+  s_35578806346017::t_ed3d3b2494ba79 9-10
+infra/clerkRecords.tf
+  s_35578806346017::t_65cae87d58288f 1-71
+openspec/changes/add-clerk-records-press/tasks.md
+  ai_agent 58-59
+infra/github-actions.tf
+  s_35578806346017::t_ed3d3b2494ba79 16-19,83-98
+openspec/changes/add-clerk-records-press/design.md
+  ai_agent 248-250
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a3cae81c22561a407316ae402c4345bcd0892932",
+  "prompts": {},
+  "sessions": {
+    "s_35578806346017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dd4c11d8-7e43-4ea2-a99c-678c6f7676a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
