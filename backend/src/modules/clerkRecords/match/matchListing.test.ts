@@ -520,6 +520,35 @@ describe('matching the spike’s listings', () => {
     expect(matchOf(result, '5872278')).toMatchObject({ role: 'PRIOR_DEED', confidence: 'high' });
   });
 
+  it('Passaic: the mortgages assigned toward the plaintiff, not the ones MERS held for other lenders', async () => {
+    const { client } = fixtureClient('passaic', 'name-all-types');
+
+    const result = await matchListing(
+      client,
+      listing({
+        county: 'Passaic',
+        defendant: 'CORAZON CABIGAO, ET ALS.',
+        plaintiff: 'RRA CP OPPORTUNITY TRUST 2',
+        courtCase: 'F 012110 25 CTL # 163224',
+        saleDate: '2026-10-20',
+        city: 'Clifton',
+        parcel: 'Tax Lot 24 Block 27.07',
+      }),
+      { now },
+    );
+    const byRole = (role: string) =>
+      result.matches
+        .filter((match) => match.role === role)
+        .map(({ instrumentNumber, confidence }) => `${instrumentNumber}/${confidence}`)
+        .sort();
+
+    expect(byRole('FORECLOSED_LIS_PENDENS')).toEqual(['2025037241/high']);
+    // Two GMAC mortgages trace to the plaintiff through GMAC's 2025 assignment; neither can be told apart, so both low.
+    expect(byRole('FORECLOSED_MORTGAGE')).toEqual(['2005042149/low', '2007016034/low']);
+    // Castle Point's loans, and their assignment to CitiFinancial, belong to another lender.
+    expect(byRole('MORTGAGE_ASSIGNMENT')).not.toContain('2005096989/medium');
+  });
+
   it('Passaic: a strong lis pendens and no parcel sweep', async () => {
     const { client, posts } = fixtureClient('passaic', 'name-lis-pendens');
 

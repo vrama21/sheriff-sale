@@ -2,7 +2,15 @@ import { DateTime } from 'luxon';
 import { NJCounty } from '../../../shared/nj';
 import { docketYear } from '../parse/docketYear';
 import { extractParcel, sameParcel } from '../parse/extractParcel';
-import { anyNameMatches, Defendant, primaryDefendant, searchTermFor, splitDefendants } from '../parse/normalizeName';
+import {
+  anyNameMatches,
+  Defendant,
+  isEntityName,
+  normalizeName,
+  primaryDefendant,
+  searchTermFor,
+  splitDefendants,
+} from '../parse/normalizeName';
 import { normalizeTown } from '../scrape/platforms/press/counties';
 import { HostBlockedError } from '../scrape/hostLimiter';
 import { ClerkDocumentRecord, ClerkPlatformClient, SearchResult } from '../scrape/types';
@@ -74,6 +82,13 @@ const partiesOn = (document: ClerkDocumentRecord, side: 'direct' | 'indirect') =
   document.parties.filter((party) => party.side === side).map((party) => party.name);
 
 const allParties = (document: ClerkDocumentRecord) => document.parties.map((party) => party.name);
+
+// MERS holds mortgages as nominee for the lender, so it never says whose loan is being foreclosed.
+const isNominee = (name: string) => normalizeName(name) === 'MERS';
+
+/** The lenders on one side: entities other than MERS. People there are borrowers, such as a co-mortgagor. */
+const holdersOn = (document: ClerkDocumentRecord, side: 'direct' | 'indirect') =>
+  partiesOn(document, side).filter((name) => isEntityName(name) && !isNominee(name));
 
 const latestFirst = (a: ClerkDocumentRecord, b: ClerkDocumentRecord) => b.recordedDate.localeCompare(a.recordedDate);
 
@@ -290,6 +305,10 @@ export const matchListing = async (
       document.docCategory === 'MORTGAGE' &&
       document.recordedDate < lisPendens.recordedDate &&
       anyNameMatches(partiesOn(document, 'direct'), defendantNames);
+    const foreclosingParties = [
+      ...(listing.plaintiff ? [listing.plaintiff] : []),
+      ...holdersOn(lisPendens, 'indirect'),
+    ];
 
     const fromParcel = parcelDocuments.filter(byDefendantBefore).sort(latestFirst)[0];
     let foreclosed: ClerkDocumentRecord[] = [];
@@ -303,17 +322,13 @@ export const matchListing = async (
       const assignments = [...named, ...parcelDocuments].filter(
         (document) => document.docCategory === 'MORTGAGE_ASSIGNMENT',
       );
-      const foreclosingParties = [
-        ...(listing.plaintiff ? [listing.plaintiff] : []),
-        ...partiesOn(lisPendens, 'indirect'),
-      ];
 
       for (let added = true; added;) {
         added = false;
 
         for (const assignment of assignments) {
-          if (anyNameMatches(partiesOn(assignment, 'indirect'), foreclosingParties)) {
-            for (const assignor of partiesOn(assignment, 'direct')) {
+          if (anyNameMatches(holdersOn(assignment, 'indirect'), foreclosingParties)) {
+            for (const assignor of holdersOn(assignment, 'direct')) {
               if (!foreclosingParties.includes(assignor) && !anyNameMatches([assignor], defendantNames)) {
                 foreclosingParties.push(assignor);
                 added = true;
@@ -322,9 +337,10 @@ export const matchListing = async (
           }
         }
       }
+
       const plausible = named
         .filter(byDefendantBefore)
-        .filter((document) => anyNameMatches(partiesOn(document, 'indirect'), foreclosingParties));
+        .filter((document) => anyNameMatches(holdersOn(document, 'indirect'), foreclosingParties));
 
       for (const document of plausible) {
         addMatch(document, {
@@ -338,12 +354,17 @@ export const matchListing = async (
     }
 
     const earliestForeclosed = foreclosed.map(({ recordedDate }) => recordedDate).sort()[0];
+    // An assignment of the foreclosed loan passes it between its lender and the foreclosing parties.
+    const holders = [...foreclosingParties, ...foreclosed.flatMap((document) => holdersOn(document, 'indirect'))];
+    const isHolderOf = (document: ClerkDocumentRecord) =>
+      anyNameMatches([...holdersOn(document, 'direct'), ...holdersOn(document, 'indirect')], holders);
 
     if (earliestForeclosed) {
       named
         .filter((document) => document.docCategory === 'MORTGAGE_ASSIGNMENT')
         .filter((document) => document.recordedDate > earliestForeclosed)
         .filter((document) => anyNameMatches(partiesOn(document, 'direct'), defendantNames))
+        .filter(isHolderOf)
         .forEach((document) =>
           addMatch(document, { role: 'MORTGAGE_ASSIGNMENT', matchedBy: 'mortgage_party', confidence: 'medium' }),
         );

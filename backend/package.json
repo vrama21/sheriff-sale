@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "build": "tsc --noEmit && npm run bundle",
-    "bundle": "esbuild src/modules/sheriffSale/handler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js",
+    "bundle": "esbuild src/modules/sheriffSale/handler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.js && esbuild src/modules/clerkRecords/handler.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/clerkRecords/index.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "watch": "tsc -w",
     "test": "vp test run",
     "lint": "vp lint src",
     "lint:fix": "vp lint --fix src",
     "replay:archive": "tsx src/modules/sheriffSale/replay/index.ts",
-    "start:newJerseyScraper": "tsx src/modules/sheriffSale/handler.local.ts"
+    "start:newJerseyScraper": "tsx src/modules/sheriffSale/handler.local.ts",
+    "start:clerkRecords": "tsx src/modules/clerkRecords/handler.local.ts"
   },
   "devDependencies": {
     "@sheriff-sale/tsconfig": "*",

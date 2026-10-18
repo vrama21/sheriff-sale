@@ -14,7 +14,7 @@
 
 ## 3. Module skeleton and shared pieces
 
-- [ ] 3.1 Create `backend/src/modules/clerkRecords/` with `scrape/`, `parse/`, `match/`, `ingest/`, `__fixtures__/`, `pipeline.ts`, `handler.ts`, `handler.local.ts` and `index.ts`. Add a `start:clerkRecords` script that runs `handler.local.ts` with `tsx`
+- [x] 3.1 Create `backend/src/modules/clerkRecords/` with `scrape/`, `parse/`, `match/`, `ingest/`, `__fixtures__/`, `pipeline.ts`, `handler.ts`, `handler.local.ts` and `index.ts`. Add a `start:clerkRecords` script that runs `handler.local.ts` with `tsx`
 - [x] 3.2 Define `scrape/types.ts`: the `ClerkPlatformClient` interface, the search input types, `DocCategory`, and the search result union (documents, `municipality_unresolved`, `blocked`)
 - [x] 3.3 Implement `parse/normalizeName.ts` and `splitDefendants`, with tests covering every Party-name normalization scenario plus cases from real listing defendants and plaintiffs in the fixtures
 - [x] 3.4 Implement `parse/extractParcel.ts` and block/lot comparison, with tests for every Block/lot extraction scenario. Run it over a prod export of upcoming listings' `parcel`/`description` and record the hit rate per county in the PR
@@ -47,14 +47,14 @@
 
 ## 7. Pipeline and handler
 
-- [ ] 7.1 Implement `pipeline.ts`: for each county, select candidates and run lookups through the county's limiter until `RUN_DEADLINE_MS`. Isolate per-listing failures, apply the county failure rules, and log the per-county run summary
-- [ ] 7.2 Implement `handler.ts`: DB health check, then all PRESS counties under `Promise.allSettled`, throwing if any county failed. Implement `handler.local.ts` with dotenv and an optional county argument
-- [ ] 7.3 Export only `handler` from `index.ts`. Confirm `clerkRecords` imports nothing from `modules/sheriffSale`, and that the stage import direction is `scrape`/`parse` → `match` → `ingest`
-- [ ] 7.4 Run `npm run start:clerkRecords -- Passaic` against the local DB with a small cap. Check the stored documents and matches for 3 listings by hand against the portal
+- [x] 7.1 Implement `pipeline.ts`: for each county, select candidates and run lookups through the county's limiter until `RUN_DEADLINE_MS`. Isolate per-listing failures, apply the county failure rules, and log the per-county run summary
+- [x] 7.2 Implement `handler.ts`: DB health check, then all PRESS counties under `Promise.allSettled`, throwing if any county failed. Implement `handler.local.ts` with dotenv and an optional county argument
+- [x] 7.3 Export only `handler` from `index.ts`. Confirm `clerkRecords` imports nothing from `modules/sheriffSale`, and that the stage import direction is `scrape`/`parse` → `match` → `ingest`
+- [x] 7.4 Run `npm run start:clerkRecords -- Passaic` against the local DB with a small cap. Check the stored documents and matches for 3 listings by hand against the portal
 
 ## 8. Build and infrastructure
 
-- [ ] 8.1 Change the `backend` `bundle` script to build `dist/index.js` and `dist/clerkRecords/index.js`. Check that both export `handler` and that the scraper bundle contains no `clerkRecords` paths
+- [x] 8.1 Change the `backend` `bundle` script to build `dist/index.js` and `dist/clerkRecords/index.js`. Check that both export `handler` and that the scraper bundle contains no `clerkRecords` paths
 - [ ] 8.2 Add `infra/clerkRecords.tf`: the archive data source for the new bundle, the `new-jersey-clerk-records` function (scraper role, DLQ, 0 retries, same env inputs), its log group with the scraper's retention, the `cron(0 2 * * ? *)` rule, its target and the invoke permission
 - [ ] 8.3 Update CI, if the `build` job's artifact upload or the infra job's bundle path needs the new file. Run `tofu plan` and confirm it creates only new resources and leaves the scraper function unchanged
 
