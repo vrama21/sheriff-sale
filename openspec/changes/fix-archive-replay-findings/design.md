@@ -57,6 +57,8 @@ This covers every variant in the dry-run log, including `UPSET RPIVE: $347,505.9
 
 Alternative: any dollar figure in the text. Rejected: legal notices in `Description` often state the judgment first.
 
+Some Hudson upset rows hold the whole sentence (`ESTIMATED UPSET BID AMOUNT: $224,000.00, PLUS …`), which neither `toAmount` nor the leading-amount rule accepts. When the upset row has text that money coercion rejects, the matcher runs on the row's text first, then on the free text, and the row still warns. `COMMERCIAL PROPERTY - UPSET NOT NEEDED` has no figure after its phrase, so it stays NULL.
+
 ### `Minimum Bid` maps to `upsetAmount` in `cleanPropertyKey`
 
 Cape May publishes a minimum bid where other counties publish an upset price: the lowest bid the sheriff will accept. Treating it as the upset row also gives it precedence over Cape May's `Description`. `Property Address` maps to `address` alongside `Address`, by an exact-label check in `cleanPropertyKey`, the same way `Sales Date` maps to `saleDate`.

@@ -20,12 +20,13 @@ const PHONE_RE = /^1?\s*\(?(\d{3})\)?[\s.-]*(\d{3})[\s.-]*(\d{4})(?:\s*\(NJ\))?(
 const MIN_YEAR = 2000;
 const MAX_YEARS_AHEAD = 5;
 
-// The free text a page without an upset row may state its upset price in, in the order it's read.
+// The free text a page may state its upset price in, in the order it's read, when its upset row is blank or isn't an
+// amount.
 const UPSET_SOURCES = ['propertyDetails', 'propertyNote', 'description'];
 
 // Detail-table labels that aren't listing fields but are expected, so dropping them isn't drift. The first two are
-// read only as upset sources.
-const IGNORED_KEYS = new Set(['propertyNote', 'propertyDetails']);
+// read only as upset sources. Middlesex and Cape May publish an `Attorney File` row, blank on every archived page.
+const IGNORED_KEYS = new Set(['propertyNote', 'propertyDetails', 'attorneyFile']);
 
 /** Strips `\r` and trims; an empty or missing value is null. */
 const cleanText = (value: string | undefined): string | null => value?.replace(/\r/g, '').trim() || null;
@@ -120,8 +121,11 @@ const coerced = <T>(
     return fallback(value);
   });
 
-/** Like `coerced`, except that a value starting with a dollar amount keeps that amount, with a warning. */
-const money = (warn: Warn, field: string) =>
+/**
+ * Like `coerced`, except that a value starting with a dollar amount keeps that amount, with a warning. Any other value
+ * warns and becomes the figure `fromText` finds for it, if any.
+ */
+const money = (warn: Warn, field: string, fromText: (value: string) => string | undefined = () => undefined) =>
   text().transform((value): number | null => {
     if (value === null) {
       return null;
@@ -141,6 +145,14 @@ const money = (warn: Warn, field: string) =>
       return toAmount(leadingAmount[0]) ?? null;
     }
 
+    const figure = fromText(value);
+
+    if (figure !== undefined) {
+      warn({ field, value, reason: "not a dollar amount, so the upset figure stated in the page's text was kept" });
+
+      return toAmount(figure) ?? null;
+    }
+
     warn({ field, value, reason: 'not a dollar amount' });
 
     return null;
@@ -153,7 +165,7 @@ const usDate = (warn: Warn, field: string) =>
 const phone = (warn: Warn, field: string) =>
   coerced(warn, field, 'not a single US phone number', toPhone, (value) => value);
 
-const listingDetailsSchema = (warn: Warn) =>
+const listingDetailsSchema = (warn: Warn, upsetFromText?: (value: string) => string | undefined) =>
   z.object({
     address: address(warn),
     attorney: text(),
@@ -169,17 +181,17 @@ const listingDetailsSchema = (warn: Warn) =>
     priors: text(),
     saleDate: usDate(warn, 'saleDate'),
     sheriffId: text(),
-    upsetAmount: money(warn, 'upsetAmount'),
+    upsetAmount: money(warn, 'upsetAmount', upsetFromText),
   });
 
 export type ScrapedListingDetails = z.output<ReturnType<typeof listingDetailsSchema>>;
 
 const LISTING_FIELDS = new Set(Object.keys(listingDetailsSchema(() => undefined).shape));
 
-/** The first upset figure in the page's free text, in UPSET_SOURCES order. */
-const upsetFromFreeText = (raw: Record<string, string>): string | undefined => {
-  for (const key of UPSET_SOURCES) {
-    const figure = extractUpsetAmount(raw[key] ?? '');
+/** The first upset figure in `texts`, read in order. */
+const firstUpsetFigure = (texts: (string | undefined)[]): string | undefined => {
+  for (const source of texts) {
+    const figure = extractUpsetAmount(source ?? '');
 
     if (figure !== undefined) {
       return figure;
@@ -192,7 +204,9 @@ const upsetFromFreeText = (raw: Record<string, string>): string | undefined => {
 /**
  * Validates and coerces a listing's detail-table values. A field that can't be coerced, the address included, is set
  * per its rule and reported in `warnings`. Unknown keys are dropped with a warning. A page whose upset row is missing
- * or blank takes its upset amount from its free text, when that states one.
+ * or blank takes its upset amount from its free text, when that states one. An upset row that isn't an amount
+ * (`ESTIMATED UPSET BID AMOUNT: $224,000.00, PLUS …`) warns, and takes the figure its own text states, else the free
+ * text's.
  */
 export const validateListingDetails = (
   raw: Record<string, string>,
@@ -201,9 +215,13 @@ export const validateListingDetails = (
     .filter(([key]) => !LISTING_FIELDS.has(key) && !IGNORED_KEYS.has(key))
     .map(([key, value]) => ({ field: key, value, reason: 'not a listing field' }));
 
-  const result = listingDetailsSchema((warning) => warnings.push(warning)).safeParse({
+  const freeText = UPSET_SOURCES.map((key) => raw[key]);
+  const result = listingDetailsSchema(
+    (warning) => warnings.push(warning),
+    (upsetRow) => firstUpsetFigure([upsetRow, ...freeText]),
+  ).safeParse({
     ...raw,
-    upsetAmount: cleanText(raw.upsetAmount) ?? upsetFromFreeText(raw),
+    upsetAmount: cleanText(raw.upsetAmount) ?? firstUpsetFigure(freeText),
   });
 
   if (!result.success) {

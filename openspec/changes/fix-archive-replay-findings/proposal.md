@@ -12,7 +12,8 @@ Fixing these before the one-time prod backfill means the backfill stores everyth
 ## What Changes
 
 - Map the `Property Address` label to `address`, and Cape May's `Minimum Bid` to `upsetAmount`.
-- When a page has no upset row, take the upset amount from the dollar figure that follows an upset or bid phrase in `Description`, `Property Note` or `Property Details`, never from a judgment figure. `Property Details` stops producing an unknown-field warning.
+- When a page has no upset row, take the upset amount from the dollar figure that follows an upset or bid phrase in `Description`, `Property Note` or `Property Details`, never from a judgment figure. `Property Details` stops producing an unknown-field warning. An upset row that isn't an amount (`ESTIMATED UPSET BID AMOUNT: $224,000.00, PLUS …`) is read the same way, before the free text, and still warns.
+- Middlesex and Cape May's blank `Attorney File` row is dropped without an unknown-field warning.
 - Money coercion takes a leading dollar amount followed by text, instead of setting the field to NULL.
 - **BREAKING (stored data)**: A listing with a missing or blank address is stored with a NULL address instead of being rejected. A missing sheriff number still rejects it.
 - A county fails the run when fewer than half of its listed properties parse, not only when all of them fail, so a partial breakage like the home-page responses fails the run.
