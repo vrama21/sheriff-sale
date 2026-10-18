@@ -1,19 +1,20 @@
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { getS3Text } from './getS3Text';
 import { s3 } from './s3Client';
 
-jest.mock('./s3Client', () => ({ s3: { getObject: jest.fn() } }));
+vi.mock('./s3Client', () => ({ s3: { getObject: vi.fn() } }));
 
-const getObject = s3.getObject as unknown as jest.Mock;
+const getObject = s3.getObject as unknown as Mock;
 
 const s3Error = (name: string) => Object.assign(new Error(name), { name });
 
 beforeEach(() => {
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 });
 
 describe('getS3Text', () => {
   it('reads the object body as text', async () => {
-    getObject.mockResolvedValue({ Body: { transformToString: jest.fn().mockResolvedValue('<html></html>') } });
+    getObject.mockResolvedValue({ Body: { transformToString: vi.fn().mockResolvedValue('<html></html>') } });
 
     await expect(getS3Text({ bucketName: 'nj-sheriff-sale', key: 'a/b.html' })).resolves.toBe('<html></html>');
     expect(getObject).toHaveBeenCalledWith({ Bucket: 'nj-sheriff-sale', Key: 'a/b.html' });

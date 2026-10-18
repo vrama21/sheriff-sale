@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { DateTime } from 'luxon';
 import { parseAddress } from '../../../shared/address';
 import { validateListingDetails, validateStatusHistory } from './listingSchema';

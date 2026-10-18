@@ -12,7 +12,7 @@
 - [x] 1.8 `turbo.json`: `globalEnv` becomes `DATABASE_URL`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NODE_ENV`, `PORT`, `VERCEL_URL`, and `globalDependencies` hashes `.env`, not `**/.env`
 - [x] 1.9 Add `.env.example`. In `.gitignore`, add `!.env.example` and drop `!packages/database/.env`.
 - [x] 1.10 Stale config: delete `backend/package-lock.json` and `backend/.npmignore`, and remove `next-env.d.ts` from `packages/database/tsconfig.json`
-- [x] 1.11 Remove the unused `pg` devDependency from `packages/database`, and confirm the `package-lock.json` diff only removes `pg` and its exclusive transitive packages
+- [x] 1.11 Remove the unused `pg` devDependency from `packages/database` (superseded: #26 removed it too). After merging `main`, move `dotenv` to devDependencies, and confirm the lockfile diff against `main` is only that move.
 
 ## 2. Migration safety (thread B)
 

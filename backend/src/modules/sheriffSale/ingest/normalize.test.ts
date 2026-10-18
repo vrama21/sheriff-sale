@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { normalizeSheriffId, normalizeStatus } from './normalize';
 
 describe('normalizeSheriffId', () => {

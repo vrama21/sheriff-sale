@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
-config({ path: resolve(__dirname, '../../../.env') });
+config({ path: resolve(__dirname, '../../../.env'), quiet: true });
 
 const migrateDb = async () => {
   // Imported after config() so the client is created from the repo-root .env.

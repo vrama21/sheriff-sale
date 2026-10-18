@@ -62,7 +62,7 @@ Alternatives considered:
 - **Keep dotenv in `client.ts` and move it to dependencies.** Rejected: it hides which file each tool reads, which is the bug.
 - **mise `[env] _.file = ".env"`.** Rejected: it couples the app's env to the user's shell tooling, and to mise-action in CI, where no `.env` exists.
 
-`dotenv` stays a devDependency of `packages/database`, because only the dev-time `drizzle.config.ts` and `migrate.ts` import it now. That also stops tsdown from inlining dotenv into `dist`.
+`dotenv` becomes a devDependency of `packages/database`, because only the dev-time `drizzle.config.ts` and `migrate.ts` import it now. `upgrade-backend-dependencies` (#26) had made it a dependency, while `client.ts` still imported it, so this change also modifies that change's workspace-dependencies scenario. Calls pass `quiet: true`, matching #26's dotenv 18 upgrade.
 
 ### 2. `.env.example` lists the local variables
 
@@ -194,7 +194,7 @@ Every prod job is gated by `if: github.ref == 'refs/heads/main'`. But that check
 - **Merging before the Vercel rename** → the Maps key stays undefined in the browser, as it is today. No regression, just no fix yet.
 - **Enabling versioning is one-way** → the lifecycle rule bounds storage. Prod can suspend it later if needed.
 - **0 async retries means a transient county-site failure isn't retried automatically** → the event lands in the DLQ, and a manual re-invoke is cheap. Failures stay as silent as they are today until the separate alarms change lands.
-- **Spec overlap with the unarchived `isolate-sheriff-sale-module` change**, which also modifies "Scraper Lambda function" → this change's MODIFIED text already uses that change's handler path. Archive `isolate-sheriff-sale-module` first, or its older text, still with `ENV`, would overwrite this one.
+- **Spec overlap with the unarchived `isolate-sheriff-sale-module` change**, which also modifies "Scraper Lambda function" → this change's MODIFIED text already uses that change's handler path. Archive `isolate-sheriff-sale-module` first, or its older text, still with `ENV`, would overwrite this one. Likewise, archive `upgrade-backend-dependencies` before this change, because this change's `workspace-dependencies` delta modifies a requirement that change introduces.
 
 ## Migration Plan
 

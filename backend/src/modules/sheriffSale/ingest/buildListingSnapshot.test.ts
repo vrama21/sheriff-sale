@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { readFixture } from '../__fixtures__/stubClientAdapter';
 import { ParsedListingPage, parseListingSnapshot } from '../parse/parseListingSnapshot';
 import { buildListingSnapshot, SNAPSHOT_FIELDS } from './buildListingSnapshot';

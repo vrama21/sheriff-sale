@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { listingPageKey, PASSAIC_ID_FIX_DATE, planCountyDay } from './plan';
 
 describe('planCountyDay', () => {

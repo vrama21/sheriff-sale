@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { createConcurrencyLimiter } from './createConcurrencyLimiter';
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 1));

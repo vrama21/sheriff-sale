@@ -12,7 +12,7 @@ An audit of the CI pipeline, docker compose, and config files found that CI can 
 - **Ops (D).** The scraper log group gets 90-day retention, and async retries are set to 0, so a failed run goes straight to the DLQ. Failure alarms (an SNS topic and CloudWatch alarms) are out of scope and will be a separate change.
 - **Infra protection (D).** The `nj-sheriff-sale` archive bucket gets Block Public Access, versioning, and a lifecycle rule that expires noncurrent versions. The CI role's existing statements already cover every new resource, so its policy doesn't change.
 - **Docker compose.** Postgres is pinned to major 15, matching prod (Railway, 15.5). The compose file gets a fixed project name, a project-specific container name, a localhost-only and configurable host port, a `pg_isready` healthcheck, and `restart: unless-stopped`. pgAdmin and the obsolete `version` key are removed. **BREAKING (local):** a local volume initialised by a newer Postgres major must be recreated.
-- **Stale config.** Remove `backend/package-lock.json`, `backend/.npmignore`, the `next-env.d.ts` include in `packages/database/tsconfig.json`, the unused `pg` devDependency, the `!packages/database/.env` gitignore negation, and the README's claim about a shared `config` package.
+- **Stale config.** Remove `backend/package-lock.json`, `backend/.npmignore`, the `next-env.d.ts` include in `packages/database/tsconfig.json`, the `!packages/database/.env` gitignore negation, and the README's claim about a shared `config` package.
 
 ### Manual steps for the user (before merging)
 
@@ -31,6 +31,7 @@ An audit of the CI pipeline, docker compose, and config files found that CI can 
 
 - `database-toolchain`: Generating is a developer-only action. The no-op-generate requirement now backs the CI drift check instead of a CI generate step. Migrations must be expand-only per deploy, and the migrate script must fail cleanly.
 - `infra-delivery`: Branches run offline `tofu fmt`/`validate`. The `prod` environment no longer holds `ENV`, and its branch policy is named as the boundary for prod secrets.
+- `workspace-dependencies` (added by the unarchived `upgrade-backend-dependencies` change): `dotenv` moves to `packages/database`'s devDependencies, because the client no longer imports it at runtime.
 - `scraper-infrastructure`: The archive bucket gains Block Public Access, versioning, and a lifecycle rule. The Lambda environment drops `ENV`. The log group gets retention. Adds the 0-retry async config. Single-environment naming no longer mentions `ENV`.
 
 ## Impact
@@ -38,5 +39,5 @@ An audit of the CI pipeline, docker compose, and config files found that CI can 
 - **Code:** `packages/database` (`client.ts`, `migrate.ts`, `drizzle.config.ts`, `package.json`, `tsconfig.json`), `backend/src/modules/sheriffSale/handler.local.ts`, `backend/src/environment.d.ts`, `frontend/package.json`, `frontend/src/pages/_app.tsx`.
 - **Config:** `.github/workflows/cicd.yml`, `turbo.json`, `vite.config.ts` (comment), `.gitignore`, `.env.example` (new), `docker-compose.yml`, `.claude/skills/db-query` (local connection reads `POSTGRES_*` from `.env`).
 - **Infra:** `infra/scraper.tf`, `infra/storage.tf`, `infra/github-actions.tf`, `infra/locals.tf`, Plan impact: Lambda environment update, log group retention, a new event invoke config, and new archive bucket versioning/PAB/lifecycle configs. The CI role policy is unchanged.
-- **Dependencies:** removes `pg` from `packages/database` devDependencies, which drops `pg` and its exclusive transitive packages from `package-lock.json`. No version bumps.
+- **Dependencies:** moves `dotenv` (18.0.8, unchanged) from `packages/database` dependencies to devDependencies. No version bumps. `pg` was removed by `upgrade-backend-dependencies` (#26), and this branch's own removal of it was dropped when merging `main`.
 - **Docs:** root, backend, and infra READMEs.

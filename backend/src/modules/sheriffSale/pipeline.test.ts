@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { ListingSnapshot } from './ingest/buildListingSnapshot';
 import { syncListing } from './ingest/syncListing';
 import { parseCountyPropertyIds } from './parse/parseCountyPropertyIds';
@@ -9,24 +10,24 @@ import { NewJerseySheriffSaleHttpClient } from './scrape/newJerseySheriffSaleHtt
 import { todaysArchiveDate } from './scrape/saveHtmlToS3';
 
 // The database client is never loaded: syncListing is mocked and everything else here is pure.
-jest.mock('@sheriff-sale/database', () => ({}));
-jest.mock('./ingest/syncListing', () => ({ syncListing: jest.fn() }));
+vi.mock('@sheriff-sale/database', () => ({}));
+vi.mock('./ingest/syncListing', () => ({ syncListing: vi.fn() }));
 
-jest.mock('./scrape/newJerseySheriffSaleHttpClient', () => ({ NewJerseySheriffSaleHttpClient: jest.fn() }));
-jest.mock('./scrape/getCountyListingsHtml', () => ({ getCountyListingsHtml: jest.fn() }));
-jest.mock('./scrape/getListingDetailsHtml', () => ({ getListingDetailsHtml: jest.fn() }));
-jest.mock('./parse/parseCountyPropertyIds', () => ({ parseCountyPropertyIds: jest.fn() }));
-jest.mock('./parse/parseListingSnapshot', () => ({ parseListingSnapshot: jest.fn() }));
+vi.mock('./scrape/newJerseySheriffSaleHttpClient', () => ({ NewJerseySheriffSaleHttpClient: vi.fn() }));
+vi.mock('./scrape/getCountyListingsHtml', () => ({ getCountyListingsHtml: vi.fn() }));
+vi.mock('./scrape/getListingDetailsHtml', () => ({ getListingDetailsHtml: vi.fn() }));
+vi.mock('./parse/parseCountyPropertyIds', () => ({ parseCountyPropertyIds: vi.fn() }));
+vi.mock('./parse/parseListingSnapshot', () => ({ parseListingSnapshot: vi.fn() }));
 
-jest.mock('./scrape/saveHtmlToS3', () => ({ todaysArchiveDate: jest.fn() }));
+vi.mock('./scrape/saveHtmlToS3', () => ({ todaysArchiveDate: vi.fn() }));
 
 const stages = {
-  getCountyListingsHtml: jest.mocked(getCountyListingsHtml),
-  getListingDetailsHtml: jest.mocked(getListingDetailsHtml),
-  parseCountyPropertyIds: jest.mocked(parseCountyPropertyIds),
-  parseListingSnapshot: jest.mocked(parseListingSnapshot),
+  getCountyListingsHtml: vi.mocked(getCountyListingsHtml),
+  getListingDetailsHtml: vi.mocked(getListingDetailsHtml),
+  parseCountyPropertyIds: vi.mocked(parseCountyPropertyIds),
+  parseListingSnapshot: vi.mocked(parseListingSnapshot),
 };
-const sync = jest.mocked(syncListing);
+const sync = vi.mocked(syncListing);
 
 const range = (start: number, count: number) => Array.from({ length: count }, (_, i) => start + i);
 
@@ -37,12 +38,12 @@ const parsedPage = (sheriffId = 'F-1') => ({
 });
 
 beforeEach(() => {
-  jest.resetAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
-  jest.spyOn(console, 'error').mockImplementation(() => undefined);
-  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.resetAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-  jest.mocked(todaysArchiveDate).mockReturnValue('2026-10-18');
+  vi.mocked(todaysArchiveDate).mockReturnValue('2026-10-18');
   stages.getCountyListingsHtml.mockResolvedValue('county-html');
   stages.getListingDetailsHtml.mockImplementation(async (_client, { propertyId }) => `listing-${propertyId}`);
   stages.parseListingSnapshot.mockImplementation((html) => parsedPage(`F-${html.replace('listing-', '')}`));
