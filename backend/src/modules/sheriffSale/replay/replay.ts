@@ -219,8 +219,8 @@ export const replayArchive = async (
   const limit = createConcurrencyLimiter(DETAIL_PAGE_CONCURRENCY);
 
   for (const date of dates) {
-    for (const county of counties) {
-      await replayCountyDay(date, county, byCounty.get(county) as ReplayCounts, deps, dryRun, limit);
+    for (const [county, counts] of byCounty) {
+      await replayCountyDay(date, county, counts, deps, dryRun, limit);
     }
   }
 

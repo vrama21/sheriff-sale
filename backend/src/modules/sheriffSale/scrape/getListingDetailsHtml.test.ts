@@ -68,11 +68,11 @@ describe('getListingDetailsHtml', () => {
 
   it('rejects with the timeout error when the request hangs past the 30 s timeout', async () => {
     const client = new NewJerseySheriffSaleHttpClient();
-    const axiosInstance = (client as unknown as { axiosInstance: { defaults: { adapter: unknown } } }).axiosInstance;
+    const axiosInstance = client['axiosInstance'];
 
     // Rejects the way axios's http adapter does when `config.timeout` elapses.
-    axiosInstance.defaults.adapter = async (config: { timeout?: number }) => {
-      throw new AxiosError(`timeout of ${config.timeout}ms exceeded`, 'ECONNABORTED', config as never, {});
+    axiosInstance.defaults.adapter = async (config) => {
+      throw new AxiosError(`timeout of ${config.timeout}ms exceeded`, 'ECONNABORTED', config, {});
     };
 
     await expect(getListingDetailsHtml(client, { propertyId: 42 })).rejects.toMatchObject({

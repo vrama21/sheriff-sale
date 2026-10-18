@@ -49,7 +49,7 @@ export class HttpClient {
       }),
       (error: AxiosError) => {
         delete error.config?.headers['Authorization'];
-        delete error.request['_header'];
+        delete error.request?._header;
 
         throw error;
       },

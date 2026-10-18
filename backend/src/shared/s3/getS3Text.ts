@@ -15,7 +15,7 @@ export const getS3Text = async ({ bucketName, key }: GetTextConfig): Promise<str
 
     return (await response.Body?.transformToString('utf-8')) ?? '';
   } catch (error) {
-    if ((error as Error | undefined)?.name === 'NoSuchKey') {
+    if (error instanceof Error && error.name === 'NoSuchKey') {
       return undefined;
     }
 

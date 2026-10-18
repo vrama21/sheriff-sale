@@ -11,7 +11,7 @@ export const contentHash = (listing: object): string => {
   const fields = Object.entries(listing)
     .filter(([key]) => !unhashedKeys.has(key))
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-    .map(([key, value]) => [key, value ?? null]);
+    .map(([key, value]: [string, unknown]) => [key, value ?? null]);
 
   return createHash('sha256')
     .update(JSON.stringify(Object.fromEntries(fields)))

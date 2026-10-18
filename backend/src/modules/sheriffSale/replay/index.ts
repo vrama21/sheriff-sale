@@ -19,7 +19,7 @@ const parseArgsOrExit = (): ReplayArgs => {
   try {
     return parseReplayArgs(process.argv.slice(2));
   } catch (error) {
-    console.error((error as Error).message);
+    console.error(error instanceof Error ? error.message : String(error));
     console.error(USAGE);
     process.exit(2);
   }
