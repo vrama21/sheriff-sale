@@ -1,0 +1,74 @@
+backend/src/modules/clerkRecords/__fixtures__/press/monmouth/parcel.html
+  s_35578806346017::t_1502a108cf2c93 1-1706
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/detail.html
+  s_35578806346017::t_1502a108cf2c93 1-541
+backend/src/modules/clerkRecords/__fixtures__/press/monmouth/name-all-types.html
+  s_35578806346017::t_1502a108cf2c93 1-2076
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/parcel-no-results.html
+  s_35578806346017::t_b13e57bba0cd10 1-1380
+backend/src/modules/clerkRecords/__fixtures__/press/essex/name-all-types.html
+  s_35578806346017::t_1502a108cf2c93 1-1155
+backend/src/modules/clerkRecords/__fixtures__/press/monmouth/no-records.html
+  s_35578806346017::t_1502a108cf2c93 1-1494
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/entry.html
+  s_35578806346017::t_1502a108cf2c93 1-1380
+backend/src/modules/clerkRecords/__fixtures__/press/burlington/no-records.html
+  s_35578806346017::t_1502a108cf2c93 1-836
+backend/src/modules/clerkRecords/__fixtures__/press/burlington/parcel-page2.html
+  s_35578806346017::t_1502a108cf2c93 1-1132
+openspec/changes/add-clerk-records-press/tasks.md
+  ai_agent 3-7
+backend/src/modules/clerkRecords/__fixtures__/press/essex/entry.html
+  s_35578806346017::t_1502a108cf2c93 1-1452
+backend/src/modules/clerkRecords/__fixtures__/press/essex/detail-image-viewer.html
+  s_35578806346017::t_b13e57bba0cd10 1-384
+backend/src/modules/clerkRecords/__fixtures__/press/burlington/entry.html
+  s_35578806346017::t_1502a108cf2c93 1-2034
+backend/src/modules/clerkRecords/__fixtures__/press/monmouth/detail-image-viewer.html
+  s_35578806346017::t_b13e57bba0cd10 1-1044
+backend/src/modules/clerkRecords/__fixtures__/press/monmouth/entry.html
+  s_35578806346017::t_1502a108cf2c93 1-2554
+backend/src/modules/clerkRecords/__fixtures__/press/burlington/parcel.html
+  s_35578806346017::t_1502a108cf2c93 1-1132
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/date-range-error.html
+  s_35578806346017::t_1502a108cf2c93 1-1380
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/name-all-types.html
+  s_35578806346017::t_1502a108cf2c93 1-1441
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/name-lis-pendens.html
+  s_35578806346017::t_b13e57bba0cd10 1-791
+backend/src/modules/clerkRecords/__fixtures__/press/passaic/no-records.html
+  s_35578806346017::t_1502a108cf2c93 1-1380
+openspec/changes/add-clerk-records-press/design.md
+  ai_agent 12,262
+  s_35578806346017::t_1036b855e5ea19 159
+  s_35578806346017::t_b05bc506e0e520 111-112,115-116,122,124-135
+  s_35578806346017::t_a2ac75356cc3f3 177-184
+  s_35578806346017::t_803ea13fc4f9f7 193
+  s_35578806346017::t_22aea63dfaa809 273-306
+backend/src/modules/clerkRecords/__fixtures__/press/essex/no-records.html
+  s_35578806346017::t_1502a108cf2c93 1-793
+backend/src/modules/clerkRecords/__fixtures__/press/burlington/detail-image-viewer.html
+  s_35578806346017::t_b13e57bba0cd10 1-425
+backend/src/modules/clerkRecords/__fixtures__/press/essex/parcel.html
+  s_35578806346017::t_1502a108cf2c93 1-845
+backend/src/modules/clerkRecords/__fixtures__/press/burlington/name-all-types.html
+  s_35578806346017::t_1502a108cf2c93 1-1188
+backend/src/modules/clerkRecords/__fixtures__/press/monmouth/parcel-page2.html
+  s_35578806346017::t_1502a108cf2c93 1-1706
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "fe569edc998d8b6901b3d49ebe663d9ae6723c77",
+  "prompts": {},
+  "sessions": {
+    "s_35578806346017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dd4c11d8-7e43-4ea2-a99c-678c6f7676a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
