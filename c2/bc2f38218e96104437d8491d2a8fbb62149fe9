@@ -1,0 +1,19 @@
+openspec/changes/add-clerk-records-press/tasks.md
+  s_35578806346017::t_d22772d033246c 65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c2bc2f38218e96104437d8491d2a8fbb62149fe9",
+  "prompts": {},
+  "sessions": {
+    "s_35578806346017": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dd4c11d8-7e43-4ea2-a99c-678c6f7676a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
