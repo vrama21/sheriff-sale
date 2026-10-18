@@ -1,0 +1,39 @@
+openspec/changes/join-burlington-notice-overflow/tasks.md
+  s_4048e0168ca1a6::t_324b69c1877eeb 1-15
+backend/src/modules/sheriffSale/parse/parseListingSnapshot.test.ts
+  s_4048e0168ca1a6::t_20773ff35cfc1b 45
+  s_4048e0168ca1a6::t_bda2572083d3a0 34-44,46-47
+openspec/changes/join-burlington-notice-overflow/.openspec.yaml
+  s_4048e0168ca1a6::t_324b69c1877eeb 1-2
+backend/src/modules/sheriffSale/parse/joinNoticeOverflow.test.ts
+  s_4048e0168ca1a6::t_7b46276671d43b 1-61
+backend/src/modules/sheriffSale/__fixtures__/listingDetailsBurlingtonOverflow.html
+  s_4048e0168ca1a6::t_73accdd49ed8f2 1-299
+backend/src/modules/sheriffSale/parse/joinNoticeOverflow.ts
+  s_4048e0168ca1a6::t_c601e85a4734cd 1-24
+backend/src/modules/sheriffSale/parse/parseListingSnapshot.ts
+  s_4048e0168ca1a6::t_d573c136cc10e0 2
+  s_4048e0168ca1a6::t_37d03cce362810 37-39,48-50
+backend/src/modules/sheriffSale/ingest/buildListingSnapshot.test.ts
+  s_4048e0168ca1a6::t_f453a0c791ac3b 98-122
+openspec/changes/join-burlington-notice-overflow/proposal.md
+  s_4048e0168ca1a6::t_324b69c1877eeb 1-31
+openspec/changes/join-burlington-notice-overflow/specs/civilview-scraping/spec.md
+  s_4048e0168ca1a6::t_324b69c1877eeb 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8ab1b49c78d5bc2203cf40eaf1b72f5f21ca2798",
+  "prompts": {},
+  "sessions": {
+    "s_4048e0168ca1a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "328ed50d-74ce-450d-aa94-24ff4487e9bc",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
