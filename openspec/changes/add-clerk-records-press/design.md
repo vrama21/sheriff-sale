@@ -9,7 +9,7 @@ We surveyed the clerk record portals for the 16 counties we list. Four of them r
 | Essex (Register of Deeds) | `press.essexregister.com/ProdPRESS/Clerk/ClerkHome.aspx?op=basic` | Block is often `N/A` on notices of settlement |
 | Passaic | `records.passaiccountynj.org/PRESS/clerk/ClerkHome.aspx?op=basic` | Older build: `_ctl0:PageContent:` field prefix, needs `hidDiv=NewSearch` |
 | Monmouth ("OPRS") | `oprs.co.monmouth.nj.us/oprs/clerk/clerkhome.aspx?op=basic` | 90-day maximum search window; needs the session cookie from a first GET |
-| Burlington | `press.burlingtoncountynj.gov/Press/clerk/ClerkHome.aspx?op=basic` | Has a `txtQualifierTab4` field; block/lot index starts 3/2012; strict TLS chain |
+| Burlington | `press.burlingtoncountynj.gov/Press/clerk/ClerkHome.aspx?op=basic` | Has a `txtQualifierTab4` field; block/lot index starts 3/2012; strict TLS chain (the spike found Node's default store verifies it) |
 
 All four share one form:
 
@@ -108,23 +108,31 @@ Each document comes back as several grid rows, one per direct/indirect party pai
 
 ### D5. Matching starts from the lis pendens
 
+*Revised after the spike (see "Spike findings" below). The changes from the first draft: the name search runs once, across all doc types and with no dates, and is filtered locally; the docket-year window is a filter on recorded dates, not a search range; the cross-reference path doesn't exist on PRESS; Passaic has no block/lot index, so it gets no parcel sweep.*
+
 For each candidate listing:
 
-1. **Lis pendens by party.** Name-search the primary defendant for `LIS_PENDENS`.
-   - The date window comes from the docket year in `courtCase`. `F-012441-25` and `F00258326` both encode the year in their last two digits. The window runs from 1 January of that year to the sale date. If there's no docket, it's the sale date minus 3 years. The PRESS client splits the window into 90-day slices where the county requires it (Monmouth).
+1. **Lis pendens by party.** Run one name search for the primary defendant across all doc types, with no dates (D6 gives the search term). PRESS's doc-type dropdown takes a single value, and Essex files foreclosures under four lis pendens types, so one all-types search costs fewer requests than one per type. It also returns the defendant's mortgages, assignments and deeds, which steps 2 and 3 reuse.
+   - Keep the `LIS_PENDENS` documents recorded inside the docket-year window. The window comes from the docket year in `courtCase` (`F-012441-25`, `F00258326`, Passaic's `F 012110 25 CTL#163224`) and runs from 1 January of that year to the sale date. If there's no docket, it's the sale date minus 3 years.
    - A candidate is accepted when:
      - one of its direct parties matches one of the listing's defendants, **and**
      - its indirect parties match the plaintiff, **or** its town and block/lot agree with the listing's.
    - Confidence:
      - **high**: the defendant, the plaintiff and the town all agree.
-     - **medium**: the defendant matches, but only one of the other two agrees. This covers a plaintiff substituted after an assignment.
+     - **medium**: the defendant matches, but only one of the other two agrees. This covers a plaintiff substituted after an assignment. The spike's Monmouth case is one: the lis pendens names GUARANTEED RATE INC, and the listing names the later assignee, Lakeview.
      - Anything weaker isn't stored.
-2. **Parcel sweep.** Take block/lot from the matched lis pendens row, which PRESS usually fills, or else from the listing (D7). Run one Block/Lot search with no date limit and doc categories {DEED, SHERIFF_DEED, MORTGAGE*, LIS_PENDENS*, FINAL_JUDGMENT}. Documents whose parties overlap the listing's defendants are matched `parcel`/high. The rest of the parcel's documents are matched `parcel`/medium. Burlington's parcel index starts in 3/2012, so earlier documents there come only from step 3.
-3. **Foreclosed mortgage.** Pick the method in this order:
-   - If the spike finds that PRESS detail exposes a cross-reference from the lis pendens to the mortgage, follow it with an instrument or book/page search (`cross_reference`/high).
-   - Otherwise, use the latest mortgage from step 2 recorded before the lis pendens whose mortgagor matches a defendant.
-   - Otherwise, name-search the defendant for `MORTGAGE` before the lis pendens date. Use mortgagee similarity to the plaintiff, or to an assignee in the parcel's assignments, to pick one (`mortgage_party`). If more than one candidate is still plausible, store each at **low** confidence.
-4. **After the sale.** Once the sale date has passed, step 2 runs again on each re-check, so a `SHERIFF_DEED` shows up when it's recorded.
+2. **Parcel sweep.** This step is skipped for counties whose index has no block/lot (Passaic). Block/lot comes from, in order:
+   - the matched lis pendens row (Monmouth and Burlington fill it; Essex and Passaic show `N/A`)
+   - a deed in the name-search results whose grantee is a defendant (Essex fills block/lot on deeds)
+   - the listing text (D7)
+
+   Run one Block/Lot search with no dates and no doc type, and filter locally. Documents whose parties overlap the listing's defendants are matched `parcel`/high. The rest of the parcel's documents are matched `parcel`/medium. If block/lot came only from the listing text and none of the parcel's documents has a defendant as a party, the sweep is discarded as a likely wrong parcel. Burlington's metes-and-bounds descriptions mention neighbouring lots, which is how this happens. Burlington's parcel index starts in 3/2012, and Essex's block/lot index in practice holds only deeds, so documents missing there come only from steps 1 and 3.
+3. **Foreclosed mortgage.** The spike found no cross-reference in PRESS: Passaic's detail view repeats the grid row, and the others' "View" opens the document image. So the `cross_reference` path isn't implemented for PRESS. `getDetail` stays an optional interface method for later platforms. Pick the method in this order:
+   - the latest mortgage from step 2 recorded before the lis pendens whose mortgagor matches a defendant (`parcel`/high)
+   - otherwise, the mortgages in step 1's name-search results that were recorded before the lis pendens and whose mortgagor matches a defendant. No extra request is needed. Pick by mortgagee similarity to the plaintiff, to the lis pendens plaintiff, or to an assignee of the parcel's or the name search's assignments (`mortgage_party`/medium). If more than one candidate is still plausible, store each at **low** confidence.
+
+   Assignments in the name-search results that a defendant is a party to, recorded after the chosen mortgage, are matched `MORTGAGE_ASSIGNMENT` by `mortgage_party`/medium.
+4. **After the sale.** Once the sale date has passed, steps 1 and 2 run again on each re-check, so a `SHERIFF_DEED` on the parcel shows up when it's recorded. Passaic has no parcel sweep, so its sheriff's deeds aren't matched in this change. Its post-sale checks follow the D10 schedule and stop at sale + 90 days.
 
 Each match gets a role:
 
@@ -148,7 +156,7 @@ Two names match when their token sets agree. The order of tokens doesn't matter,
 
 The listing's `defendant` string splits on `;`, ` AND ` and `, ` into a defendant list. Splitting on `, ` happens only after role phrases are removed, so "SMITH, JOHN" stays one name.
 
-The search term sent to PRESS is the surname of the first person defendant, or the full name of the first entity defendant. Matching then filters the results. The normalized name is stored on each party row, so later adapters and queries compare names the same way.
+The search term sent to PRESS is the first person defendant's surname in the last-name field and their first given name in the first-name field. For an entity, it's the full normalized name in the last-name field. The spike showed the first name is optional and matched as a prefix (`ANDREW` found `HAMILTON ANDREW L`, and `NICHOLAS` found `HUBBARD NICHOLAS JR`), and it cuts a common surname's results from hundreds of rows to one page. Matching then filters the results. The normalized name is stored on each party row, so later adapters and queries compare names the same way.
 
 ### D7. Block/lot extraction rejects text that isn't a parcel
 
@@ -166,6 +174,14 @@ It also handles additional lots ("ADDITIONAL LOTS 12, 18-B") and condo qualifier
 
 Listing `city` values ("Margate City", "South Orange") and PRESS dropdown labels ("SOUTH ORANGE VILLAGE") differ. `counties.ts` holds a per-county alias map. At run start the client reads the dropdown options from the landing page and checks every alias target against them. If one is missing, it logs a warning and skips parcel search for that town. Name search still runs.
 
+A listing city resolves to an ordered list of candidate labels:
+
+1. the alias map's entry
+2. a label that equals the city once suffixes such as `TWP`, `TOWNSHIP`, `BORO`, `BOROUGH`, `CITY` and `VILLAGE` are dropped from both
+3. the longest label the city text ends with, which rescues values like `55 Tulip Lane Red Bank`
+
+Parcel search uses the first candidate that is live in the dropdown. Town agreement in D5 accepts any candidate. Monmouth's dropdown lists postal names (`LEONARDO`, `BELFORD`) alongside municipalities. Its documents carry the municipality (`MIDDLETOWN`), so section names alias to the municipality first.
+
 ### D9. Request politeness and the per-run budget
 
 - Each county host gets its own limiter with concurrency 1 and at least 1.5 s between requests.
@@ -174,7 +190,7 @@ Listing `city` values ("Margate City", "South Orange") and PRESS dropdown labels
 - Paging asks for the largest rows-per-page option and stops after `MAX_RESULT_PAGES` (5). If the stop truncates results, that's logged with the search key.
 - Each run looks up at most `MAX_LISTINGS_PER_COUNTY_PER_RUN` (40) listings per county, nearest sale date first.
 
-At about 4 to 8 requests per listing, that's at most about 320 requests per county per run, roughly 8 minutes with the delay. The four counties run in parallel on separate hosts, which fits the 900 s Lambda timeout. A listing whose lookup hasn't finished by `RUN_DEADLINE_MS` (780 s) is left for the next run without being marked failed.
+Only Passaic's results page carries the search form, so every search starts with a GET of the entry page: a search is a GET plus a POST, plus one POST per extra page. A lookup is one name search and, where the county indexes block/lot, one parcel sweep. At about 4 to 8 requests per listing, that's at most about 320 requests per county per run, roughly 8 minutes with the delay. The four counties run in parallel on separate hosts, which fits the 900 s Lambda timeout. A listing whose lookup hasn't finished by `RUN_DEADLINE_MS` (780 s) is left for the next run without being marked failed.
 
 ### D10. Re-check schedule (per-listing lookup state)
 
@@ -243,7 +259,7 @@ Every search result page is saved with the existing `saveS3` helper before it's 
 - **[Burlington's parcel index starts 3/2012]** → Older deeds and mortgages there come only from name search. That's documented in the per-county config, and a parcel sweep result there isn't treated as complete.
 - **[Daniel's Law redactions]** → Covered persons' names may be redacted in the index, and matching by party will then miss. The lookup records `no_lis_pendens` and keeps re-checking on the schedule. Nothing works around redactions.
 - **[A portal throttles or blocks us]** → Low concurrency, delays and the per-run cap keep volume small. Repeated 403/429 responses mark the county failed for the run and stop its remaining lookups, rather than retrying harder.
-- **[Burlington's strict TLS chain]** → Node's bundled CA store needs checking against it in the spike. If it fails, add the missing intermediate to the client's agent for that host only, never by turning off verification.
+- **[Burlington's strict TLS chain]** → Node's bundled CA store needs checking against it in the spike. If it fails, add the missing intermediate to the client's agent for that host only, never by turning off verification. The spike found the default store verifies it, so no intermediate is configured.
 
 ## Migration Plan
 
@@ -254,10 +270,37 @@ Every search result page is saved with the existing `saveS3` helper before it's 
 
 **Rollback:** disable the EventBridge rule, or remove the infra resources. The tables are additive and nothing else reads them yet, so they can stay or be dropped in a later migration.
 
-## Open Questions
+## Spike findings (task 1)
 
-- **The PRESS detail view** (spike, task 1). Does a "View Image" or row postback show a detail panel with parties' roles, consideration, and cross-references (the "links" BrowserView exposes)? The answer decides whether step 3 of D5 can use `cross_reference` or falls back to party search.
-- **The orientation of direct and indirect parties for each doc type, per county.** For example, is the defendant always the direct party on a lis pendens? To confirm from fixtures in the spike.
-- **Does PRESS name search match on a prefix or the exact name, and does it treat the first name as optional?** This affects how we build the search term for entities.
-- **The largest `ddlShowRec`/`ddlTotalRec` option per county**, which affects how many pages a search needs.
-- **Whether Essex's Register of Deeds indexes lis pendens in the same PRESS instance or in a separate court index.** If it doesn't, Essex matching starts from the parcel and the Essex coverage numbers drop.
+The spike ran on 2026-10-18 with a throwaway script: one session at a time, at least 2 s between requests, Node 24's default trust store. Its pages are the fixtures under `modules/clerkRecords/__fixtures__/press/<county>/`. Each county took 11 to 17 requests, more than planned, because fixing the script's own bugs (it posted from the wrong page and missed image buttons) needed fresh entry GETs. No county throttled, blocked or challenged a request, and none of the pages has a captcha.
+
+Test listings: Passaic `F 012110 25` (Cabigao, Clifton), Essex `F00863924` (Hamilton, Livingston), Monmouth `F00463123` (Hubbard, Leonardo/Middletown), Burlington `F-007795-24` (Lundy, Hainesport). The lis pendens was found for all four.
+
+**Open questions, resolved:**
+
+- **The PRESS detail view.** Each row has a "View" control: a submit button in Passaic, an image input elsewhere. It posts back and redirects to `ShowDetails.aspx`.
+  - Passaic shows "Instrument Details": type, instrument number, date, book/page, all mortgagors and mortgagees separated by `;`, block/lot and township. That is no more than the grid. There's no consideration and no cross-reference.
+  - Essex, Monmouth and Burlington show an image-viewer frame (`ShowDetails.htm`) for the document image, which is out of scope.
+  - So D5 step 3 has no `cross_reference` path, task 4.7 is skipped, and `consideration` stays null for PRESS.
+- **Party orientation.** The same in all four counties: the grid's first party column is the grantor, mortgagor or defendant, and the second is the grantee, mortgagee or plaintiff. On a lis pendens the defendants are direct and the plaintiff is indirect. On a mortgage the mortgagor is direct. On a deed into the defendant, the defendant is indirect. On an assignment, the assignor (and often the mortgagor) is direct and the assignee is indirect. The header text changes with the doc type (`Direct Party`, `Mortgagor`, `Grantor`), so the parser reads columns by position. Burlington has an extra `Qualifier` column, and Monmouth and Burlington an extra `Action` column, so the column map comes from the header row.
+- **Name search.** The first name is optional and matched as a prefix. The last name is a required field. The grid shows every party pair of each matching document, including co-parties who didn't match the search. Whether the last name is also a prefix match wasn't tested.
+- **Rows per page.** `ddlShowRec` goes up to 100 in all four. `ddlTotalRec` goes up to 750 in Essex and Passaic and 2000 in Monmouth and Burlington. The pager is a row of `__doPostBack` page-number links at the top of `dgdDeedMort`. No total row count is shown, so truncation means the pager lists more than `MAX_RESULT_PAGES` pages.
+- **Essex lis pendens.** Essex's Register indexes them in the same PRESS instance, under four types. The test case was `LIS PENDENS FORECLOSURE AND RECOVERY`, not `LIS PENDENS FORECLOSURE`, which is why matching searches all types (D5).
+
+**Other findings:**
+
+- **The date window limits all four counties.** Essex and Monmouth state "Maximum Date Range between From and To dates is 90 days", and Passaic answers a longer range with `Date Range should not be more than '90' days.` (fixture `passaic/date-range-error.html`). Burlington runs the same release. The dates are optional everywhere, so matching sends none. The client still splits a requested range into 90-day windows, and all four counties are configured with 90 days. That contradicts the press-scraping scenario "County without a limit" (Essex). That scenario is exercised with a synthetic config instead.
+- **No-records marker.** All four show `No results found` in `lblMessage`. Any other message there, such as Passaic's date-range error, is a parse error.
+- **Block/lot coverage.**
+  - Passaic shows `N/A` for block on every document, deeds and mortgages included. A block/lot search for a known parcel returned nothing (`passaic/parcel-no-results.html`). So Passaic has no parcel sweep.
+  - Essex fills block/lot on deeds only, so its parcel sweep returns the deed chain.
+  - Monmouth fills it on lis pendens, mortgages, deeds and most assignments.
+  - Burlington fills it from 3/2012, with one row per lot for multi-lot documents (`47.02/11` and `47.02/11.01`).
+- **Result order differs by county.** Passaic and Monmouth list oldest first, and Burlington newest first. Essex groups rows by type. Truncation can therefore drop either end, so it's logged.
+- **Document keys.**
+  - Instrument numbers are 10 digits in Passaic and Monmouth, 7 in Burlington, and both 7 and 10 in Essex. Every document seen had one.
+  - Books carry a type prefix (`M3873`, `D988`, `AS92`, `DM186` in Passaic; `OR-9597`, `MB-4786` in Monmouth and Burlington; plain `12000` in Essex). The parser splits the prefix into `bookType`.
+- **The doc type in the grid is the dropdown label.** Labels include Monmouth's `DEEDS From 10/01/1996 to Present`, `MORTGAGES from 01/01/1976 to 12/31/1996` and `FORECLOSURE LISPENDENS`, so the description map is built from the dropdown fixtures.
+- **Sessions.** Every host sets `ASP.NET_SessionId` on the entry GET. Monmouth marks it `secure`. Only Passaic's results page carries the search form (D9).
+- **TLS.** Node 24.22's default trust store verifies all four hosts, Burlington included. No extra CA is configured. The `extraCa` option stays in the county config, unused.
+- **Clerk spelling varies.** Monmouth indexes one party as both `HUBBARD NICHOLAS SR` and `HUBBARD NICOLAS SR`. Token-set equality misses such typos, but another defendant's row usually carries the match.

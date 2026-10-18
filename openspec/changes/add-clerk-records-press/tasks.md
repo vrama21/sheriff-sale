@@ -1,10 +1,10 @@
 ## 1. Spike: PRESS behaviour (answers design Open Questions)
 
-- [ ] 1.1 For each of Essex, Passaic, Monmouth and Burlington, capture real pages into `modules/clerkRecords/__fixtures__/press/<county>/`, by hand or with a throwaway script and at most a handful of requests per county: the entry page, a name search for a known listing's defendant with doc type lis pendens, a page-2 postback, a block/lot search for that listing's parcel, and a no-records result
-- [ ] 1.2 Check whether a result row or "View Image" postback opens a document detail view. Record which fields it shows (party roles, consideration, cross-references to other instruments) and capture one detail fixture per county if one exists
-- [ ] 1.3 From the fixtures, record for each county: whether the defendant is the direct or indirect party on a lis pendens and the mortgagor on a mortgage; whether name search matches by prefix or exact name, with first name optional; the largest `ddlShowRec`/`ddlTotalRec` options; the no-records marker text; and whether Essex's Register indexes lis pendens
-- [ ] 1.4 Confirm Node 24's default trust store connects to all four hosts. If Burlington's chain fails, capture the missing intermediate certificate for its configuration
-- [ ] 1.5 Write the findings into `design.md` (resolve the Open Questions, and adjust D5 step 3 if there's no cross-reference) before starting group 4
+- [x] 1.1 For each of Essex, Passaic, Monmouth and Burlington, capture real pages into `modules/clerkRecords/__fixtures__/press/<county>/`, by hand or with a throwaway script and at most a handful of requests per county: the entry page, a name search for a known listing's defendant with doc type lis pendens, a page-2 postback, a block/lot search for that listing's parcel, and a no-records result
+- [x] 1.2 Check whether a result row or "View Image" postback opens a document detail view. Record which fields it shows (party roles, consideration, cross-references to other instruments) and capture one detail fixture per county if one exists
+- [x] 1.3 From the fixtures, record for each county: whether the defendant is the direct or indirect party on a lis pendens and the mortgagor on a mortgage; whether name search matches by prefix or exact name, with first name optional; the largest `ddlShowRec`/`ddlTotalRec` options; the no-records marker text; and whether Essex's Register indexes lis pendens
+- [x] 1.4 Confirm Node 24's default trust store connects to all four hosts. If Burlington's chain fails, capture the missing intermediate certificate for its configuration
+- [x] 1.5 Write the findings into `design.md` (resolve the Open Questions, and adjust D5 step 3 if there's no cross-reference) before starting group 4
 
 ## 2. Database schema
 

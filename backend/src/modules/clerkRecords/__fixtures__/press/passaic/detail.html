@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="_ctl0_Head1"><title>
+	Public Records Electronic Search System (PRESS)
+</title><link media="screen" href="../Includes/Style/tabs.css" type="text/css" rel="stylesheet" /><link media="print" href="../Includes/Style/tabs-print.css" type="text/css" rel="stylesheet" />
+
+    <script language="javascript" type="text/javascript">
+        function donothing() {
+        }
+
+        function popUpTermsofuse(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 50,top = 100');");
+        }
+
+
+        function changeButton(btncssclass) {
+            try {
+                var el = event.srcElement;
+                if (el.tagName.toUpperCase() == "INPUT")
+                    if (el.type.toUpperCase() == "SUBMIT" || el.type.toUpperCase() == "BUTTON" || el.type.toUpperCase() == "RESET") {
+                        //alert(event.srcElement.className);
+                        if (event.srcElement.className.indexOf("Small") > 0) btncssclass += "Small"
+                        event.srcElement.className = btncssclass;
+                    }
+                /*if (el.type.toUpperCase() == "IMAGE")
+                {
+                    if(event.srcElement.tagForHover==1)
+                        if(event.srcElement.src.indexOf("_over") > 0)
+                            event.srcElement.src = event.srcElement.src.replace("_over", "");
+                        else
+                            event.srcElement.src += "_over";
+                }*/
+            }
+            catch (ex) { }
+        }
+
+        //function retH() {
+        //    if (screen.height > 1000)
+        //        document.getElementById('tblMainTable').height = screen.height - 400;
+        //    else
+        //        document.getElementById('tblMainTable').height = 400;
+
+        //    if (document.getElementById('tblIndxInfo') != null)
+        //        if (screen.height > 1000)
+        //            document.getElementById('tblIndxInfo').height = screen.height - 400;
+        //        else
+        //            document.getElementById('tblIndxInfo').height = 600;
+
+        //    return true;
+        //}
+
+        function OnFAQsButton(ImgPath) {
+
+            //alert('This feature will be available soon.'); return false;
+
+            var helpFile = ImgPath + '../FAQ2026.pdf';
+            var newWin = window.open(helpFile, 'FAQsWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+
+
+        function retH() {
+
+            var tbl = document.getElementById("tblMainTable");
+
+            var viewport = window.innerHeight;
+            var top = tbl.getBoundingClientRect().top;
+
+            var footer = document.getElementById("tblFooter");
+            var footerHeight = footer ? footer.offsetHeight : 0;
+
+            var available = viewport - top - footerHeight - 2;
+
+            console.log({
+                viewport: viewport,
+                top: top,
+                footerHeight: footerHeight,
+                available: available
+            });
+
+            tbl.style.height = available + "px";
+        }
+
+        window.addEventListener("load", retH);
+        window.addEventListener("resize", retH);
+
+    </script>
+    <style type="text/css">
+        /*      body, html {
+            height: 100%;
+        }*/
+
+        html,
+        body,
+        form {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+<link href="../App_Themes/Passaic/Style/BaseStyle.css" type="text/css" rel="stylesheet" /><link href="../App_Themes/Passaic/Style/tabs.css" type="text/css" rel="stylesheet" /><link href="../App_Themes/Passaic/Style/tabs-print.css" type="text/css" rel="stylesheet" /><link type="text/css" rel="stylesheet" href="/PRESS/WebResource.axd?d=NdAkyY4PRJzWQ89qrGL_4DvWY0ji3-ziRrmQI400jf9AsSt4K7wX3JtWgrHp7van7DgDZJ5hub7g4XPUmrU7OQqTiQy93Of03HG2gkoScH_D2-gCruPD43tA4Jc6pm3QGsl_D0gmBnRVAJr4Au0mZBXTigEPRM-OEYKpfhF5-uXyC1Zp0&amp;amp;t=637354020940000000" /></head>
+<script type="text/javascript">
+    function CheckCart() {
+        if ('' == '')
+            return true;
+        else
+            return confirm('There are items in Checkout Cart, which would be lost on SignOut. Do you still want to SignOut?');
+    }
+</script>
+<body>
+    <form name="aspnetForm" method="post" action="./ShowDetails.aspx" id="aspnetForm" onmouseover="changeButton(&#39;ButtonClassHover&#39;);" onmouseout="changeButton(&#39;ButtonClass&#39;)">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTUxNDU3NzcyOQ9kFgJmD2QWAgIBD2QWFmYPDxYCHghJbWFnZVVybAUrL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9Ib21lLmpwZ2RkAgEPDxYEHwAFLS9QUkVTUy8vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vU2VhcmNoLmdpZh4HVmlzaWJsZWhkZAICDw8WBB8ABS4vUFJFU1MvL0FwcF9UaGVtZXMvUGFzc2FpYy9JbWFnZXMvL1JlcG9ydHMuanBnHwFoZGQCAw8PFgQfAAUwL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9NeUFjY291bnQuanBnHwFoZGQCBA8PFgQfAAUtL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9SZWNlbnQuZ2lmHwFoZGQCBQ8PFgIfAAUrL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9oZWxwLmpwZ2RkAgYPDxYEHwAFLC9QUkVTUy8vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vQ2FydDIuanBnHwFoZGQCBw8PFgIfAWhkZAIIDxYCHwFoZAIJDw8WAh4EVGV4dAUnUmVjb3JkcyBTZWFyY2ggLSBJbnN0cnVtZW50IEluZm9ybWF0aW9uZGQCCg9kFgJmD2QWAgIBD2QWAmYPZBYCZg9kFigCAQ8PFgIfAWhkZAIDDw8WBB8CBTVUbyB2aWV3IGFsbCBwYWdlcywgeW91IG5lZWQgdG8gcmVnaXN0ZXIgYW5kIHB1cmNoYXNlLh8BaGRkAgkPDxYCHwFoZGQCCw8PFgIfAWhkZAIPDw8WCB4IQ3NzQ2xhc3MFEkRpc2FibGVCdXR0b25DbGFzcx4HRW5hYmxlZGgeBF8hU0ICAh8BaGRkAhEPDxYEHwRoHwFoZGQCEw8WAh8BaGQCFQ8PFgIfAgUNRGlzcGxheSBJbWFnZWRkAhkPDxYCHwFoZGQCHw88KwALAQAPFggeCERhdGFLZXlzFgAeC18hSXRlbUNvdW50AggeCVBhZ2VDb3VudAIBHhVfIURhdGFTb3VyY2VJdGVtQ291bnQCCGQWAmYPZBYQAgEPZBYEZg8PFgIfAgUPSW5zdHJ1bWVudCBUeXBlZGQCAQ8PFgIfAgUXRk9SRUNMT1NVUkUgTElTIFBFTkRFTlNkZAICD2QWBGYPDxYCHwIFC0luc3RydW1lbnQjZGQCAQ8PFgIfAgUKMjAyNTAzNzI0MWRkAgMPZBYEZg8PFgIfAgUNRGF0ZSBSZWNvcmRlZGRkAgEPDxYCHwIFCjExLzA1LzIwMjVkZAIED2QWBGYPDxYCHwIFCUJvb2svUGFnZWRkAgEPDxYCHwIFAS9kZAIFD2QWBGYPDxYCHwIFCU1vcnRnYWdvcmRkAgEPDxYCHwIFTkNBQklHQU8gQ09SQVpPTjtDQUJJR0FPIEFOR0VMRVM7VU5JVEVEIFNUQVRFUyBPRiBBTUVSSUNBIDtORVcgSkVSU0VZIFNUQVRFIE9GIGRkAgYPZBYEZg8PFgIfAgUJTW9ydGdhZ2VlZGQCAQ8PFgIfAgUbUlJBIENQIE9QUE9SVFVOSVRZIFRSVVNUIDIgZGQCBw9kFgRmDw8WAh8CBQlCbG9jay9Mb3RkZAIBDw8WAh8CBQVOL0EvIGRkAggPZBYEZg8PFgIfAgUIVG93bnNoaXBkZAIBDw8WAh8CBQxDTElGVE9OIENJVFlkZAIhDw8WAh8BaGRkAiMPDxYCHwFnZGQCJQ8WAh8BaGQCJw8WAh8BaGQCKQ88KwALAQAPFggfBhYAHwcC/////w8fCQL/////Dx8IZmRkAisPDxYCHwFnZGQCLQ8WAh8BaGQCLw8WAh8BaGQCMQ88KwALAQAPFggfBhYAHwcC/////w8fCQL/////Dx8IZmRkAjMPFgIfAWhkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYCBRNfY3RsMDppbWdNYXN0ZXJIb21lBRNfY3RsMDppbWdNYXN0ZXJIZWxwTLSqyUibfzLb3OU5bnFvUL3D9mU=" />
+
+<script type="text/javascript">
+<!--
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+// -->
+</script>
+
+
+<script src="/PRESS/WebResource.axd?d=t9ldMoKIWZyJfEbbC4TM4TXsESTdr1IW1kSfdYpO57GI0Ou-MFiGYNSTWbVUu1P1kyzXW11pNs4SKnhg0&amp;t=638285921964787378" type="text/javascript"></script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="89983770" />
+<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="xMDMEop12plsGoOeGd0szreRjmxojem9Ic2i4IUzwS0LhXeeggpqOeS2O_83eUNnwSLAXGOp4A3VcNzQbJEIaar4m9IVbNR5BnLf6g2" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAh/YmjCTsk9iOcRqgvLi3usrcFizq9RiMwgIwJ75OwBkKfQDR7mU9l1zuxbDOEmkdleTxPWmS4riXyjt2wWia9FQAgtAjYd1040iD9rdlgfF61Q67mg4gaO1RGdSDobwM/GFdEfJNTV+a0dwXVvrt5vMfGhR2wbiaDZVkZBovrlj4I2yUKG/Q47O+e+iOnbAoJlm70e" />
+
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td valign="top">
+
+
+                    <!--*************-->
+                    <!--Logo + Header-->
+                    <!--*************-->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td height="76" class="HeaderMaster">
+                                <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url(/PRESS//App_Themes/Passaic/Images//gred.jpg); background-attachment: scroll; background-repeat: repeat-x; background-position: left top;">
+                                    <tr>
+
+                                        <td style="width: 70%">
+                                            <table border="0" cellspacing="0" cellpadding="0" style="background-image: url(/PRESS//App_Themes/Passaic/Images//gred.jpg); background-attachment: scroll; background-repeat: repeat-x; background-position: left top;">
+                                                <tr>
+                                                     <td style="width: 12%; padding-right: 20px" valign="top">
+                                                        <img alt="logo" src="/PRESS//App_Themes/Passaic/Images//PassaicLogo.png" width="60" height="60" /></td>
+                                                    <td width="88%" valign="middle">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/PRESS//App_Themes/Passaic/Images//logoname.jpg" /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/PRESS//App_Themes/Passaic/Images//logoname1.jpg" /></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 30%" align="right" valign="middle">
+                                            <br />
+                                            <table border="0" cellspacing="0" cellpadding="2">
+                                                <tr>
+                                                    <td align="center" valign="top">
+
+                                                        <input type="image" name="_ctl0:imgMasterHome" id="_ctl0_imgMasterHome" title="Home" src="/PRESS//App_Themes/Passaic/Images//Home.jpg" border="0" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;_ctl0:imgMasterHome&quot;, &quot;&quot;, false, &quot;&quot;, &quot;../index.aspx&quot;, false, false))" language="javascript" /></td>
+                                                    <td valign="top">
+                                                        
+                                                        
+                                                        
+                                                        
+                                                    </td>
+                                                    <td valign="top">
+                                                        <input type="image" name="_ctl0:imgMasterHelp" id="_ctl0_imgMasterHelp" title="Help" src="/PRESS//App_Themes/Passaic/Images//help.jpg" border="0" onclick="OnHelpButton(); return false;" language="javascript" />
+                                                        <img id="imgMasterFAQs" onclick="OnFAQsButton('/PRESS//App_Themes/Passaic/Images/'); return false;" src="/PRESS//App_Themes/Passaic/Images//FAQs.gif" style="cursor: hand;" />
+                                                    </td>
+                                                    <td valign="top">
+                                                        </td>
+                                                    <td>
+                                                        </td>
+                                                </tr>
+
+
+                                                
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+
+
+
+
+                    <!--****************-->
+                    <!-- Page Title Bar -->
+                    <!--****************-->
+                    <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="24">
+                                <img src="/PRESS//App_Themes/Passaic/Images//titleLeft.jpg" /></td>
+                            <td width="97%" background="/PRESS//App_Themes/Passaic/Images//titleBack.jpg" align="center">
+                                <span id="_ctl0_lblBarTitle" class="bar">Records Search - Instrument Information</span>
+                            </td>
+                            <td width="24">
+                                <img src="/PRESS//App_Themes/Passaic/Images//titleRight.jpg" /></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <!--**************-->
+                    <!-- Page Content -->
+                    <!--**************-->
+                    <table id="tblMainTable" cellspacing="0" width="99%" cellpadding="0" align="center" border="0">
+                        <tr id="_ctl0_pnlContent" valign="top" align="left">
+	<td valign="top" nowrap="nowrap" align="left" style="vertical-align: top">
+                                <div style="width: 100%">
+                                    
+
+    <script defer>
+
+
+        function OnHelpButton() {
+
+            //alert('This feature will be available soon.'); return false;
+            var helpFile = '../webhelp/index.html?page=source/Contents.htm';
+            //var helpFile = '../webhelp/Press_HelpFile.pdf#pagemode=bookmarks&page=';
+            //helpFile += '17'
+            //'ViewImages.htm'
+            /*		    switch(helpParam){
+                            case 'view':{
+                                helpFile += 'ViewImages.htm'
+                                break
+                            }
+                        	
+                        }*/
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+
+        function ShowImg() {
+            //splDocDtl.loadPage('RightContent','RetrieveImage.aspx?InstNum=1')
+            document.getElementById("_ctl0_PageContent_loadMsg").style.display = "block";
+            var RadSplitterBrowser = _ctl0_PageContent_RadSplitterBrowser;
+            var RadPaneImage = RadSplitterBrowser.GetPaneById("_ctl0_PageContent_RadPaneImage");
+            if (!RadPaneImage) return;
+            RadPaneImage.SetContentUrl('RetrieveImage.aspx?InstNum=1');
+            return false;
+        }
+
+        function LoadBlank() {
+            var RadSplitterBrowser = _ctl0_PageContent_RadSplitterBrowser;
+            var RadPaneImage = RadSplitterBrowser.GetPaneById("_ctl0_PageContent_RadPaneImage");
+            if (!RadPaneImage) return;
+            RadPaneImage.SetContentUrl('RetrieveImage.aspx?InstNum=0');
+            return false;
+        }
+
+
+
+        function resizeShowDetails() {
+            var tblMain = document.getElementById("tblMainTable");
+            var root = document.getElementById("showDetailsRoot");
+
+            if (!tblMain || !root) return;
+
+            root.style.height = tblMain.offsetHeight - 30 + "px";
+        }
+
+        window.addEventListener("load", resizeShowDetails);
+        window.addEventListener("resize", resizeShowDetails);
+
+    </script>
+
+    <div id="showDetailsRoot">
+        <table id='tblIndxInfo' border="0" class="TableBorder" cellspacing="0" cellpadding="0" style="width: 100%; height: 100%;">
+            <tr>
+
+                <td width="100%" height="100%" style="height:100%;">
+
+                    <div id="divShowDetailsContainer" style="width: 100%; height: 100%;">
+                        <div id="_ctl0_PageContent_RadSplitterBrowser"><!-- 1.2.1 --><script type="text/javascript" src="/PRESS/WebResource.axd?d=vwnH4CDVIUGb-Fzpj3TkPXTuibdH_xGO0cDcYM_YbICS0lH_9OiZhkB1sBaNipvFjqJkk6CKSkhK5WLv197ML0NRnHSKS2O8zCqP-NbRdjbInsvmZDnP97QG_seEalTXJOrFph7naBbsV8mctf5mCSviNgA6ZepPFHEWxhtbS0nbcKVx0&amp;t=637354020940000000"></script><span id="_ctl0_PageContent_RadSplitterBrowserStyleSheetHolder" style="display:none;"></span><script type="text/javascript">RadControlsNamespace.MarkSplitterToInit('_ctl0_PageContent_RadSplitterBrowser')</script><table id="RAD_SPLITTER__ctl0_PageContent_RadSplitterBrowser" class="RadSplitter_Default" cellpadding="0" cellspacing="0" style="width:100%;height:100%;visibility:visible;">
+		<tr>
+			<td id="RAD_SPLITTER_PANE__ctl0_PageContent_RadPaneGrid" valign="top" class="pane firstItem" style="width:30%;"><div id="RAD_SPLITTER_PANE_CONTENT__ctl0_PageContent_RadPaneGrid"  style="width:30%;overflow:auto;">
+                                <table cellspacing="0" cellpadding="0" width="95%" border="0">
+
+                                    <tr>
+                                        <td style="height: 5px" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center" colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="height: 5px" colspan="2"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="bottom" align="center" colspan="2" style="color: Red">
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="bottom" align="left" colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="5"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2">
+                                            <input type="submit" name="_ctl0:PageContent:btnResults" value="Search Results" onclick="{window.parent.location=&#39;clerkhome.aspx?op=search&#39;; return false;};" language="javascript" id="_ctl0_PageContent_btnResults" class="ButtonClass" />
+                                            
+                                            
+                                            
+		                                    <input type="submit" name="_ctl0:PageContent:btnNewSearch" value="New Search" onclick="{window.parent.location=&#39;clerkhome.aspx?op=basic&#39;; return false;};" language="javascript" id="_ctl0_PageContent_btnNewSearch" class="ButtonClass" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" colspan="2" height="5px"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="right" width="50%">
+                                            
+                                            &nbsp;&nbsp;
+                                        </td>
+                                        <td align="left" width="50%">
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="5px"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="bottom" align="center" colspan="2">
+                                            
+                                            <br />
+                                            <input type="submit" name="_ctl0:PageContent:btnImage" value="Display Image" onclick="return ShowImg();" language="javascript" id="_ctl0_PageContent_btnImage" class="ButtonClass" />
+                                        </td>
+                                    </tr>
+
+                                    
+                                    <tr>
+                                        <td style="width: 100%; text-align: center" colspan="2">
+                                            <div id="_ctl0_PageContent_loadMsg" align="center" style="display: none">
+                                                <img alt="Loading Document..." src="images/loading.gif" />
+                                                <script language="javascript">
+			                                        //Changing the mouse pointer to HOURGLASS in LEFT and Right Frames
+			                                        //MIBAJAXparent.InstViewerHeadFrame.document.body.style.cursor = "wait";
+			                                        //MIBAJAXparent.InstViewerBodyFrame.document.body.style.cursor = "wait";
+
+			                                        //parent.InstViewerHeadFrame.document.body.style.cursor = "wait";
+			                                        //parent.InstViewerBodyFrame.document.body.style.cursor = "wait";
+                                                </script>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="height: 10px" colspan="2"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="bottom" align="center" colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td valign="bottom" align="center" colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="15"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center" colspan="2">
+                                            <div id="_ctl0_PageContent_lblInstDetails" class="HeaderStyle" style="width: 100%">Instrument Details</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" align="left" colspan="2">
+                                            <table class="gridCommon" cellspacing="0" cellpadding="0" rules="all" bordercolor="#000D47" border="1" id="_ctl0_PageContent_dgdDoc" style="background-color:WhiteSmoke;border-color:#000D47;width:100%;border-collapse:collapse;">
+				<tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Instrument Type</td><td class="newitemstyle" style="width:65%;">FORECLOSURE LIS PENDENS</td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Instrument#</td><td class="newitemstyle" style="width:65%;">2025037241</td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Date Recorded</td><td class="newitemstyle" style="width:65%;">11/05/2025</td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Book/Page</td><td class="newitemstyle" style="width:65%;">/</td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Mortgagor</td><td class="newitemstyle" style="width:65%;">CABIGAO CORAZON;CABIGAO ANGELES;UNITED STATES OF AMERICA ;NEW JERSEY STATE OF </td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Mortgagee</td><td class="newitemstyle" style="width:65%;">RRA CP OPPORTUNITY TRUST 2 </td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Block/Lot</td><td class="newitemstyle" style="width:65%;">N/A/ </td>
+				</tr><tr class="newitemstyle">
+					<td class="item" style="background-color:White;font-weight:bold;width:35%;">Township</td><td class="newitemstyle" style="width:65%;">CLIFTON CITY</td>
+				</tr>
+			</table>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="5px"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            <input type="submit" name="_ctl0:PageContent:btnInst" value="Get Related Instruments" id="_ctl0_PageContent_btnInst" class="ButtonClass" /></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="5px"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" align="left" colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="5px"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            <input type="submit" name="_ctl0:PageContent:btnBL" value="Get Related Instrument by Block &amp; Lot" id="_ctl0_PageContent_btnBL" class="ButtonClass" />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="center" colspan="2" height="5px"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2">
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" align="left" colspan="2">
+                                            
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div><input name="_ctl0:PageContent:RadPaneGrid" id="RAD_SPLITTER_PANE_STORAGE__ctl0_PageContent_RadPaneGrid" type="hidden" /><script type="text/javascript">window["RadPaneConfig__ctl0_PageContent_RadPaneGrid"] = {"OnClientPaneExpanded":"","width":"30%","originalWidth":"30%","minWidth":20,"indexInSplitItems":0,"contentUrl":"","expandedSize":"30%","OnClientPaneResized":"","stateFieldId":"RAD_SPLITTER_PANE_STORAGE__ctl0_PageContent_RadPaneGrid","maxHeight":2147483647,"OnClientBeforePaneResize":"","locked":false,"originalHeight":"","scrollLeft":0,"OnClientPaneCollapsed":"","scrollTop":0,"height":"","initiallyCollapsed":false,"childSplitterID":"","maxWidth":2147483647,"ID":"_ctl0_PageContent_RadPaneGrid","minHeight":20,"enableScrolling":true,"persistScrollPosition":true,"OnClientBeforePaneExpand":"","OnClientBeforePaneCollapse":"","collapsedDirection":1};</script></td><td id="RAD_SPLITTER_PANE__ctl0_PageContent_RadPaneImage" valign="top" class="pane" style="width:70%;"><div id="RAD_SPLITTER_PANE_CONTENT__ctl0_PageContent_RadPaneImage"  style="width:70%;overflow:auto;"></div><input name="_ctl0:PageContent:RadPaneImage" id="RAD_SPLITTER_PANE_STORAGE__ctl0_PageContent_RadPaneImage" type="hidden" /><script type="text/javascript">window["RadPaneConfig__ctl0_PageContent_RadPaneImage"] = {"OnClientPaneExpanded":"","width":"70%","originalWidth":"70%","minWidth":100,"indexInSplitItems":1,"contentUrl":"RetrieveImage.aspx?InstNum=0","expandedSize":"70%","OnClientPaneResized":"","stateFieldId":"RAD_SPLITTER_PANE_STORAGE__ctl0_PageContent_RadPaneImage","maxHeight":2147483647,"OnClientBeforePaneResize":"","locked":false,"originalHeight":"","scrollLeft":0,"OnClientPaneCollapsed":"","scrollTop":0,"height":"","initiallyCollapsed":false,"childSplitterID":"","maxWidth":2147483647,"ID":"_ctl0_PageContent_RadPaneImage","minHeight":20,"enableScrolling":true,"persistScrollPosition":true,"OnClientBeforePaneExpand":"","OnClientBeforePaneCollapse":"","collapsedDirection":1};</script></td>
+		</tr>
+	</table><script type="text/javascript">window["_ctl0_PageContent_RadSplitterBrowser"] = new RadSplitter({"OnClientResized":"","logLevel":"RadControlsNamespace.LL.NONE","width":"100%","ID":"_ctl0_PageContent_RadSplitterBrowser","resizeWithParentPane":true,"borderSize":0,"liveResize":false,"OnClientLoaded":"LoadBlank();","panesBorderSize":0,"height":"100%","visibleDuringInit":true,"fullScreenMode":false,"resizeWithBrowserWindow":true,"heightOffset":0,"panes":["_ctl0_PageContent_RadPaneGrid","_ctl0_PageContent_RadPaneImage"],"orientation":1,"OnClientBeforeResize":"","splitBars":[],"resizeMode":1});</script></div>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+                                </div>
+                            </td>
+</tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <!--********-->
+        <!-- Footer -->
+        <!--********-->
+        <table id="tblFooter" class="FooterMaster" width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>
+                    <table align="center" style="width: 70%" cellpadding="0" cellspacing="0" border="0">
+                        <tr height="20" id="rowFooter" class="FooterMaster">
+                            <td align="left" width="30%"><a href="javascript:popUpTermsofuse('/PRESS/TermsOfUse.aspx')">Terms of Use</a></td>
+                            <td align="center" width="40%">Developed by <a target="_blank" href="http://www.sunrisesys.com"><font color="white">Sunrise Systems Inc.</font></a></td>
+                            <td align="right" width="30%">© Copyright 2009 - 2026</td>
+                        </tr>
+                    </table>
+                </td>
+	</tr>
+</table>
+
+    </form>
+</body>
+</html>

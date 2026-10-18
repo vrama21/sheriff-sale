@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="_ctl0_Head1"><title>
+	Public Records Electronic Search System (PRESS)
+</title><link media="screen" href="../Includes/Style/tabs.css" type="text/css" rel="stylesheet" /><link media="print" href="../Includes/Style/tabs-print.css" type="text/css" rel="stylesheet" />
+
+    <script language="javascript" type="text/javascript">
+        function donothing() {
+        }
+
+        function popUpTermsofuse(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 50,top = 100');");
+        }
+
+
+        function changeButton(btncssclass) {
+            try {
+                var el = event.srcElement;
+                if (el.tagName.toUpperCase() == "INPUT")
+                    if (el.type.toUpperCase() == "SUBMIT" || el.type.toUpperCase() == "BUTTON" || el.type.toUpperCase() == "RESET") {
+                        //alert(event.srcElement.className);
+                        if (event.srcElement.className.indexOf("Small") > 0) btncssclass += "Small"
+                        event.srcElement.className = btncssclass;
+                    }
+                /*if (el.type.toUpperCase() == "IMAGE")
+                {
+                    if(event.srcElement.tagForHover==1)
+                        if(event.srcElement.src.indexOf("_over") > 0)
+                            event.srcElement.src = event.srcElement.src.replace("_over", "");
+                        else
+                            event.srcElement.src += "_over";
+                }*/
+            }
+            catch (ex) { }
+        }
+
+        //function retH() {
+        //    if (screen.height > 1000)
+        //        document.getElementById('tblMainTable').height = screen.height - 400;
+        //    else
+        //        document.getElementById('tblMainTable').height = 400;
+
+        //    if (document.getElementById('tblIndxInfo') != null)
+        //        if (screen.height > 1000)
+        //            document.getElementById('tblIndxInfo').height = screen.height - 400;
+        //        else
+        //            document.getElementById('tblIndxInfo').height = 600;
+
+        //    return true;
+        //}
+
+        function OnFAQsButton(ImgPath) {
+
+            //alert('This feature will be available soon.'); return false;
+
+            var helpFile = ImgPath + '../FAQ2026.pdf';
+            var newWin = window.open(helpFile, 'FAQsWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+
+
+        function retH() {
+
+            var tbl = document.getElementById("tblMainTable");
+
+            var viewport = window.innerHeight;
+            var top = tbl.getBoundingClientRect().top;
+
+            var footer = document.getElementById("tblFooter");
+            var footerHeight = footer ? footer.offsetHeight : 0;
+
+            var available = viewport - top - footerHeight - 2;
+
+            console.log({
+                viewport: viewport,
+                top: top,
+                footerHeight: footerHeight,
+                available: available
+            });
+
+            tbl.style.height = available + "px";
+        }
+
+        window.addEventListener("load", retH);
+        window.addEventListener("resize", retH);
+
+    </script>
+    <style type="text/css">
+        /*      body, html {
+            height: 100%;
+        }*/
+
+        html,
+        body,
+        form {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+<link href="../App_Themes/Passaic/Style/BaseStyle.css" type="text/css" rel="stylesheet" /><link href="../App_Themes/Passaic/Style/tabs.css" type="text/css" rel="stylesheet" /><link href="../App_Themes/Passaic/Style/tabs-print.css" type="text/css" rel="stylesheet" /></head>
+<script type="text/javascript">
+    function CheckCart() {
+        if ('' == '')
+            return true;
+        else
+            return confirm('There are items in Checkout Cart, which would be lost on SignOut. Do you still want to SignOut?');
+    }
+</script>
+<body>
+    <form name="aspnetForm" method="post" action="./ClerkHome.aspx?op=basic" id="aspnetForm" onmouseover="changeButton(&#39;ButtonClassHover&#39;);" onmouseout="changeButton(&#39;ButtonClass&#39;)">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTc0MDQwOTc3OQ9kFgJmD2QWAgIBD2QWFmYPDxYCHghJbWFnZVVybAUrL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9Ib21lLmpwZ2RkAgEPDxYEHwAFLS9QUkVTUy8vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vU2VhcmNoLmdpZh4HVmlzaWJsZWhkZAICDw8WBB8ABS4vUFJFU1MvL0FwcF9UaGVtZXMvUGFzc2FpYy9JbWFnZXMvL1JlcG9ydHMuanBnHwFoZGQCAw8PFgQfAAUwL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9NeUFjY291bnQuanBnHwFoZGQCBA8PFgQfAAUtL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9SZWNlbnQuZ2lmHwFoZGQCBQ8PFgIfAAUrL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9oZWxwLmpwZ2RkAgYPDxYEHwAFLC9QUkVTUy8vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vQ2FydDIuanBnHwFoZGQCBw8PFgIfAWhkZAIIDxYCHwFoZAIJDw8WAh4EVGV4dAUfUmVjb3JkcyBTZWFyY2ggLSBTZWFyY2ggUmVzdWx0c2RkAgoPZBYCZg9kFgICAQ9kFghmDw8WAh8CZWRkAgEPFgIfAWhkAgIPFgIfAWgWDmYPDxYCHwAFMi4uL0FwcF9UaGVtZXMvUGFzc2FpYy9JbWFnZXMvL0NsZXJrL3RhYkRvY1R5cGUuanBnZGQCAg8PFgIfAAUzLi4vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vQ2xlcmsvdGFiQmxvY2tMb3QuanBnZGQCBA8PFgIfAAUvLi4vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vQ2xlcmsvdGFiTmFtZS5qcGdkZAIGDw8WAh8ABTIuLi9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9DbGVyay90YWJJbnN0TnVtLmpwZ2RkAggPZBYIAgEPEA8WBB4NRGF0YVRleHRGaWVsZAUIVG93bk5hbWUeC18hRGF0YUJvdW5kZ2QQFRQcUGxlYXNlIFNlbGVjdCBhIE11bmljaXBhbGl0eRRCTE9PTUlOR0RBTEUgQk9ST1VHSAxDTElGVE9OIENJVFkPSEFMRURPTiBCT1JPVUdIEUhBV1RIT1JORSBCT1JPVUdIFUxJVFRMRSBGQUxMUyBUT1dOU0hJUBVOT1JUSCBIQUxFRE9OIEJPUk9VR0gMUEFTU0FJQyBDSVRZDlBBU1NBSUMgQ09VTlRZDVBBVEVSU09OIENJVFkVUE9NUFRPTiBMQUtFUyBCT1JPVUdIFVBST1NQRUNUIFBBUksgQk9ST1VHSBBSSU5HV09PRCBCT1JPVUdIDlRPVE9XQSBCT1JPVUdID1dBTkFRVUUgQk9ST1VHSA5XQVlORSBUT1dOU0hJUBVXRVNUIE1JTEZPUkQgVE9XTlNISVAVV0VTVCBQQVRFUlNPTiBCT1JPVUdIDVdPT0RMQU5EIFBBUksLQ09VTlRZIFdJREUVFBxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5FEJMT09NSU5HREFMRSBCT1JPVUdIDENMSUZUT04gQ0lUWQ9IQUxFRE9OIEJPUk9VR0gRSEFXVEhPUk5FIEJPUk9VR0gVTElUVExFIEZBTExTIFRPV05TSElQFU5PUlRIIEhBTEVET04gQk9ST1VHSAxQQVNTQUlDIENJVFkOUEFTU0FJQyBDT1VOVFkNUEFURVJTT04gQ0lUWRVQT01QVE9OIExBS0VTIEJPUk9VR0gVUFJPU1BFQ1QgUEFSSyBCT1JPVUdIEFJJTkdXT09EIEJPUk9VR0gOVE9UT1dBIEJPUk9VR0gPV0FOQVFVRSBCT1JPVUdIDldBWU5FIFRPV05TSElQFVdFU1QgTUlMRk9SRCBUT1dOU0hJUBVXRVNUIFBBVEVSU09OIEJPUk9VR0gNV09PRExBTkQgUEFSSwtDT1VOVFkgV0lERRQrAxRnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZxYBZmQCAw8QDxYGHg5EYXRhVmFsdWVGaWVsZAUHRG9jVHlwZR8DBQdEb2NOYW1lHwRnZBAVMhRTZWxlY3QgRG9jdW1lbnQgVHlwZR9BTUVOREVEIENPTlNUUlVDVElPTiBMSUVOIENMQUlNJUFNRU5ERUQgRElTQ0hBUkdFIE9GIENPTlNUVUNUSU9OIExJRU4wQU1FTkRFRCBOT1RJQ0UgVU5QQUlEIEJBTEFOQ0UvUklHSFQgVE8gRklMRSBMSUVOFkFTU0lHTk1FTlQgT0YgTU9SVEdBR0UZQk9ORCBUTyBESVNDSEFSR0UgQ0xDL05VQg9DQU5DRUwgTU9SVEdBR0URQ09OU1RSVUNUSU9OIExJRU4WQ09OU1RSVUNUSU9OIExJRU4gQk9ORCFDT1VSVCBPUkRFUiBESVNDSEFSR0lORyBBIENMQy9OVUIKREVESUNBVElPTgRERUVEMkRJU0NIQVJHRSBBTUVOREVEIE5PVElDRSBVTlBBSUQgQkFMQU5DRS9SSUdIVCBGSUxFMURJU0NIQVJHRSBPRiBBTUVORE1FTlQgT0YgQ09OU1RSVUNUSU9OIExJRU4gQ0xBSU0eRElTQ0hBUkdFIE9GIENPTlNUUlVDVElPTiBMSUVOFkRJU0NIQVJHRSBPRiBMSUVOIEJPTkQURElTQ0hBUkdFIE9GIExJU1BFTlMVRElTQ0hBUkdFIE9GIE1PUlRHQUdFG0RJU0NIQVJHRSBPRiBQSFlTSUNJQU4gTElFTgpESVNDTEFJTUVSCUZJTEVEIE1BUBNGSU5BTkNJTkcgU1RBVEVNRU5UH0ZJTkFOQ0lORyBTVEFURU1FTlQgVEVSTUlOQVRJT04XRk9SRUNMT1NVUkUgTElTIFBFTkRFTlMWSU5IRVJJVEFOQ0UgVEFYIFdBSVZFUglKVURHRU1FTlQLTElTIFBFTkRFTlMNTUlTQ0VMTEFORU9VUxVNSVNDRUxMQU5FT1VTIC0gQ0xFUksITU9SVEdBR0UOTk9USUNFIE9GIFNBTEUUTk9USUNFIE9GIFNFVFRMRU1FTlQgTk9USUNFIE9GIFNFVFRMRU1FTlQgLSBESVNDSEFSR0UsTk9USUNFIE9GIFRIRSBERUxJVkVSWSBPRiBMQUJPUiBPUiBNQVRFUklBTFMYTk9USUNFIE9GIFVOUEFJRCBCQUxBTkNFJFBBUlRJQUwgUkVMRUFTRSBPRiBDT05TVFJVQ1RJT04gTElFThZQSFlTSUNJQU4gUkVHSVNUUkFUSU9OEFBIWVNJQ0lBTidTIExJRU4RUE9XRVIgT0YgQVRUT1JORVkdUkVMRUFTRSBOT1RJQ0UgVU5QQUlEIEJBTEFOQ0UTUkVMRUFTRSBPRiBNT1JUR0FHRQxSSUdIVCBPRiBXQVkPU1RSRUVUIFZBQ0FUSU9OGFNVQk9SRElOQVRJT04gT0YgQ0xDL05VQhRUQVggU0FMRSBDRVJUSUZJQ0FURSFUQVggU0FMRSBDRVJUSUZJQ0FURSBDQU5DRUxMQVRJT04OV0FJVkVSIE9GIExJRU4YV0FSUkFOVCBGT1IgU0FUSVNGQUNUSU9OI1dBUlJBTlQgRk9SIFNBVElTRkFDVElPTiAtIEpVREdNRU5ULVdJVEhEUkFXTCBPRiBGSUxFRCBGRUQgVEFYIExJRU4gQUZURVIgUkVMRUFTRRUyAANBQ0wDQURDA0FOVQE1A0JURAE0A0NMQwNDTEIHQ1RPUkRDTgMyM0EBMQREQU5VA0RBQwNEQ0wDRExCAjIxATYDRFBMAjIyAjI5ATMCMjgBOQNJVFcESlVERwE4AjI1BE1JU0MBMgIzMQIyMAMyMEQDTk9EA05VQgRQUkNMBlBIWVJFRwJQTAIxQQNETlUBNwIxQgIyMwNTQ0wEMlRBWAgyVEFYQ0FOQwNXT0wDV0ZTA1dTSgMxMlcUKwMyZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAg0PEGRkFgFmZAIPDxBkZBYBZmQCCQ9kFgYCAQ8QDxYEHwMFCFRvd25OYW1lHwRnZBAVFBxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5FEJMT09NSU5HREFMRSBCT1JPVUdIDENMSUZUT04gQ0lUWQ9IQUxFRE9OIEJPUk9VR0gRSEFXVEhPUk5FIEJPUk9VR0gVTElUVExFIEZBTExTIFRPV05TSElQFU5PUlRIIEhBTEVET04gQk9ST1VHSAxQQVNTQUlDIENJVFkOUEFTU0FJQyBDT1VOVFkNUEFURVJTT04gQ0lUWRVQT01QVE9OIExBS0VTIEJPUk9VR0gVUFJPU1BFQ1QgUEFSSyBCT1JPVUdIEFJJTkdXT09EIEJPUk9VR0gOVE9UT1dBIEJPUk9VR0gPV0FOQVFVRSBCT1JPVUdIDldBWU5FIFRPV05TSElQFVdFU1QgTUlMRk9SRCBUT1dOU0hJUBVXRVNUIFBBVEVSU09OIEJPUk9VR0gNV09PRExBTkQgUEFSSwtDT1VOVFkgV0lERRUUHFBsZWFzZSBTZWxlY3QgYSBNdW5pY2lwYWxpdHkUQkxPT01JTkdEQUxFIEJPUk9VR0gMQ0xJRlRPTiBDSVRZD0hBTEVET04gQk9ST1VHSBFIQVdUSE9STkUgQk9ST1VHSBVMSVRUTEUgRkFMTFMgVE9XTlNISVAVTk9SVEggSEFMRURPTiBCT1JPVUdIDFBBU1NBSUMgQ0lUWQ5QQVNTQUlDIENPVU5UWQ1QQVRFUlNPTiBDSVRZFVBPTVBUT04gTEFLRVMgQk9ST1VHSBVQUk9TUEVDVCBQQVJLIEJPUk9VR0gQUklOR1dPT0QgQk9ST1VHSA5UT1RPV0EgQk9ST1VHSA9XQU5BUVVFIEJPUk9VR0gOV0FZTkUgVE9XTlNISVAVV0VTVCBNSUxGT1JEIFRPV05TSElQFVdFU1QgUEFURVJTT04gQk9ST1VHSA1XT09ETEFORCBQQVJLC0NPVU5UWSBXSURFFCsDFGdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnFgFmZAINDxBkZBYBZmQCDw8QZGQWAWZkAgoPZBYIAgEPDxYCHwIFB0NBQklHQU9kZAIFDxAPFgYfBQUHRG9jVHlwZR8DBQdEb2NOYW1lHwRnZBAVMhRTZWxlY3QgRG9jdW1lbnQgVHlwZR9BTUVOREVEIENPTlNUUlVDVElPTiBMSUVOIENMQUlNJUFNRU5ERUQgRElTQ0hBUkdFIE9GIENPTlNUVUNUSU9OIExJRU4wQU1FTkRFRCBOT1RJQ0UgVU5QQUlEIEJBTEFOQ0UvUklHSFQgVE8gRklMRSBMSUVOFkFTU0lHTk1FTlQgT0YgTU9SVEdBR0UZQk9ORCBUTyBESVNDSEFSR0UgQ0xDL05VQg9DQU5DRUwgTU9SVEdBR0URQ09OU1RSVUNUSU9OIExJRU4WQ09OU1RSVUNUSU9OIExJRU4gQk9ORCFDT1VSVCBPUkRFUiBESVNDSEFSR0lORyBBIENMQy9OVUIKREVESUNBVElPTgRERUVEMkRJU0NIQVJHRSBBTUVOREVEIE5PVElDRSBVTlBBSUQgQkFMQU5DRS9SSUdIVCBGSUxFMURJU0NIQVJHRSBPRiBBTUVORE1FTlQgT0YgQ09OU1RSVUNUSU9OIExJRU4gQ0xBSU0eRElTQ0hBUkdFIE9GIENPTlNUUlVDVElPTiBMSUVOFkRJU0NIQVJHRSBPRiBMSUVOIEJPTkQURElTQ0hBUkdFIE9GIExJU1BFTlMVRElTQ0hBUkdFIE9GIE1PUlRHQUdFG0RJU0NIQVJHRSBPRiBQSFlTSUNJQU4gTElFTgpESVNDTEFJTUVSCUZJTEVEIE1BUBNGSU5BTkNJTkcgU1RBVEVNRU5UH0ZJTkFOQ0lORyBTVEFURU1FTlQgVEVSTUlOQVRJT04XRk9SRUNMT1NVUkUgTElTIFBFTkRFTlMWSU5IRVJJVEFOQ0UgVEFYIFdBSVZFUglKVURHRU1FTlQLTElTIFBFTkRFTlMNTUlTQ0VMTEFORU9VUxVNSVNDRUxMQU5FT1VTIC0gQ0xFUksITU9SVEdBR0UOTk9USUNFIE9GIFNBTEUUTk9USUNFIE9GIFNFVFRMRU1FTlQgTk9USUNFIE9GIFNFVFRMRU1FTlQgLSBESVNDSEFSR0UsTk9USUNFIE9GIFRIRSBERUxJVkVSWSBPRiBMQUJPUiBPUiBNQVRFUklBTFMYTk9USUNFIE9GIFVOUEFJRCBCQUxBTkNFJFBBUlRJQUwgUkVMRUFTRSBPRiBDT05TVFJVQ1RJT04gTElFThZQSFlTSUNJQU4gUkVHSVNUUkFUSU9OEFBIWVNJQ0lBTidTIExJRU4RUE9XRVIgT0YgQVRUT1JORVkdUkVMRUFTRSBOT1RJQ0UgVU5QQUlEIEJBTEFOQ0UTUkVMRUFTRSBPRiBNT1JUR0FHRQxSSUdIVCBPRiBXQVkPU1RSRUVUIFZBQ0FUSU9OGFNVQk9SRElOQVRJT04gT0YgQ0xDL05VQhRUQVggU0FMRSBDRVJUSUZJQ0FURSFUQVggU0FMRSBDRVJUSUZJQ0FURSBDQU5DRUxMQVRJT04OV0FJVkVSIE9GIExJRU4YV0FSUkFOVCBGT1IgU0FUSVNGQUNUSU9OI1dBUlJBTlQgRk9SIFNBVElTRkFDVElPTiAtIEpVREdNRU5ULVdJVEhEUkFXTCBPRiBGSUxFRCBGRUQgVEFYIExJRU4gQUZURVIgUkVMRUFTRRUyAANBQ0wDQURDA0FOVQE1A0JURAE0A0NMQwNDTEIHQ1RPUkRDTgMyM0EBMQREQU5VA0RBQwNEQ0wDRExCAjIxATYDRFBMAjIyAjI5ATMCMjgBOQNJVFcESlVERwE4AjI1BE1JU0MBMgIzMQIyMAMyMEQDTk9EA05VQgRQUkNMBlBIWVJFRwJQTAIxQQNETlUBNwIxQgIyMwNTQ0wEMlRBWAgyVEFYQ0FOQwNXT0wDV0ZTA1dTSgMxMlcUKwMyZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAQIXZAINDxBkZBYBAgJkAg8PEGRkFgECA2QCAw8WAh8BZxYEAgMPDxYCHwFnZGQCBQ88KwALAQAPFgweCFBhZ2VTaXplAmQeCERhdGFLZXlzFgAeEEN1cnJlbnRQYWdlSW5kZXhmHgtfIUl0ZW1Db3VudAIEHhVfIURhdGFTb3VyY2VJdGVtQ291bnQCBB4JUGFnZUNvdW50AgFkFgJmD2QWCgIBD2QWBAIBD2QWAgIBDw8WAh8CBQlNb3J0Z2Fnb3JkZAICD2QWAgIBDw8WAh8CBQlNb3J0Z2FnZWVkZAICD2QWFmYPDxYCHwIFF0ZPUkVDTE9TVVJFIExJUyBQRU5ERU5TZGQCAQ9kFgJmDxUBD0NBQklHQU8gQU5HRUxFU2QCAg9kFgJmDxUBG1JSQSBDUCBPUFBPUlRVTklUWSBUUlVTVCAyIGQCAw8PFgIfAgUKMjAyNTAzNzI0MWRkAgQPZBYCZg8VAQkxMS81LzIwMjVkAgUPZBYCZg8VAQxDTElGVE9OIENJVFlkAgYPDxYCHwIFDENMSUZUT04gQ0lUWWRkAgcPDxYCHwIFA04vQWRkAggPDxYCHwIFBiZuYnNwO2RkAgkPDxYCHwIFBiZuYnNwO2RkAgoPDxYCHwIFBiZuYnNwO2RkAgMPZBYWZg8PFgIfAgUXRk9SRUNMT1NVUkUgTElTIFBFTkRFTlNkZAIBD2QWAmYPFQEPQ0FCSUdBTyBDT1JBWk9OZAICD2QWAmYPFQEbUlJBIENQIE9QUE9SVFVOSVRZIFRSVVNUIDIgZAIDDw8WAh8CBQoyMDI1MDM3MjQxZGQCBA9kFgJmDxUBCTExLzUvMjAyNWQCBQ9kFgJmDxUBDENMSUZUT04gQ0lUWWQCBg8PFgIfAgUMQ0xJRlRPTiBDSVRZZGQCBw8PFgIfAgUDTi9BZGQCCA8PFgIfAgUGJm5ic3A7ZGQCCQ8PFgIfAgUGJm5ic3A7ZGQCCg8PFgIfAgUGJm5ic3A7ZGQCBA9kFhZmDw8WAh8CBRdGT1JFQ0xPU1VSRSBMSVMgUEVOREVOU2RkAgEPZBYCZg8VARRORVcgSkVSU0VZIFNUQVRFIE9GIGQCAg9kFgJmDxUBG1JSQSBDUCBPUFBPUlRVTklUWSBUUlVTVCAyIGQCAw8PFgIfAgUKMjAyNTAzNzI0MWRkAgQPZBYCZg8VAQkxMS81LzIwMjVkAgUPZBYCZg8VAQxDTElGVE9OIENJVFlkAgYPDxYCHwIFDENMSUZUT04gQ0lUWWRkAgcPDxYCHwIFA04vQWRkAggPDxYCHwIFBiZuYnNwO2RkAgkPDxYCHwIFBiZuYnNwO2RkAgoPDxYCHwIFBiZuYnNwO2RkAgUPZBYWZg8PFgIfAgUXRk9SRUNMT1NVUkUgTElTIFBFTkRFTlNkZAIBD2QWAmYPFQEZVU5JVEVEIFNUQVRFUyBPRiBBTUVSSUNBIGQCAg9kFgJmDxUBG1JSQSBDUCBPUFBPUlRVTklUWSBUUlVTVCAyIGQCAw8PFgIfAgUKMjAyNTAzNzI0MWRkAgQPZBYCZg8VAQkxMS81LzIwMjVkAgUPZBYCZg8VAQxDTElGVE9OIENJVFlkAgYPDxYCHwIFDENMSUZUT04gQ0lUWWRkAgcPDxYCHwIFA04vQWRkAggPDxYCHwIFBiZuYnNwO2RkAgkPDxYCHwIFBiZuYnNwO2RkAgoPDxYCHwIFBiZuYnNwO2RkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYCBRNfY3RsMDppbWdNYXN0ZXJIb21lBRNfY3RsMDppbWdNYXN0ZXJIZWxw3hcGYduuZCBuMEKLJqLxJVrc4kQ=" />
+
+<script type="text/javascript">
+<!--
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+// -->
+</script>
+
+
+<script src="/PRESS/WebResource.axd?d=t9ldMoKIWZyJfEbbC4TM4TXsESTdr1IW1kSfdYpO57GI0Ou-MFiGYNSTWbVUu1P1kyzXW11pNs4SKnhg0&amp;t=638285921964787378" type="text/javascript"></script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="D8795D1B" />
+<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="li_dG6bHgKNr-KUNv27oU8NX7Muem09Ty8t8v-6oojXnyeTmt4_fJUabnwz-ZqtzPaYkZTn8Nw0A1vtMbJ36fEEgsnPrFIW_z187jw2" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdABLVHyOApaDF/DxJwvh6mz9xrcFizq9RiMwgIwJ75OwBkKfQDR7mU9l1zuxbDOEmkdlACC0CNh3XTjSIP2t2WB8XKbhault7oJr8mfhkAVVGU+kkHrFESbK8pzjNPG0cTk3/fi3TtSGbR7pyM+gKajdnx5SWotpPQTnG97PBsMP3mLu1kinAa/MOMBlNGmTrv3CPgD6dav0USXWqjv2IKfKysl+VtTt171VAw1vpsJtcdAKUszJCRiV6RbnKTcr+O3IxPXEGvmV99qD7e6BzCnoSJw1TfKZVuIQJFPtvbhdIG8wAXeWrjsKwIyHZ5x1ghJrARvAWGHLTQQfZZg/eonTIT1ZnnEhAHLyZusxA6zcgGol/e/DNAajo9JsgZyjPukVjLUz1SAN35lxzVBQmTTZINFAFrw==" />
+
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td valign="top">
+
+
+                    <!--*************-->
+                    <!--Logo + Header-->
+                    <!--*************-->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td height="76" class="HeaderMaster">
+                                <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url(/PRESS//App_Themes/Passaic/Images//gred.jpg); background-attachment: scroll; background-repeat: repeat-x; background-position: left top;">
+                                    <tr>
+
+                                        <td style="width: 70%">
+                                            <table border="0" cellspacing="0" cellpadding="0" style="background-image: url(/PRESS//App_Themes/Passaic/Images//gred.jpg); background-attachment: scroll; background-repeat: repeat-x; background-position: left top;">
+                                                <tr>
+                                                     <td style="width: 12%; padding-right: 20px" valign="top">
+                                                        <img alt="logo" src="/PRESS//App_Themes/Passaic/Images//PassaicLogo.png" width="60" height="60" /></td>
+                                                    <td width="88%" valign="middle">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/PRESS//App_Themes/Passaic/Images//logoname.jpg" /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/PRESS//App_Themes/Passaic/Images//logoname1.jpg" /></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 30%" align="right" valign="middle">
+                                            <br />
+                                            <table border="0" cellspacing="0" cellpadding="2">
+                                                <tr>
+                                                    <td align="center" valign="top">
+
+                                                        <input type="image" name="_ctl0:imgMasterHome" id="_ctl0_imgMasterHome" title="Home" src="/PRESS//App_Themes/Passaic/Images//Home.jpg" border="0" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;_ctl0:imgMasterHome&quot;, &quot;&quot;, false, &quot;&quot;, &quot;../index.aspx&quot;, false, false))" language="javascript" /></td>
+                                                    <td valign="top">
+                                                        
+                                                        
+                                                        
+                                                        
+                                                    </td>
+                                                    <td valign="top">
+                                                        <input type="image" name="_ctl0:imgMasterHelp" id="_ctl0_imgMasterHelp" title="Help" src="/PRESS//App_Themes/Passaic/Images//help.jpg" border="0" onclick="OnHelpButton(); return false;" language="javascript" />
+                                                        <img id="imgMasterFAQs" onclick="OnFAQsButton('/PRESS//App_Themes/Passaic/Images/'); return false;" src="/PRESS//App_Themes/Passaic/Images//FAQs.gif" style="cursor: hand;" />
+                                                    </td>
+                                                    <td valign="top">
+                                                        </td>
+                                                    <td>
+                                                        </td>
+                                                </tr>
+
+
+                                                
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+
+
+
+
+                    <!--****************-->
+                    <!-- Page Title Bar -->
+                    <!--****************-->
+                    <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="24">
+                                <img src="/PRESS//App_Themes/Passaic/Images//titleLeft.jpg" /></td>
+                            <td width="97%" background="/PRESS//App_Themes/Passaic/Images//titleBack.jpg" align="center">
+                                <span id="_ctl0_lblBarTitle" class="bar">Records Search - Search Results</span>
+                            </td>
+                            <td width="24">
+                                <img src="/PRESS//App_Themes/Passaic/Images//titleRight.jpg" /></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <!--**************-->
+                    <!-- Page Content -->
+                    <!--**************-->
+                    <table id="tblMainTable" cellspacing="0" width="99%" cellpadding="0" align="center" border="0">
+                        <tr id="_ctl0_pnlContent" valign="top" align="left">
+	<td valign="top" nowrap="nowrap" align="left" style="vertical-align: top">
+                                <div style="width: 100%">
+                                    
+    <style type="text/css">
+        A.newitemstyleblue:visited {
+            COLOR: blue
+        }
+
+        /* Inactive Tab */
+        .tabButtonSelected {
+            display: inline-block;
+            min-width: 170px;
+            height: 32px;
+            line-height: 32px;
+            padding: 0 12px;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px !important;
+            font-weight: bold;
+            color: #003399;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+            background: linear-gradient(to bottom, #b8c4f7 0%, #9baef0 45%, #7f98e8 100%);
+            /*border: 1px solid #6d7db8;*/
+            border-bottom-color: #4f5f9c;
+            border-radius: 6px 6px 0 0;
+            box-sizing: border-box;
+        }
+
+            .tabButtonSelected:hover {
+                color: #003399;
+                text-decoration: none;
+                /*background: linear-gradient(to bottom, #c6d2fb 0%, #a9bbf4 45%, #8ba3eb 100%);*/
+                background: linear-gradient( to bottom, #b8c6ee 0%, #c8d2f2 25%, #dbe2f8 55%, #eef1fb 80%, #ffffff 100% );
+            }
+
+        /* Selected Tab */
+        .tabButton {
+            display: inline-block;
+            min-width: 170px;
+            height: 32px;
+            line-height: 32px;
+            padding: 0 12px;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px !important; /* Increase to 15px or 16px if required */
+            font-weight: bold;
+            color: #2F2365;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+            background: linear-gradient( to bottom, #b8c6ee 0%, #c8d2f2 25%, #dbe2f8 55%, #eef1fb 80%, #ffffff 100% );
+            border-top: 1px solid #93a3d5;
+            border-left: 1px solid #d7dff6;
+            border-right: 1px solid #d7dff6;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            text-shadow: 0 1px 0 #ffffff;
+            box-sizing: border-box;
+        }
+
+            .tabButton:hover {
+                color: #2F2365;
+                text-decoration: none;
+                background: linear-gradient(to bottom, #c6d2fb 0%, #a9bbf4 45%, #8ba3eb 100%);
+            }
+
+            .tabButton,
+            .tabButton:link,
+            .tabButton:visited,
+            .tabButton:hover,
+            .tabButtonSelected,
+            .tabButtonSelected:link,
+            .tabButtonSelected:visited,
+            .tabButtonSelected:hover {
+                color: #000000 !important;
+                text-decoration: none !important;
+            }
+    </style>
+
+    <script type="text/javascript">
+        /* Optional: Temporarily hide the "tabber" class so it does not "flash"
+        on the page as plain HTML. After tabber runs, the class is changed
+        to "tabberlive" and it will appear. */
+
+        document.write('<style type="text/css">.tabber{display:none;}<\/style>');
+
+        /*==================================================
+        Set the tabber options (must do this before including tabber.js)
+        ==================================================*/
+        var tabberOptions = {
+
+            'cookie': "tabber", /* Name to use for the cookie */
+
+            'onLoad': function (argsObj) {
+                var t = argsObj.tabber;
+                var i;
+
+                /* Optional: Add the id of the tabber to the cookie name to allow
+                for multiple tabber interfaces on the site.  If you have
+                multiple tabber interfaces (even on different pages) I suggest
+                setting a unique id on each one, to avoid having the cookie set
+                the wrong tab.
+                */
+                if (t.id) {
+                    t.cookie = t.id + t.cookie;
+                }
+
+                /* If a cookie was previously set, restore the active tab */
+                i = parseInt(getCookie(t.cookie));
+                if (isNaN(i)) { return; }
+                t.tabShow(i);
+                document.getElementById('hidCurrTab').value = i;
+
+                //Murtuza Commented Note Tab AND ALSO REMOVED CELL FOR NOTE COMPLETELY
+                //	    // If Instrument Number tab is selected dont show the Div tag note.
+                //	    if (i == 0){
+                //	        document.getElementById('<PERCENTAGE=note.ClientID%>').style.visibility = "hidden";
+                //	    }
+                //	    else{
+                //	        document.getElementById('<PERCENTAGE=note.ClientID%>').style.visibility = "";
+                //	    }
+
+                //alert('getCookie(' + t.cookie + ') = ' + i);
+            },
+
+            'onClick': function (argsObj) {
+
+                var t = argsObj.tabber; /* Tabber object */
+                var id = t.id; /* ID of the main tabber DIV */
+                var i = argsObj.index; /* Which tab was clicked (0 is the first tab) */
+                var e = argsObj.event; /* Event object */
+                var c = argsObj.tabber.cookie;
+                //Setting up the value for HELP file.
+                document.getElementById('hidCurrTab').value = i;
+
+                setCookie(c, i);
+
+            }
+        };
+
+        /*==================================================
+        Cookie functions
+        ==================================================*/
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                ((expires) ? "; expires=" + expires.toGMTString() : "") +
+                ((path) ? "; path=" + path : "") +
+                ((domain) ? "; domain=" + domain : "") +
+                ((secure) ? "; secure" : "");
+        }
+
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+            }
+        }
+
+        function OnHelpButton() {
+
+
+            //alert('This feature will be available soon.'); return false;
+
+            //var helpFile = '../webhelp/Press_HelpFile.pdf#pagemode=bookmarks&page=';
+            var helpFile = '../webhelp/index.html?page=source/Contents.htm';
+
+            //if (document.getElementById('hidCurrTab').value == ''){
+            //    document.getElementById('hidCurrTab').value = 2
+            //}
+
+            //switch (document.getElementById('hidCurrTab').value) {
+            //    case '3': {
+            //        helpFile += '14'	//'instrument.htm'
+            //        break
+            //    }
+
+            //    case '2': {
+            //        helpFile += '5'	//'document.htm'
+            //        break
+            //    }
+
+            //    case '4': {
+            //        helpFile += '8'	//'blockandlot.htm'
+            //        break
+            //    }
+
+            //    case '1': {
+            //        helpFile += '11'	//'name.htm'
+            //        break
+            //    }
+
+            //    //case 'results':{
+            //    default: {
+            //        helpFile += '6'	//'SearchResults.htm'
+            //        break
+            //    }
+
+            //}
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+
+        }
+
+
+        function OnHelpButton1() {
+
+
+            alert('This feature will be available soon.'); return false;
+
+
+            var helpFile = '../webhelp/index.html?page=source/';
+
+            switch ('Results') {
+                case 'Search': {
+                    helpFile += 'RecordSearch.htm'
+                    break
+                }
+                case 'Results': {
+                    helpFile += 'SearchResults.htm'
+                    break
+                }
+
+            }
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+    </script>
+    <script language="javascript" src="../includes/tabber.js"></script>
+    <script language="javascript" src="../includes/jsDate.js"></script>
+    <script language="javascript">
+        function goodchars(e, goods) {
+            var key, keychar;
+            key = window.event.keyCode;
+            if (key == null) return true;
+
+            // get character
+            keychar = String.fromCharCode(key);
+            keychar = keychar.toLowerCase();
+            goods = goods.toLowerCase();
+
+            // check goodkeys
+            if (goods.indexOf(keychar) != -1)
+                return true;
+
+            // control keys
+            if (key == null || key == 0 || key == 8 || key == 9 || key == 13 || key == 27)
+                return true;
+
+            // else return false
+            return false;
+        }
+
+        function cleartab1() {
+            document.getElementById('_ctl0_PageContent_txtLastNameTab1').value = '';
+        document.getElementById('_ctl0_PageContent_txtFirstNameTab1').value = '';
+        document.getElementById('_ctl0_PageContent_txtFromTab1').value = '';
+        document.getElementById('_ctl0_PageContent_txtToTab1').value = '';
+        document.getElementById('_ctl0_PageContent_ddlDocTypeTab1').selectedIndex = 0;
+            return false;
+        }
+
+        function cleartab2() {
+            document.getElementById('_ctl0_PageContent_txtFromTab2').value = '';
+        document.getElementById('_ctl0_PageContent_txtToTab2').value = '';
+	    //document.getElementById('_ctl0_PageContent_txtConsiderationTab2').value = '';
+        document.getElementById('_ctl0_PageContent_ddlMunTab2').selectedIndex = 0;
+        document.getElementById('_ctl0_PageContent_ddlDocTypeTab2').selectedIndex = 0;
+            return false;
+        }
+
+        function cleartab3() {
+            document.getElementById('_ctl0_PageContent_txtInstrumentTab3').value = '';
+        document.getElementById('_ctl0_PageContent_txtBookNumberTab3').value = '';
+        document.getElementById('_ctl0_PageContent_txtPageNumberTab3').value = '';
+            return false;
+        }
+
+        function cleartab4() {
+            document.getElementById('_ctl0_PageContent_txtFromTab4').value = '';
+        document.getElementById('_ctl0_PageContent_txtToTab4').value = '';
+        document.getElementById('_ctl0_PageContent_txtBlockTab4').value = '';
+        document.getElementById('_ctl0_PageContent_txtLotTab4').value = '';
+        document.getElementById('_ctl0_PageContent_ddlMunTab4').selectedIndex = 0;
+            return false;
+        }
+
+        function MoreDates(tabIndex) {
+            //alert('Please enter any date (in From and To) from 10/1/1996 in 90 days range.')
+            alert('Please enter any date (in From and To) in 90 days range.')
+            switch (tabIndex) {
+                case 1: {
+                    document.getElementById('_ctl0_PageContent_txtFromTab1').focus();
+                break;
+            }
+            case 2: {
+                document.getElementById('_ctl0_PageContent_txtFromTab2').focus();
+                break;
+            }
+            case 4: {
+                document.getElementById('_ctl0_PageContent_txtFromTab4').focus();
+                    break;
+                }
+            }
+        }
+
+        function FillDates(tabIndex, dateInt) {
+            var currDate = new Date()
+            var fromDate
+            dateInt = dateInt * -1; // To find the nth day prior to today.
+            fromDate = DateAdd('d', dateInt, currDate);
+
+            switch (tabIndex) {
+                case 1: {
+                    document.getElementById('_ctl0_PageContent_txtFromTab1').value = simpleDate(fromDate);
+                document.getElementById('_ctl0_PageContent_txtToTab1').value = simpleDate(currDate);
+                break;
+            }
+            case 2: {
+                document.getElementById('_ctl0_PageContent_txtFromTab2').value = simpleDate(fromDate);
+                document.getElementById('_ctl0_PageContent_txtToTab2').value = simpleDate(currDate);
+                break;
+            }
+            case 4: {
+                document.getElementById('_ctl0_PageContent_txtFromTab4').value = simpleDate(fromDate);
+                document.getElementById('_ctl0_PageContent_txtToTab4').value = simpleDate(currDate);
+                    break;
+                }
+            }
+        }
+
+        function tabChanged(newTabIndex) {
+
+            document.getElementById('_ctl0_PageContent_imgTab2').src = '../App_Themes/Passaic/Images//Clerk/tabDocType_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab4').src = '../App_Themes/Passaic/Images//Clerk/tabBlockLot_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab1').src = '../App_Themes/Passaic/Images//Clerk/tabName_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab3').src = '../App_Themes/Passaic/Images//Clerk/tabInstNum_over.jpg';
+
+
+        document.getElementById('_ctl0_PageContent_imgTab2').src = '../App_Themes/Passaic/Images//Clerk/tabDocType_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab4').src = '../App_Themes/Passaic/Images//Clerk/tabBlockLot_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab1').src = '../App_Themes/Passaic/Images//Clerk/tabName_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab3').src = '../App_Themes/Passaic/Images//Clerk/tabInstNum_over.jpg';
+
+
+
+        document.getElementById('tab1').style.display='none';
+        document.getElementById('tab2').style.display='none';
+        document.getElementById('tab3').style.display='none';
+        document.getElementById('tab4').style.display='none';
+
+        switch (newTabIndex)
+        {
+            case '2': {document.getElementById('tab2').style.display="";    document.getElementById('_ctl0_PageContent_imgTab2').src = '../App_Themes/Passaic/Images//Clerk/tabDocType.jpg';    break;}
+            case '4': {document.getElementById('tab4').style.display="";    document.getElementById('_ctl0_PageContent_imgTab4').src = '../App_Themes/Passaic/Images//Clerk/tabBlockLot.jpg';   break;}
+            case '1': {document.getElementById('tab1').style.display="";    document.getElementById('_ctl0_PageContent_imgTab1').src = '../App_Themes/Passaic/Images//Clerk/tabName.jpg';       break;}
+            case '3': {document.getElementById('tab3').style.display="";    document.getElementById('_ctl0_PageContent_imgTab3').src = '../App_Themes/Passaic/Images//Clerk/tabInstNum.jpg';    break;}
+        }
+
+        var tabButtons = [
+        '_ctl0_PageContent_lnkTab1',
+        '_ctl0_PageContent_lnkTab2',
+        '_ctl0_PageContent_lnkTab3',
+            '_ctl0_PageContent_lnkTab4'
+        ];
+
+        // Reset all tabs
+        for (var i = 0; i < tabButtons.length; i++) {
+            document.getElementById(tabButtons[i]).className = "tabButton";
+            document.getElementById("tab" + (i + 1)).style.display = "none";
+        }
+
+        // Select the current tab
+        document.getElementById(tabButtons[parseInt(newTabIndex, 10) - 1]).className = "tabButtonSelected";
+        document.getElementById("tab" + newTabIndex).style.display = "";
+
+
+        
+        document.getElementById('hidCurrTab').value = newTabIndex;
+        
+    }
+    
+    window.onload = function()
+    {   if (document.getElementById('_ctl0_PageContent_divBasic') != null)
+        {
+            if ('1' == '')
+                tabChanged('2');
+            else
+                tabChanged('1');
+        }
+        }
+
+        function DisplayCalendar(ctl) {
+            Width = 290;
+            Height = 280;
+            xPos = (screen.width - Width) / 2;
+            yPos = (screen.height - Height) / 2;
+
+            window.open('ShowCalendar.aspx?frm=0&ctl=' + ctl, 'Names', 'dependent=yes,width=' + Width + ',height=' + Height + ',left=' + xPos + ',top=' + yPos + ',titlebar=yes');
+            //window.open('ShowCalendar.aspx?ctl=' + ctl,'Names','dependent=yes,width=' + Width + ',height=' + Height + ',left=' + xPos + ',top=' + yPos + ',titlebar=yes');
+        }
+    </script>
+    <table style="vertical-align: top; width: 100%">
+        <tr>
+            <td align="center">
+                </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                
+            </td>
+        </tr>
+
+        <!-- Search Begin-->
+        <tr>
+            <td valign="top" colspan="2">
+                
+            </td>
+        </tr>
+        <!--Sim Search End-->
+        <tr>
+            <td style="vertical-align: top" valign="top">
+                <div id="_ctl0_PageContent_divSearch">
+                    <table cellspacing="0" cellpadding="0" width="0" align="center" border="0">
+                        <tr>
+                            <td align="center">
+                                </td>
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <input type="submit" name="_ctl0:PageContent:btnNewSearch" value="New Search" onclick="{window.parent.location=&#39;clerkhome.aspx?op=basic&#39;; return false;};" language="javascript" id="_ctl0_PageContent_btnNewSearch" class="ButtonClass" />
+                            </td>
+                        </tr>
+                        <tr height="2">
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: top" align="center">
+                                <!--Grid-->
+                                <table cellspacing="0" cellpadding="4" rules="all" bordercolor="#CDDDD1" border="1" id="_ctl0_PageContent_dgdDeedMort" style="border-color:#CDDDD1;width:100%;border-collapse:collapse;">
+		<tr class="NormalFont" align="right" style="background-color:#CDCDCD;">
+			<td colspan="11"><span>1</span></td>
+		</tr><tr class="HeaderStyle">
+			<td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl0&#39;,&#39;&#39;)">Type</a></td><td>
+                                                <a id="_ctl0_PageContent_dgdDeedMort__ctl2_lnkDirectParty" href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$lnkDirectParty&#39;,&#39;&#39;)">Mortgagor</a>
+                                            </td><td>
+                                                <a id="_ctl0_PageContent_dgdDeedMort__ctl2_lnkIndirectParty" href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$lnkIndirectParty&#39;,&#39;&#39;)">Mortgagee</a>
+                                            </td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl1&#39;,&#39;&#39;)">Instrument#</a></td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl2&#39;,&#39;&#39;)">Recorded</a></td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl3&#39;,&#39;&#39;)">Town Name</a></td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl5&#39;,&#39;&#39;)">Block</a></td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl6&#39;,&#39;&#39;)">Lot</a></td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl7&#39;,&#39;&#39;)">Book</a></td><td><a href="javascript:__doPostBack(&#39;_ctl0$PageContent$dgdDeedMort$_ctl2$_ctl8&#39;,&#39;&#39;)">Page</a></td><td>&nbsp;</td>
+		</tr><tr class="ItemStyle">
+			<td>FORECLOSURE LIS PENDENS</td><td>
+                                                CABIGAO ANGELES
+                                            </td><td>
+                                                RRA CP OPPORTUNITY TRUST 2 
+                                            </td><td>2025037241</td><td>
+                                                11/5/2025
+                                            </td><td>
+                                                CLIFTON CITY
+                                            </td><td>N/A</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><input type="submit" name="_ctl0:PageContent:dgdDeedMort:_ctl3:_ctl0" value="View" onclick="document.forms[0].hidDiv.value=&#39;ShowDetails&#39;;" language="javascript" class="ButtonClassSmall" /></td>
+		</tr><tr class="ItemStyleAlt">
+			<td>FORECLOSURE LIS PENDENS</td><td>
+                                                CABIGAO CORAZON
+                                            </td><td>
+                                                RRA CP OPPORTUNITY TRUST 2 
+                                            </td><td>2025037241</td><td>
+                                                11/5/2025
+                                            </td><td>
+                                                CLIFTON CITY
+                                            </td><td>N/A</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><input type="submit" name="_ctl0:PageContent:dgdDeedMort:_ctl4:_ctl0" value="View" onclick="document.forms[0].hidDiv.value=&#39;ShowDetails&#39;;" language="javascript" class="ButtonClassSmall" /></td>
+		</tr><tr class="ItemStyle">
+			<td>FORECLOSURE LIS PENDENS</td><td>
+                                                NEW JERSEY STATE OF 
+                                            </td><td>
+                                                RRA CP OPPORTUNITY TRUST 2 
+                                            </td><td>2025037241</td><td>
+                                                11/5/2025
+                                            </td><td>
+                                                CLIFTON CITY
+                                            </td><td>N/A</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><input type="submit" name="_ctl0:PageContent:dgdDeedMort:_ctl5:_ctl0" value="View" onclick="document.forms[0].hidDiv.value=&#39;ShowDetails&#39;;" language="javascript" class="ButtonClassSmall" /></td>
+		</tr><tr class="ItemStyleAlt">
+			<td>FORECLOSURE LIS PENDENS</td><td>
+                                                UNITED STATES OF AMERICA 
+                                            </td><td>
+                                                RRA CP OPPORTUNITY TRUST 2 
+                                            </td><td>2025037241</td><td>
+                                                11/5/2025
+                                            </td><td>
+                                                CLIFTON CITY
+                                            </td><td>N/A</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><input type="submit" name="_ctl0:PageContent:dgdDeedMort:_ctl6:_ctl0" value="View" onclick="document.forms[0].hidDiv.value=&#39;ShowDetails&#39;;" language="javascript" class="ButtonClassSmall" /></td>
+		</tr><tr class="NormalFont" align="right" style="background-color:#CDCDCD;">
+			<td colspan="11"><span>1</span></td>
+		</tr>
+	</table>
+                                <!--Grid-->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <input id="hidDiv" type="hidden" name="hidDiv"> <input id="hidCurrTab" type="hidden" name="hidCurrTab">
+
+                                </div>
+                            </td>
+</tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <!--********-->
+        <!-- Footer -->
+        <!--********-->
+        <table id="tblFooter" class="FooterMaster" width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>
+                    <table align="center" style="width: 70%" cellpadding="0" cellspacing="0" border="0">
+                        <tr height="20" id="rowFooter" class="FooterMaster">
+                            <td align="left" width="30%"><a href="javascript:popUpTermsofuse('/PRESS/TermsOfUse.aspx')">Terms of Use</a></td>
+                            <td align="center" width="40%">Developed by <a target="_blank" href="http://www.sunrisesys.com"><font color="white">Sunrise Systems Inc.</font></a></td>
+                            <td align="right" width="30%">© Copyright 2009 - 2026</td>
+                        </tr>
+                    </table>
+                </td>
+	</tr>
+</table>
+
+    </form>
+</body>
+</html>

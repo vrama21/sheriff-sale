@@ -1,0 +1,1380 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="_ctl0_Head1"><title>
+	Public Records Electronic Search System (PRESS)
+</title><link media="screen" href="../Includes/Style/tabs.css" type="text/css" rel="stylesheet" /><link media="print" href="../Includes/Style/tabs-print.css" type="text/css" rel="stylesheet" />
+
+    <script language="javascript" type="text/javascript">
+        function donothing() {
+        }
+
+        function popUpTermsofuse(URL) {
+            day = new Date();
+            id = day.getTime();
+            eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=700,height=400,left = 50,top = 100');");
+        }
+
+
+        function changeButton(btncssclass) {
+            try {
+                var el = event.srcElement;
+                if (el.tagName.toUpperCase() == "INPUT")
+                    if (el.type.toUpperCase() == "SUBMIT" || el.type.toUpperCase() == "BUTTON" || el.type.toUpperCase() == "RESET") {
+                        //alert(event.srcElement.className);
+                        if (event.srcElement.className.indexOf("Small") > 0) btncssclass += "Small"
+                        event.srcElement.className = btncssclass;
+                    }
+                /*if (el.type.toUpperCase() == "IMAGE")
+                {
+                    if(event.srcElement.tagForHover==1)
+                        if(event.srcElement.src.indexOf("_over") > 0)
+                            event.srcElement.src = event.srcElement.src.replace("_over", "");
+                        else
+                            event.srcElement.src += "_over";
+                }*/
+            }
+            catch (ex) { }
+        }
+
+        //function retH() {
+        //    if (screen.height > 1000)
+        //        document.getElementById('tblMainTable').height = screen.height - 400;
+        //    else
+        //        document.getElementById('tblMainTable').height = 400;
+
+        //    if (document.getElementById('tblIndxInfo') != null)
+        //        if (screen.height > 1000)
+        //            document.getElementById('tblIndxInfo').height = screen.height - 400;
+        //        else
+        //            document.getElementById('tblIndxInfo').height = 600;
+
+        //    return true;
+        //}
+
+        function OnFAQsButton(ImgPath) {
+
+            //alert('This feature will be available soon.'); return false;
+
+            var helpFile = ImgPath + '../FAQ2026.pdf';
+            var newWin = window.open(helpFile, 'FAQsWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+
+
+        function retH() {
+
+            var tbl = document.getElementById("tblMainTable");
+
+            var viewport = window.innerHeight;
+            var top = tbl.getBoundingClientRect().top;
+
+            var footer = document.getElementById("tblFooter");
+            var footerHeight = footer ? footer.offsetHeight : 0;
+
+            var available = viewport - top - footerHeight - 2;
+
+            console.log({
+                viewport: viewport,
+                top: top,
+                footerHeight: footerHeight,
+                available: available
+            });
+
+            tbl.style.height = available + "px";
+        }
+
+        window.addEventListener("load", retH);
+        window.addEventListener("resize", retH);
+
+    </script>
+    <style type="text/css">
+        /*      body, html {
+            height: 100%;
+        }*/
+
+        html,
+        body,
+        form {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+<link href="../App_Themes/Passaic/Style/BaseStyle.css" type="text/css" rel="stylesheet" /><link href="../App_Themes/Passaic/Style/tabs.css" type="text/css" rel="stylesheet" /><link href="../App_Themes/Passaic/Style/tabs-print.css" type="text/css" rel="stylesheet" /></head>
+<script type="text/javascript">
+    function CheckCart() {
+        if ('' == '')
+            return true;
+        else
+            return confirm('There are items in Checkout Cart, which would be lost on SignOut. Do you still want to SignOut?');
+    }
+</script>
+<body>
+    <form name="aspnetForm" method="post" action="./ClerkHome.aspx?op=basic" id="aspnetForm" onmouseover="changeButton(&#39;ButtonClassHover&#39;);" onmouseout="changeButton(&#39;ButtonClass&#39;)">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTc0MDQwOTc3OQ9kFgJmD2QWAgIBD2QWFmYPDxYCHghJbWFnZVVybAUrL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9Ib21lLmpwZ2RkAgEPDxYEHwAFLS9QUkVTUy8vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vU2VhcmNoLmdpZh4HVmlzaWJsZWhkZAICDw8WBB8ABS4vUFJFU1MvL0FwcF9UaGVtZXMvUGFzc2FpYy9JbWFnZXMvL1JlcG9ydHMuanBnHwFoZGQCAw8PFgQfAAUwL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9NeUFjY291bnQuanBnHwFoZGQCBA8PFgQfAAUtL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9SZWNlbnQuZ2lmHwFoZGQCBQ8PFgIfAAUrL1BSRVNTLy9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9oZWxwLmpwZ2RkAgYPDxYEHwAFLC9QUkVTUy8vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vQ2FydDIuanBnHwFoZGQCBw8PFgIfAWhkZAIIDxYCHwFoZAIJDw8WAh4EVGV4dAUgUmVjb3JkcyBTZWFyY2ggLSBTZWFyY2ggQ3JpdGVyaWFkZAIKD2QWAmYPZBYCAgEPZBYGAgEPFgIfAWhkAgIPZBYOZg8PFgIfAAUyLi4vQXBwX1RoZW1lcy9QYXNzYWljL0ltYWdlcy8vQ2xlcmsvdGFiRG9jVHlwZS5qcGdkZAICDw8WAh8ABTMuLi9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9DbGVyay90YWJCbG9ja0xvdC5qcGdkZAIEDw8WAh8ABS8uLi9BcHBfVGhlbWVzL1Bhc3NhaWMvSW1hZ2VzLy9DbGVyay90YWJOYW1lLmpwZ2RkAgYPDxYCHwAFMi4uL0FwcF9UaGVtZXMvUGFzc2FpYy9JbWFnZXMvL0NsZXJrL3RhYkluc3ROdW0uanBnZGQCCA9kFgQCAQ8QDxYEHg1EYXRhVGV4dEZpZWxkBQhUb3duTmFtZR4LXyFEYXRhQm91bmRnZBAVFBxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5FEJMT09NSU5HREFMRSBCT1JPVUdIDENMSUZUT04gQ0lUWQ9IQUxFRE9OIEJPUk9VR0gRSEFXVEhPUk5FIEJPUk9VR0gVTElUVExFIEZBTExTIFRPV05TSElQFU5PUlRIIEhBTEVET04gQk9ST1VHSAxQQVNTQUlDIENJVFkOUEFTU0FJQyBDT1VOVFkNUEFURVJTT04gQ0lUWRVQT01QVE9OIExBS0VTIEJPUk9VR0gVUFJPU1BFQ1QgUEFSSyBCT1JPVUdIEFJJTkdXT09EIEJPUk9VR0gOVE9UT1dBIEJPUk9VR0gPV0FOQVFVRSBCT1JPVUdIDldBWU5FIFRPV05TSElQFVdFU1QgTUlMRk9SRCBUT1dOU0hJUBVXRVNUIFBBVEVSU09OIEJPUk9VR0gNV09PRExBTkQgUEFSSwtDT1VOVFkgV0lERRUUHFBsZWFzZSBTZWxlY3QgYSBNdW5pY2lwYWxpdHkUQkxPT01JTkdEQUxFIEJPUk9VR0gMQ0xJRlRPTiBDSVRZD0hBTEVET04gQk9ST1VHSBFIQVdUSE9STkUgQk9ST1VHSBVMSVRUTEUgRkFMTFMgVE9XTlNISVAVTk9SVEggSEFMRURPTiBCT1JPVUdIDFBBU1NBSUMgQ0lUWQ5QQVNTQUlDIENPVU5UWQ1QQVRFUlNPTiBDSVRZFVBPTVBUT04gTEFLRVMgQk9ST1VHSBVQUk9TUEVDVCBQQVJLIEJPUk9VR0gQUklOR1dPT0QgQk9ST1VHSA5UT1RPV0EgQk9ST1VHSA9XQU5BUVVFIEJPUk9VR0gOV0FZTkUgVE9XTlNISVAVV0VTVCBNSUxGT1JEIFRPV05TSElQFVdFU1QgUEFURVJTT04gQk9ST1VHSA1XT09ETEFORCBQQVJLC0NPVU5UWSBXSURFFCsDFGdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZGQCAw8QDxYGHg5EYXRhVmFsdWVGaWVsZAUHRG9jVHlwZR8DBQdEb2NOYW1lHwRnZBAVMhRTZWxlY3QgRG9jdW1lbnQgVHlwZR9BTUVOREVEIENPTlNUUlVDVElPTiBMSUVOIENMQUlNJUFNRU5ERUQgRElTQ0hBUkdFIE9GIENPTlNUVUNUSU9OIExJRU4wQU1FTkRFRCBOT1RJQ0UgVU5QQUlEIEJBTEFOQ0UvUklHSFQgVE8gRklMRSBMSUVOFkFTU0lHTk1FTlQgT0YgTU9SVEdBR0UZQk9ORCBUTyBESVNDSEFSR0UgQ0xDL05VQg9DQU5DRUwgTU9SVEdBR0URQ09OU1RSVUNUSU9OIExJRU4WQ09OU1RSVUNUSU9OIExJRU4gQk9ORCFDT1VSVCBPUkRFUiBESVNDSEFSR0lORyBBIENMQy9OVUIKREVESUNBVElPTgRERUVEMkRJU0NIQVJHRSBBTUVOREVEIE5PVElDRSBVTlBBSUQgQkFMQU5DRS9SSUdIVCBGSUxFMURJU0NIQVJHRSBPRiBBTUVORE1FTlQgT0YgQ09OU1RSVUNUSU9OIExJRU4gQ0xBSU0eRElTQ0hBUkdFIE9GIENPTlNUUlVDVElPTiBMSUVOFkRJU0NIQVJHRSBPRiBMSUVOIEJPTkQURElTQ0hBUkdFIE9GIExJU1BFTlMVRElTQ0hBUkdFIE9GIE1PUlRHQUdFG0RJU0NIQVJHRSBPRiBQSFlTSUNJQU4gTElFTgpESVNDTEFJTUVSCUZJTEVEIE1BUBNGSU5BTkNJTkcgU1RBVEVNRU5UH0ZJTkFOQ0lORyBTVEFURU1FTlQgVEVSTUlOQVRJT04XRk9SRUNMT1NVUkUgTElTIFBFTkRFTlMWSU5IRVJJVEFOQ0UgVEFYIFdBSVZFUglKVURHRU1FTlQLTElTIFBFTkRFTlMNTUlTQ0VMTEFORU9VUxVNSVNDRUxMQU5FT1VTIC0gQ0xFUksITU9SVEdBR0UOTk9USUNFIE9GIFNBTEUUTk9USUNFIE9GIFNFVFRMRU1FTlQgTk9USUNFIE9GIFNFVFRMRU1FTlQgLSBESVNDSEFSR0UsTk9USUNFIE9GIFRIRSBERUxJVkVSWSBPRiBMQUJPUiBPUiBNQVRFUklBTFMYTk9USUNFIE9GIFVOUEFJRCBCQUxBTkNFJFBBUlRJQUwgUkVMRUFTRSBPRiBDT05TVFJVQ1RJT04gTElFThZQSFlTSUNJQU4gUkVHSVNUUkFUSU9OEFBIWVNJQ0lBTidTIExJRU4RUE9XRVIgT0YgQVRUT1JORVkdUkVMRUFTRSBOT1RJQ0UgVU5QQUlEIEJBTEFOQ0UTUkVMRUFTRSBPRiBNT1JUR0FHRQxSSUdIVCBPRiBXQVkPU1RSRUVUIFZBQ0FUSU9OGFNVQk9SRElOQVRJT04gT0YgQ0xDL05VQhRUQVggU0FMRSBDRVJUSUZJQ0FURSFUQVggU0FMRSBDRVJUSUZJQ0FURSBDQU5DRUxMQVRJT04OV0FJVkVSIE9GIExJRU4YV0FSUkFOVCBGT1IgU0FUSVNGQUNUSU9OI1dBUlJBTlQgRk9SIFNBVElTRkFDVElPTiAtIEpVREdNRU5ULVdJVEhEUkFXTCBPRiBGSUxFRCBGRUQgVEFYIExJRU4gQUZURVIgUkVMRUFTRRUyAANBQ0wDQURDA0FOVQE1A0JURAE0A0NMQwNDTEIHQ1RPUkRDTgMyM0EBMQREQU5VA0RBQwNEQ0wDRExCAjIxATYDRFBMAjIyAjI5ATMCMjgBOQNJVFcESlVERwE4AjI1BE1JU0MBMgIzMQIyMAMyMEQDTk9EA05VQgRQUkNMBlBIWVJFRwJQTAIxQQNETlUBNwIxQgIyMwNTQ0wEMlRBWAgyVEFYQ0FOQwNXT0wDV0ZTA1dTSgMxMlcUKwMyZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAgkPZBYCAgEPEA8WBB8DBQhUb3duTmFtZR8EZ2QQFRQcUGxlYXNlIFNlbGVjdCBhIE11bmljaXBhbGl0eRRCTE9PTUlOR0RBTEUgQk9ST1VHSAxDTElGVE9OIENJVFkPSEFMRURPTiBCT1JPVUdIEUhBV1RIT1JORSBCT1JPVUdIFUxJVFRMRSBGQUxMUyBUT1dOU0hJUBVOT1JUSCBIQUxFRE9OIEJPUk9VR0gMUEFTU0FJQyBDSVRZDlBBU1NBSUMgQ09VTlRZDVBBVEVSU09OIENJVFkVUE9NUFRPTiBMQUtFUyBCT1JPVUdIFVBST1NQRUNUIFBBUksgQk9ST1VHSBBSSU5HV09PRCBCT1JPVUdIDlRPVE9XQSBCT1JPVUdID1dBTkFRVUUgQk9ST1VHSA5XQVlORSBUT1dOU0hJUBVXRVNUIE1JTEZPUkQgVE9XTlNISVAVV0VTVCBQQVRFUlNPTiBCT1JPVUdIDVdPT0RMQU5EIFBBUksLQ09VTlRZIFdJREUVFBxQbGVhc2UgU2VsZWN0IGEgTXVuaWNpcGFsaXR5FEJMT09NSU5HREFMRSBCT1JPVUdIDENMSUZUT04gQ0lUWQ9IQUxFRE9OIEJPUk9VR0gRSEFXVEhPUk5FIEJPUk9VR0gVTElUVExFIEZBTExTIFRPV05TSElQFU5PUlRIIEhBTEVET04gQk9ST1VHSAxQQVNTQUlDIENJVFkOUEFTU0FJQyBDT1VOVFkNUEFURVJTT04gQ0lUWRVQT01QVE9OIExBS0VTIEJPUk9VR0gVUFJPU1BFQ1QgUEFSSyBCT1JPVUdIEFJJTkdXT09EIEJPUk9VR0gOVE9UT1dBIEJPUk9VR0gPV0FOQVFVRSBCT1JPVUdIDldBWU5FIFRPV05TSElQFVdFU1QgTUlMRk9SRCBUT1dOU0hJUBVXRVNUIFBBVEVSU09OIEJPUk9VR0gNV09PRExBTkQgUEFSSwtDT1VOVFkgV0lERRQrAxRnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2RkAgoPZBYCAgUPEA8WBh8FBQdEb2NUeXBlHwMFB0RvY05hbWUfBGdkEBUyFFNlbGVjdCBEb2N1bWVudCBUeXBlH0FNRU5ERUQgQ09OU1RSVUNUSU9OIExJRU4gQ0xBSU0lQU1FTkRFRCBESVNDSEFSR0UgT0YgQ09OU1RVQ1RJT04gTElFTjBBTUVOREVEIE5PVElDRSBVTlBBSUQgQkFMQU5DRS9SSUdIVCBUTyBGSUxFIExJRU4WQVNTSUdOTUVOVCBPRiBNT1JUR0FHRRlCT05EIFRPIERJU0NIQVJHRSBDTEMvTlVCD0NBTkNFTCBNT1JUR0FHRRFDT05TVFJVQ1RJT04gTElFThZDT05TVFJVQ1RJT04gTElFTiBCT05EIUNPVVJUIE9SREVSIERJU0NIQVJHSU5HIEEgQ0xDL05VQgpERURJQ0FUSU9OBERFRUQyRElTQ0hBUkdFIEFNRU5ERUQgTk9USUNFIFVOUEFJRCBCQUxBTkNFL1JJR0hUIEZJTEUxRElTQ0hBUkdFIE9GIEFNRU5ETUVOVCBPRiBDT05TVFJVQ1RJT04gTElFTiBDTEFJTR5ESVNDSEFSR0UgT0YgQ09OU1RSVUNUSU9OIExJRU4WRElTQ0hBUkdFIE9GIExJRU4gQk9ORBRESVNDSEFSR0UgT0YgTElTUEVOUxVESVNDSEFSR0UgT0YgTU9SVEdBR0UbRElTQ0hBUkdFIE9GIFBIWVNJQ0lBTiBMSUVOCkRJU0NMQUlNRVIJRklMRUQgTUFQE0ZJTkFOQ0lORyBTVEFURU1FTlQfRklOQU5DSU5HIFNUQVRFTUVOVCBURVJNSU5BVElPThdGT1JFQ0xPU1VSRSBMSVMgUEVOREVOUxZJTkhFUklUQU5DRSBUQVggV0FJVkVSCUpVREdFTUVOVAtMSVMgUEVOREVOUw1NSVNDRUxMQU5FT1VTFU1JU0NFTExBTkVPVVMgLSBDTEVSSwhNT1JUR0FHRQ5OT1RJQ0UgT0YgU0FMRRROT1RJQ0UgT0YgU0VUVExFTUVOVCBOT1RJQ0UgT0YgU0VUVExFTUVOVCAtIERJU0NIQVJHRSxOT1RJQ0UgT0YgVEhFIERFTElWRVJZIE9GIExBQk9SIE9SIE1BVEVSSUFMUxhOT1RJQ0UgT0YgVU5QQUlEIEJBTEFOQ0UkUEFSVElBTCBSRUxFQVNFIE9GIENPTlNUUlVDVElPTiBMSUVOFlBIWVNJQ0lBTiBSRUdJU1RSQVRJT04QUEhZU0lDSUFOJ1MgTElFThFQT1dFUiBPRiBBVFRPUk5FWR1SRUxFQVNFIE5PVElDRSBVTlBBSUQgQkFMQU5DRRNSRUxFQVNFIE9GIE1PUlRHQUdFDFJJR0hUIE9GIFdBWQ9TVFJFRVQgVkFDQVRJT04YU1VCT1JESU5BVElPTiBPRiBDTEMvTlVCFFRBWCBTQUxFIENFUlRJRklDQVRFIVRBWCBTQUxFIENFUlRJRklDQVRFIENBTkNFTExBVElPTg5XQUlWRVIgT0YgTElFThhXQVJSQU5UIEZPUiBTQVRJU0ZBQ1RJT04jV0FSUkFOVCBGT1IgU0FUSVNGQUNUSU9OIC0gSlVER01FTlQtV0lUSERSQVdMIE9GIEZJTEVEIEZFRCBUQVggTElFTiBBRlRFUiBSRUxFQVNFFTIAA0FDTANBREMDQU5VATUDQlREATQDQ0xDA0NMQgdDVE9SRENOAzIzQQExBERBTlUDREFDA0RDTANETEICMjEBNgNEUEwCMjICMjkBMwIyOAE5A0lUVwRKVURHATgCMjUETUlTQwEyAjMxAjIwAzIwRANOT0QDTlVCBFBSQ0wGUEhZUkVHAlBMAjFBA0ROVQE3AjFCAjIzA1NDTAQyVEFYCDJUQVhDQU5DA1dPTANXRlMDV1NKAzEyVxQrAzJnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2RkAgMPFgIfAWgWBAIDDw8WAh8BaGRkAgUPPCsACwBkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYGBRNfY3RsMDppbWdNYXN0ZXJIb21lBRNfY3RsMDppbWdNYXN0ZXJIZWxwBRlfY3RsMDpQYWdlQ29udGVudDppbWdUYWIyBRlfY3RsMDpQYWdlQ29udGVudDppbWdUYWI0BRlfY3RsMDpQYWdlQ29udGVudDppbWdUYWIxBRlfY3RsMDpQYWdlQ29udGVudDppbWdUYWIzqSaEOcl7WxGi10LcaSeQRA41KGw=" />
+
+<script type="text/javascript">
+<!--
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+// -->
+</script>
+
+
+<script src="/PRESS/WebResource.axd?d=t9ldMoKIWZyJfEbbC4TM4TXsESTdr1IW1kSfdYpO57GI0Ou-MFiGYNSTWbVUu1P1kyzXW11pNs4SKnhg0&amp;t=638285921964787378" type="text/javascript"></script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="D8795D1B" />
+<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="li_dG6bHgKNr-KUNv27oU8NX7Muem09Ty8t8v-6oojXnyeTmt4_fJUabnwz-ZqtzPaYkZTn8Nw0A1vtMbJ36fEEgsnPrFIW_z187jw2" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="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" />
+
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td valign="top">
+
+
+                    <!--*************-->
+                    <!--Logo + Header-->
+                    <!--*************-->
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td height="76" class="HeaderMaster">
+                                <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url(/PRESS//App_Themes/Passaic/Images//gred.jpg); background-attachment: scroll; background-repeat: repeat-x; background-position: left top;">
+                                    <tr>
+
+                                        <td style="width: 70%">
+                                            <table border="0" cellspacing="0" cellpadding="0" style="background-image: url(/PRESS//App_Themes/Passaic/Images//gred.jpg); background-attachment: scroll; background-repeat: repeat-x; background-position: left top;">
+                                                <tr>
+                                                     <td style="width: 12%; padding-right: 20px" valign="top">
+                                                        <img alt="logo" src="/PRESS//App_Themes/Passaic/Images//PassaicLogo.png" width="60" height="60" /></td>
+                                                    <td width="88%" valign="middle">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/PRESS//App_Themes/Passaic/Images//logoname.jpg" /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <img src="/PRESS//App_Themes/Passaic/Images//logoname1.jpg" /></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 30%" align="right" valign="middle">
+                                            <br />
+                                            <table border="0" cellspacing="0" cellpadding="2">
+                                                <tr>
+                                                    <td align="center" valign="top">
+
+                                                        <input type="image" name="_ctl0:imgMasterHome" id="_ctl0_imgMasterHome" title="Home" src="/PRESS//App_Themes/Passaic/Images//Home.jpg" border="0" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;_ctl0:imgMasterHome&quot;, &quot;&quot;, false, &quot;&quot;, &quot;../index.aspx&quot;, false, false))" language="javascript" /></td>
+                                                    <td valign="top">
+                                                        
+                                                        
+                                                        
+                                                        
+                                                    </td>
+                                                    <td valign="top">
+                                                        <input type="image" name="_ctl0:imgMasterHelp" id="_ctl0_imgMasterHelp" title="Help" src="/PRESS//App_Themes/Passaic/Images//help.jpg" border="0" onclick="OnHelpButton(); return false;" language="javascript" />
+                                                        <img id="imgMasterFAQs" onclick="OnFAQsButton('/PRESS//App_Themes/Passaic/Images/'); return false;" src="/PRESS//App_Themes/Passaic/Images//FAQs.gif" style="cursor: hand;" />
+                                                    </td>
+                                                    <td valign="top">
+                                                        </td>
+                                                    <td>
+                                                        </td>
+                                                </tr>
+
+
+                                                
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+
+
+
+
+                    <!--****************-->
+                    <!-- Page Title Bar -->
+                    <!--****************-->
+                    <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="24">
+                                <img src="/PRESS//App_Themes/Passaic/Images//titleLeft.jpg" /></td>
+                            <td width="97%" background="/PRESS//App_Themes/Passaic/Images//titleBack.jpg" align="center">
+                                <span id="_ctl0_lblBarTitle" class="bar">Records Search - Search Criteria</span>
+                            </td>
+                            <td width="24">
+                                <img src="/PRESS//App_Themes/Passaic/Images//titleRight.jpg" /></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <!--**************-->
+                    <!-- Page Content -->
+                    <!--**************-->
+                    <table id="tblMainTable" cellspacing="0" width="99%" cellpadding="0" align="center" border="0">
+                        <tr id="_ctl0_pnlContent" valign="top" align="left">
+	<td valign="top" nowrap="nowrap" align="left" style="vertical-align: top">
+                                <div style="width: 100%">
+                                    
+    <style type="text/css">
+        A.newitemstyleblue:visited {
+            COLOR: blue
+        }
+
+        /* Inactive Tab */
+        .tabButtonSelected {
+            display: inline-block;
+            min-width: 170px;
+            height: 32px;
+            line-height: 32px;
+            padding: 0 12px;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px !important;
+            font-weight: bold;
+            color: #003399;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+            background: linear-gradient(to bottom, #b8c4f7 0%, #9baef0 45%, #7f98e8 100%);
+            /*border: 1px solid #6d7db8;*/
+            border-bottom-color: #4f5f9c;
+            border-radius: 6px 6px 0 0;
+            box-sizing: border-box;
+        }
+
+            .tabButtonSelected:hover {
+                color: #003399;
+                text-decoration: none;
+                /*background: linear-gradient(to bottom, #c6d2fb 0%, #a9bbf4 45%, #8ba3eb 100%);*/
+                background: linear-gradient( to bottom, #b8c6ee 0%, #c8d2f2 25%, #dbe2f8 55%, #eef1fb 80%, #ffffff 100% );
+            }
+
+        /* Selected Tab */
+        .tabButton {
+            display: inline-block;
+            min-width: 170px;
+            height: 32px;
+            line-height: 32px;
+            padding: 0 12px;
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 14px !important; /* Increase to 15px or 16px if required */
+            font-weight: bold;
+            color: #2F2365;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+            background: linear-gradient( to bottom, #b8c6ee 0%, #c8d2f2 25%, #dbe2f8 55%, #eef1fb 80%, #ffffff 100% );
+            border-top: 1px solid #93a3d5;
+            border-left: 1px solid #d7dff6;
+            border-right: 1px solid #d7dff6;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            text-shadow: 0 1px 0 #ffffff;
+            box-sizing: border-box;
+        }
+
+            .tabButton:hover {
+                color: #2F2365;
+                text-decoration: none;
+                background: linear-gradient(to bottom, #c6d2fb 0%, #a9bbf4 45%, #8ba3eb 100%);
+            }
+
+            .tabButton,
+            .tabButton:link,
+            .tabButton:visited,
+            .tabButton:hover,
+            .tabButtonSelected,
+            .tabButtonSelected:link,
+            .tabButtonSelected:visited,
+            .tabButtonSelected:hover {
+                color: #000000 !important;
+                text-decoration: none !important;
+            }
+    </style>
+
+    <script type="text/javascript">
+        /* Optional: Temporarily hide the "tabber" class so it does not "flash"
+        on the page as plain HTML. After tabber runs, the class is changed
+        to "tabberlive" and it will appear. */
+
+        document.write('<style type="text/css">.tabber{display:none;}<\/style>');
+
+        /*==================================================
+        Set the tabber options (must do this before including tabber.js)
+        ==================================================*/
+        var tabberOptions = {
+
+            'cookie': "tabber", /* Name to use for the cookie */
+
+            'onLoad': function (argsObj) {
+                var t = argsObj.tabber;
+                var i;
+
+                /* Optional: Add the id of the tabber to the cookie name to allow
+                for multiple tabber interfaces on the site.  If you have
+                multiple tabber interfaces (even on different pages) I suggest
+                setting a unique id on each one, to avoid having the cookie set
+                the wrong tab.
+                */
+                if (t.id) {
+                    t.cookie = t.id + t.cookie;
+                }
+
+                /* If a cookie was previously set, restore the active tab */
+                i = parseInt(getCookie(t.cookie));
+                if (isNaN(i)) { return; }
+                t.tabShow(i);
+                document.getElementById('hidCurrTab').value = i;
+
+                //Murtuza Commented Note Tab AND ALSO REMOVED CELL FOR NOTE COMPLETELY
+                //	    // If Instrument Number tab is selected dont show the Div tag note.
+                //	    if (i == 0){
+                //	        document.getElementById('<PERCENTAGE=note.ClientID%>').style.visibility = "hidden";
+                //	    }
+                //	    else{
+                //	        document.getElementById('<PERCENTAGE=note.ClientID%>').style.visibility = "";
+                //	    }
+
+                //alert('getCookie(' + t.cookie + ') = ' + i);
+            },
+
+            'onClick': function (argsObj) {
+
+                var t = argsObj.tabber; /* Tabber object */
+                var id = t.id; /* ID of the main tabber DIV */
+                var i = argsObj.index; /* Which tab was clicked (0 is the first tab) */
+                var e = argsObj.event; /* Event object */
+                var c = argsObj.tabber.cookie;
+                //Setting up the value for HELP file.
+                document.getElementById('hidCurrTab').value = i;
+
+                setCookie(c, i);
+
+            }
+        };
+
+        /*==================================================
+        Cookie functions
+        ==================================================*/
+        function setCookie(name, value, expires, path, domain, secure) {
+            document.cookie = name + "=" + escape(value) +
+                ((expires) ? "; expires=" + expires.toGMTString() : "") +
+                ((path) ? "; path=" + path : "") +
+                ((domain) ? "; domain=" + domain : "") +
+                ((secure) ? "; secure" : "");
+        }
+
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+
+        function deleteCookie(name, path, domain) {
+            if (getCookie(name)) {
+                document.cookie = name + "=" +
+                    ((path) ? "; path=" + path : "") +
+                    ((domain) ? "; domain=" + domain : "") +
+                    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+            }
+        }
+
+        function OnHelpButton() {
+
+
+            //alert('This feature will be available soon.'); return false;
+
+            //var helpFile = '../webhelp/Press_HelpFile.pdf#pagemode=bookmarks&page=';
+            var helpFile = '../webhelp/index.html?page=source/Contents.htm';
+
+            //if (document.getElementById('hidCurrTab').value == ''){
+            //    document.getElementById('hidCurrTab').value = 2
+            //}
+
+            //switch (document.getElementById('hidCurrTab').value) {
+            //    case '3': {
+            //        helpFile += '14'	//'instrument.htm'
+            //        break
+            //    }
+
+            //    case '2': {
+            //        helpFile += '5'	//'document.htm'
+            //        break
+            //    }
+
+            //    case '4': {
+            //        helpFile += '8'	//'blockandlot.htm'
+            //        break
+            //    }
+
+            //    case '1': {
+            //        helpFile += '11'	//'name.htm'
+            //        break
+            //    }
+
+            //    //case 'results':{
+            //    default: {
+            //        helpFile += '6'	//'SearchResults.htm'
+            //        break
+            //    }
+
+            //}
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+
+        }
+
+
+        function OnHelpButton1() {
+
+
+            alert('This feature will be available soon.'); return false;
+
+
+            var helpFile = '../webhelp/index.html?page=source/';
+
+            switch ('Search') {
+                case 'Search': {
+                    helpFile += 'RecordSearch.htm'
+                    break
+                }
+                case 'Results': {
+                    helpFile += 'SearchResults.htm'
+                    break
+                }
+
+            }
+            var newWin = window.open(helpFile, 'HelpWindow', "height=600,width=900,status=yes,toolbar=no,location=no");
+            newWin.focus();
+        }
+    </script>
+    <script language="javascript" src="../includes/tabber.js"></script>
+    <script language="javascript" src="../includes/jsDate.js"></script>
+    <script language="javascript">
+        function goodchars(e, goods) {
+            var key, keychar;
+            key = window.event.keyCode;
+            if (key == null) return true;
+
+            // get character
+            keychar = String.fromCharCode(key);
+            keychar = keychar.toLowerCase();
+            goods = goods.toLowerCase();
+
+            // check goodkeys
+            if (goods.indexOf(keychar) != -1)
+                return true;
+
+            // control keys
+            if (key == null || key == 0 || key == 8 || key == 9 || key == 13 || key == 27)
+                return true;
+
+            // else return false
+            return false;
+        }
+
+        function cleartab1() {
+            document.getElementById('_ctl0_PageContent_txtLastNameTab1').value = '';
+        document.getElementById('_ctl0_PageContent_txtFirstNameTab1').value = '';
+        document.getElementById('_ctl0_PageContent_txtFromTab1').value = '';
+        document.getElementById('_ctl0_PageContent_txtToTab1').value = '';
+        document.getElementById('_ctl0_PageContent_ddlDocTypeTab1').selectedIndex = 0;
+            return false;
+        }
+
+        function cleartab2() {
+            document.getElementById('_ctl0_PageContent_txtFromTab2').value = '';
+        document.getElementById('_ctl0_PageContent_txtToTab2').value = '';
+	    //document.getElementById('_ctl0_PageContent_txtConsiderationTab2').value = '';
+        document.getElementById('_ctl0_PageContent_ddlMunTab2').selectedIndex = 0;
+        document.getElementById('_ctl0_PageContent_ddlDocTypeTab2').selectedIndex = 0;
+            return false;
+        }
+
+        function cleartab3() {
+            document.getElementById('_ctl0_PageContent_txtInstrumentTab3').value = '';
+        document.getElementById('_ctl0_PageContent_txtBookNumberTab3').value = '';
+        document.getElementById('_ctl0_PageContent_txtPageNumberTab3').value = '';
+            return false;
+        }
+
+        function cleartab4() {
+            document.getElementById('_ctl0_PageContent_txtFromTab4').value = '';
+        document.getElementById('_ctl0_PageContent_txtToTab4').value = '';
+        document.getElementById('_ctl0_PageContent_txtBlockTab4').value = '';
+        document.getElementById('_ctl0_PageContent_txtLotTab4').value = '';
+        document.getElementById('_ctl0_PageContent_ddlMunTab4').selectedIndex = 0;
+            return false;
+        }
+
+        function MoreDates(tabIndex) {
+            //alert('Please enter any date (in From and To) from 10/1/1996 in 90 days range.')
+            alert('Please enter any date (in From and To) in 90 days range.')
+            switch (tabIndex) {
+                case 1: {
+                    document.getElementById('_ctl0_PageContent_txtFromTab1').focus();
+                break;
+            }
+            case 2: {
+                document.getElementById('_ctl0_PageContent_txtFromTab2').focus();
+                break;
+            }
+            case 4: {
+                document.getElementById('_ctl0_PageContent_txtFromTab4').focus();
+                    break;
+                }
+            }
+        }
+
+        function FillDates(tabIndex, dateInt) {
+            var currDate = new Date()
+            var fromDate
+            dateInt = dateInt * -1; // To find the nth day prior to today.
+            fromDate = DateAdd('d', dateInt, currDate);
+
+            switch (tabIndex) {
+                case 1: {
+                    document.getElementById('_ctl0_PageContent_txtFromTab1').value = simpleDate(fromDate);
+                document.getElementById('_ctl0_PageContent_txtToTab1').value = simpleDate(currDate);
+                break;
+            }
+            case 2: {
+                document.getElementById('_ctl0_PageContent_txtFromTab2').value = simpleDate(fromDate);
+                document.getElementById('_ctl0_PageContent_txtToTab2').value = simpleDate(currDate);
+                break;
+            }
+            case 4: {
+                document.getElementById('_ctl0_PageContent_txtFromTab4').value = simpleDate(fromDate);
+                document.getElementById('_ctl0_PageContent_txtToTab4').value = simpleDate(currDate);
+                    break;
+                }
+            }
+        }
+
+        function tabChanged(newTabIndex) {
+
+            document.getElementById('_ctl0_PageContent_imgTab2').src = '../App_Themes/Passaic/Images//Clerk/tabDocType_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab4').src = '../App_Themes/Passaic/Images//Clerk/tabBlockLot_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab1').src = '../App_Themes/Passaic/Images//Clerk/tabName_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab3').src = '../App_Themes/Passaic/Images//Clerk/tabInstNum_over.jpg';
+
+
+        document.getElementById('_ctl0_PageContent_imgTab2').src = '../App_Themes/Passaic/Images//Clerk/tabDocType_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab4').src = '../App_Themes/Passaic/Images//Clerk/tabBlockLot_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab1').src = '../App_Themes/Passaic/Images//Clerk/tabName_over.jpg';
+        document.getElementById('_ctl0_PageContent_imgTab3').src = '../App_Themes/Passaic/Images//Clerk/tabInstNum_over.jpg';
+
+
+
+        document.getElementById('tab1').style.display='none';
+        document.getElementById('tab2').style.display='none';
+        document.getElementById('tab3').style.display='none';
+        document.getElementById('tab4').style.display='none';
+
+        switch (newTabIndex)
+        {
+            case '2': {document.getElementById('tab2').style.display="";    document.getElementById('_ctl0_PageContent_imgTab2').src = '../App_Themes/Passaic/Images//Clerk/tabDocType.jpg';    break;}
+            case '4': {document.getElementById('tab4').style.display="";    document.getElementById('_ctl0_PageContent_imgTab4').src = '../App_Themes/Passaic/Images//Clerk/tabBlockLot.jpg';   break;}
+            case '1': {document.getElementById('tab1').style.display="";    document.getElementById('_ctl0_PageContent_imgTab1').src = '../App_Themes/Passaic/Images//Clerk/tabName.jpg';       break;}
+            case '3': {document.getElementById('tab3').style.display="";    document.getElementById('_ctl0_PageContent_imgTab3').src = '../App_Themes/Passaic/Images//Clerk/tabInstNum.jpg';    break;}
+        }
+
+        var tabButtons = [
+        '_ctl0_PageContent_lnkTab1',
+        '_ctl0_PageContent_lnkTab2',
+        '_ctl0_PageContent_lnkTab3',
+            '_ctl0_PageContent_lnkTab4'
+        ];
+
+        // Reset all tabs
+        for (var i = 0; i < tabButtons.length; i++) {
+            document.getElementById(tabButtons[i]).className = "tabButton";
+            document.getElementById("tab" + (i + 1)).style.display = "none";
+        }
+
+        // Select the current tab
+        document.getElementById(tabButtons[parseInt(newTabIndex, 10) - 1]).className = "tabButtonSelected";
+        document.getElementById("tab" + newTabIndex).style.display = "";
+
+
+        
+        document.getElementById('hidCurrTab').value = newTabIndex;
+        
+    }
+    
+    window.onload = function()
+    {   if (document.getElementById('_ctl0_PageContent_divBasic') != null)
+        {
+            if ('' == '')
+                tabChanged('2');
+            else
+                tabChanged('');
+        }
+        }
+
+        function DisplayCalendar(ctl) {
+            Width = 290;
+            Height = 280;
+            xPos = (screen.width - Width) / 2;
+            yPos = (screen.height - Height) / 2;
+
+            window.open('ShowCalendar.aspx?frm=0&ctl=' + ctl, 'Names', 'dependent=yes,width=' + Width + ',height=' + Height + ',left=' + xPos + ',top=' + yPos + ',titlebar=yes');
+            //window.open('ShowCalendar.aspx?ctl=' + ctl,'Names','dependent=yes,width=' + Width + ',height=' + Height + ',left=' + xPos + ',top=' + yPos + ',titlebar=yes');
+        }
+    </script>
+    <table style="vertical-align: top; width: 100%">
+        <tr>
+            <td align="center">
+                </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                
+            </td>
+        </tr>
+
+        <!-- Search Begin-->
+        <tr>
+            <td valign="top" colspan="2">
+                <div id="_ctl0_PageContent_divBasic">
+                    <table cellspacing="0" cellpadding="0" width="56%" align="center" border="0">
+                        <tr valign="top">
+                            <td valign="top" align="center" width="100%">
+                                <br />
+                                <table cellspacing="0" cellpadding="0" border="0" width="100%" align="left">
+                                    <tr valign="top">
+                                        <td colspan="2">
+                                            <table border="0" align="center" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td width="13" valign="bottom">
+                                                        <img src="../App_Themes/Passaic/Images//Clerk/Corner1.jpg" width="13" height="23" /></td>
+                                                    <td width="100%" background="../App_Themes/Passaic/Images//Clerk/TabBack.jpg">
+                                                        <table style="width: 750px" border="0" cellspacing="0" cellpadding="0" align="left">
+                                                            <tr>
+                                                                <td style="height: 23px" align="left">
+                                                                    <table cellpadding="0" align="left" cellspacing="0" border="0">
+                                                                        <tr>
+                                                                            <td style="width: 0px"></td>
+                                                                            
+                                                                            <td>
+                                                                                <input type="image" name="_ctl0:PageContent:imgTab2" id="_ctl0_PageContent_imgTab2" tagForHover="1" src="../App_Themes/Passaic/Images//Clerk/tabDocType.jpg" border="0" onclick="tabChanged(&#39;2&#39;); return false;" language="javascript" style="border-style:None;height:23px;display: none;" />
+
+                                                                                <a onclick="tabChanged(&#39;2&#39;); return false;" id="_ctl0_PageContent_lnkTab2" class="tabButtonSelected" href="javascript:__doPostBack(&#39;_ctl0$PageContent$lnkTab2&#39;,&#39;&#39;)">By Document Type</a>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="image" name="_ctl0:PageContent:imgTab4" id="_ctl0_PageContent_imgTab4" tagForHover="1" src="../App_Themes/Passaic/Images//Clerk/tabBlockLot.jpg" border="0" onclick="tabChanged(&#39;4&#39;); return false;" language="javascript" style="border-style:None;height:23px;display:none" />
+
+                                                                                 <a onclick="tabChanged(&#39;4&#39;); return false;" id="_ctl0_PageContent_lnkTab4" class="tabButton" href="javascript:__doPostBack(&#39;_ctl0$PageContent$lnkTab4&#39;,&#39;&#39;)">By Block and Lot</a>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="image" name="_ctl0:PageContent:imgTab1" id="_ctl0_PageContent_imgTab1" tagForHover="1" src="../App_Themes/Passaic/Images//Clerk/tabName.jpg" border="0" onclick="tabChanged(&#39;1&#39;); return false;" language="javascript" style="border-style:None;height:23px;display:none" />
+
+                                                                                 <a onclick="tabChanged(&#39;1&#39;); return false;" id="_ctl0_PageContent_lnkTab1" class="tabButton" href="javascript:__doPostBack(&#39;_ctl0$PageContent$lnkTab1&#39;,&#39;&#39;)">By Name</a>
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="image" name="_ctl0:PageContent:imgTab3" id="_ctl0_PageContent_imgTab3" tagForHover="1" src="../App_Themes/Passaic/Images//Clerk/tabInstNum.jpg" border="0" onclick="tabChanged(&#39;3&#39;); return false;" language="javascript" style="border-style:None;height:23px;display:none" />
+
+                                                                                 <a onclick="tabChanged(&#39;3&#39;); return false;" id="_ctl0_PageContent_lnkTab3" class="tabButton" href="javascript:__doPostBack(&#39;_ctl0$PageContent$lnkTab3&#39;,&#39;&#39;)">By Instrument Number</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td width="12" valign="bottom">
+                                                        <img src="../App_Themes/Passaic/Images//Clerk/Corner2.jpg" width="12" height="23" /></td>
+                                                </tr>
+
+
+                                                <tr valign="top">
+                                                    <td valign="top">
+                                                        <img src="../App_Themes/Passaic/Images//Clerk/Corner3.jpg" width="13" height="8" /></td>
+                                                    <td valign="top" background="../App_Themes/Passaic/Images//Clerk/TabBack.jpg"></td>
+                                                    <td valign="top">
+                                                        <img src="../App_Themes/Passaic/Images//Clerk/Corner4.jpg" width="12" height="8" /></td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td background="../App_Themes/Passaic/Images//Clerk/leftspread.jpg">&nbsp;</td>
+                                                    <td height="300" valign="top">
+
+
+                                                        <div id="tab2">
+                                                            <!--Originally Tab 2 -->
+                                                            <div id="_ctl0_PageContent_pnlTab2" language="javascript" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;_ctl0_PageContent_btnSearchTab2&#39;)">
+		
+                                                                <table align="center" height="275" width="75%" border="0" class="TabContentBackGround">
+                                                                    <tr>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="1" style="text-align: right">
+                                                                            &nbsp;<span id="_ctl0_PageContent_lblMunTab2" class="NormalFont">Municipality:</span></td>
+                                                                        <td colspan="3" style="width: 50%; text-align: left">
+                                                                            <select name="_ctl0:PageContent:ddlMunTab2" id="_ctl0_PageContent_ddlMunTab2" class="TextField" style="width:300px;">
+			<option value="Please Select a Municipality">Please Select a Municipality</option>
+			<option value="BLOOMINGDALE BOROUGH">BLOOMINGDALE BOROUGH</option>
+			<option value="CLIFTON CITY">CLIFTON CITY</option>
+			<option value="HALEDON BOROUGH">HALEDON BOROUGH</option>
+			<option value="HAWTHORNE BOROUGH">HAWTHORNE BOROUGH</option>
+			<option value="LITTLE FALLS TOWNSHIP">LITTLE FALLS TOWNSHIP</option>
+			<option value="NORTH HALEDON BOROUGH">NORTH HALEDON BOROUGH</option>
+			<option value="PASSAIC CITY">PASSAIC CITY</option>
+			<option value="PASSAIC COUNTY">PASSAIC COUNTY</option>
+			<option value="PATERSON CITY">PATERSON CITY</option>
+			<option value="POMPTON LAKES BOROUGH">POMPTON LAKES BOROUGH</option>
+			<option value="PROSPECT PARK BOROUGH">PROSPECT PARK BOROUGH</option>
+			<option value="RINGWOOD BOROUGH">RINGWOOD BOROUGH</option>
+			<option value="TOTOWA BOROUGH">TOTOWA BOROUGH</option>
+			<option value="WANAQUE BOROUGH">WANAQUE BOROUGH</option>
+			<option value="WAYNE TOWNSHIP">WAYNE TOWNSHIP</option>
+			<option value="WEST MILFORD TOWNSHIP">WEST MILFORD TOWNSHIP</option>
+			<option value="WEST PATERSON BOROUGH">WEST PATERSON BOROUGH</option>
+			<option value="WOODLAND PARK">WOODLAND PARK</option>
+			<option value="COUNTY WIDE">COUNTY WIDE</option>
+
+		</select></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="1" style="text-align: right">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblDocumentTypeTab2" class="NormalFont">Document Type:</span></td>
+                                                                        <td colspan="3" style="text-align: left">
+                                                                            <select name="_ctl0:PageContent:ddlDocTypeTab2" id="_ctl0_PageContent_ddlDocTypeTab2" class="TextField" style="width:300px;">
+			<option selected="selected" value="">Select Document Type</option>
+			<option value="ACL">AMENDED CONSTRUCTION LIEN CLAIM</option>
+			<option value="ADC">AMENDED DISCHARGE OF CONSTUCTION LIEN</option>
+			<option value="ANU">AMENDED NOTICE UNPAID BALANCE/RIGHT TO FILE LIEN</option>
+			<option value="5">ASSIGNMENT OF MORTGAGE</option>
+			<option value="BTD">BOND TO DISCHARGE CLC/NUB</option>
+			<option value="4">CANCEL MORTGAGE</option>
+			<option value="CLC">CONSTRUCTION LIEN</option>
+			<option value="CLB">CONSTRUCTION LIEN BOND</option>
+			<option value="CTORDCN">COURT ORDER DISCHARGING A CLC/NUB</option>
+			<option value="23A">DEDICATION</option>
+			<option value="1">DEED</option>
+			<option value="DANU">DISCHARGE AMENDED NOTICE UNPAID BALANCE/RIGHT FILE</option>
+			<option value="DAC">DISCHARGE OF AMENDMENT OF CONSTRUCTION LIEN CLAIM</option>
+			<option value="DCL">DISCHARGE OF CONSTRUCTION LIEN</option>
+			<option value="DLB">DISCHARGE OF LIEN BOND</option>
+			<option value="21">DISCHARGE OF LISPENS</option>
+			<option value="6">DISCHARGE OF MORTGAGE</option>
+			<option value="DPL">DISCHARGE OF PHYSICIAN LIEN</option>
+			<option value="22">DISCLAIMER</option>
+			<option value="29">FILED MAP</option>
+			<option value="3">FINANCING STATEMENT</option>
+			<option value="28">FINANCING STATEMENT TERMINATION</option>
+			<option value="9">FORECLOSURE LIS PENDENS</option>
+			<option value="ITW">INHERITANCE TAX WAIVER</option>
+			<option value="JUDG">JUDGEMENT</option>
+			<option value="8">LIS PENDENS</option>
+			<option value="25">MISCELLANEOUS</option>
+			<option value="MISC">MISCELLANEOUS - CLERK</option>
+			<option value="2">MORTGAGE</option>
+			<option value="31">NOTICE OF SALE</option>
+			<option value="20">NOTICE OF SETTLEMENT</option>
+			<option value="20D">NOTICE OF SETTLEMENT - DISCHARGE</option>
+			<option value="NOD">NOTICE OF THE DELIVERY OF LABOR OR MATERIALS</option>
+			<option value="NUB">NOTICE OF UNPAID BALANCE</option>
+			<option value="PRCL">PARTIAL RELEASE OF CONSTRUCTION LIEN</option>
+			<option value="PHYREG">PHYSICIAN REGISTRATION</option>
+			<option value="PL">PHYSICIAN&#39;S LIEN</option>
+			<option value="1A">POWER OF ATTORNEY</option>
+			<option value="DNU">RELEASE NOTICE UNPAID BALANCE</option>
+			<option value="7">RELEASE OF MORTGAGE</option>
+			<option value="1B">RIGHT OF WAY</option>
+			<option value="23">STREET VACATION</option>
+			<option value="SCL">SUBORDINATION OF CLC/NUB</option>
+			<option value="2TAX">TAX SALE CERTIFICATE</option>
+			<option value="2TAXCANC">TAX SALE CERTIFICATE CANCELLATION</option>
+			<option value="WOL">WAIVER OF LIEN</option>
+			<option value="WFS">WARRANT FOR SATISFACTION</option>
+			<option value="WSJ">WARRANT FOR SATISFACTION - JUDGMENT</option>
+			<option value="12W">WITHDRAWL OF FILED FED TAX LIEN AFTER RELEASE</option>
+
+		</select></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td valign="top" align="left" width="124">
+                                                                            </td>
+                                                                        <td class="NormalFont" valign="top" align="left" colspan="4">
+                                                                            
+                                                                            <!--(For Deed & Mortgages Only. Greater or Equal to)-->
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2" style="text-align: center">
+                                                                            
+                                                                            
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblFromTab2" class="NormalFont">From Date:</span>
+
+                                                                            &nbsp;&nbsp;
+
+                                                                            <input name="_ctl0:PageContent:txtFromTab2" type="text" id="_ctl0_PageContent_txtFromTab2" class="TextField" style="width:90px;" />
+                                                                            <a onmouseover="window.status='Date Picker';return true;"
+                                                                                onclick="DisplayCalendar('_ctl0_PageContent_txtFromTab2');"
+                                                                                onmouseout="window.status='';return true;" href="javascript:donothing()">
+                                                                                <img src="../App_Themes/Passaic/Images//calendar.gif" align="absMiddle" border="0">
+                                                                            </a>
+                                                                            
+                                                                        </td>
+                                                                        
+                                                                        <td colspan="2" style="text-align: center">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblToTab2" class="NormalFont">To Date:</span>
+                                                                            
+                                                                            &nbsp;&nbsp;
+															               <input name="_ctl0:PageContent:txtToTab2" type="text" id="_ctl0_PageContent_txtToTab2" class="TextField" style="width:90px;" />
+                                                                            <a onmouseover="window.status='Date Picker';return true;"
+                                                                                onclick="DisplayCalendar('_ctl0_PageContent_txtToTab2');"
+                                                                                onmouseout="window.status='';return true;" href="javascript:donothing()">
+                                                                                <img src="../App_Themes/Passaic/Images//calendar.gif" align="absMiddle" border="0">
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr><td style="height: 10px"></td></tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <a class="NormalFont" href="javascript:FillDates(2,3)"><font color="blue">3 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(2,7)"><font color="blue">7 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(2,15)"><font color="blue">15 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(2,30)"><font color="blue">30 days</font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(2,90)"><font color="blue">90 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:MoreDates(2)"><font color="blue">more.. </font></a>
+                                                                            &nbsp; &nbsp;
+														        <font face="verdana" color="black" size="2">[<b>Quick Date Range</b>]</font>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4" style="height: 10px"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <span id="_ctl0_PageContent_lblShowRecTab2" class="NormalFont">Display Results:</span>
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                            
+                                                                            <span style="vertical-align: top;">
+                                                                                <span id="_ctl0_PageContent_lblShowRecTab2A" class="NormalFont">Per Page:</span></span>
+                                                                            &nbsp;
+														                    <select name="_ctl0:PageContent:ddlShowRecTab2" id="_ctl0_PageContent_ddlShowRecTab2" class="TextField">
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+
+		</select>
+                                                                            &nbsp;&nbsp;
+															                <span style="vertical-align: top;">
+                                                                                <span id="_ctl0_PageContent_lblTotalRecTab2" class="NormalFont">Total Records:</span></span>
+                                                                                        &nbsp;
+															                <select name="_ctl0:PageContent:ddlTotalRecTab2" id="_ctl0_PageContent_ddlTotalRecTab2" class="TextField">
+			<option value="100">100</option>
+			<option value="200">200</option>
+			<option value="500">500</option>
+			<option value="750">750</option>
+
+		</select>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td align="center" colspan="4">&nbsp;</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td align="center" width="100%" colspan="4">
+                                                                                        <input type="submit" name="_ctl0:PageContent:btnSearchTab2" value="Search" onclick="document.getElementById(&#39;hidDiv&#39;).value=&#39;NewSearch&#39;;" language="javascript" id="_ctl0_PageContent_btnSearchTab2" class="ButtonClass" />
+                                                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														                    <input type="submit" name="_ctl0:PageContent:btnClearTab2" value="Clear" onclick="return cleartab2();" language="javascript" id="_ctl0_PageContent_btnClearTab2" class="ButtonClass" />
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        
+	</div>
+                                                                     </div>
+
+
+
+
+
+                                                        <div id="tab4">
+                                                            <!--Originally Tab 4 -->
+                                                            <div id="_ctl0_PageContent_pnlTab4" language="javascript" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;_ctl0_PageContent_btnSearchTab4&#39;)">
+		
+                                                                <table height="275" width="100%" class="TabContentBackGround" border="0">
+                                                                    <tr>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="text-align: right">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblMunicipalTab4" class="NormalFont">Municipality:</span></td>
+                                                                        <td colspan="3" style="text-align: left">
+                                                                            <select name="_ctl0:PageContent:ddlMunTab4" id="_ctl0_PageContent_ddlMunTab4" class="TextField" style="width:300px;">
+			<option value="Please Select a Municipality">Please Select a Municipality</option>
+			<option value="BLOOMINGDALE BOROUGH">BLOOMINGDALE BOROUGH</option>
+			<option value="CLIFTON CITY">CLIFTON CITY</option>
+			<option value="HALEDON BOROUGH">HALEDON BOROUGH</option>
+			<option value="HAWTHORNE BOROUGH">HAWTHORNE BOROUGH</option>
+			<option value="LITTLE FALLS TOWNSHIP">LITTLE FALLS TOWNSHIP</option>
+			<option value="NORTH HALEDON BOROUGH">NORTH HALEDON BOROUGH</option>
+			<option value="PASSAIC CITY">PASSAIC CITY</option>
+			<option value="PASSAIC COUNTY">PASSAIC COUNTY</option>
+			<option value="PATERSON CITY">PATERSON CITY</option>
+			<option value="POMPTON LAKES BOROUGH">POMPTON LAKES BOROUGH</option>
+			<option value="PROSPECT PARK BOROUGH">PROSPECT PARK BOROUGH</option>
+			<option value="RINGWOOD BOROUGH">RINGWOOD BOROUGH</option>
+			<option value="TOTOWA BOROUGH">TOTOWA BOROUGH</option>
+			<option value="WANAQUE BOROUGH">WANAQUE BOROUGH</option>
+			<option value="WAYNE TOWNSHIP">WAYNE TOWNSHIP</option>
+			<option value="WEST MILFORD TOWNSHIP">WEST MILFORD TOWNSHIP</option>
+			<option value="WEST PATERSON BOROUGH">WEST PATERSON BOROUGH</option>
+			<option value="WOODLAND PARK">WOODLAND PARK</option>
+			<option value="COUNTY WIDE">COUNTY WIDE</option>
+
+		</select></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4" style="height: 10px"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="text-align: center" colspan="2">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblBlockTab4" class="NormalFont">Block:</span>
+                                                                       
+                                                                            <input name="_ctl0:PageContent:txtBlockTab4" type="text" id="_ctl0_PageContent_txtBlockTab4" class="TextField" style="width:75px;" />
+                                                                        </td>
+                                                                        
+                                                                        <td style="text-align: center" colspan="2">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblLotTab4" class="NormalFont">Lot:</span>
+                                                                        
+														                    <input name="_ctl0:PageContent:txtLotTab4" type="text" id="_ctl0_PageContent_txtLotTab4" class="TextField" style="width:75px;" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="NormalFont" align="center" colspan="4"><font color="red">[OR]</font></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="text-align: center" colspan="2">
+                                                                            
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblFromTab4" class="NormalFont">From Date:</span>
+                                                                            
+                                                                        
+                                                                            <input name="_ctl0:PageContent:txtFromTab4" type="text" id="_ctl0_PageContent_txtFromTab4" class="TextField" style="width:75px;" />
+                                                                            <a onmouseover="window.status='Date Picker';return true;"
+                                                                                onclick="DisplayCalendar('_ctl0_PageContent_txtFromTab4');"
+                                                                                onmouseout="window.status='';return true;" href="javascript:donothing()">
+                                                                                <img src="../App_Themes/Passaic/Images//calendar.gif" align="absMiddle" border="0">
+                                                                            </a>
+                                                                        </td>
+                                                                        <td style="text-align: center" colspan="2">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblToTab4" class="NormalFont">To Date:</span>
+                                                                        
+															                <input name="_ctl0:PageContent:txtToTab4" type="text" id="_ctl0_PageContent_txtToTab4" class="TextField" style="width:75px;" />
+                                                                            <a onmouseover="window.status='Date Picker';return true;"
+                                                                                onclick="DisplayCalendar('_ctl0_PageContent_txtToTab4');"
+                                                                                onmouseout="window.status='';return true;" href="javascript:donothing()">
+                                                                                <img src="../App_Themes/Passaic/Images//calendar.gif" align="absMiddle" border="0">
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="height: 10px" colspan="4"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <a class="NormalFont" href="javascript:FillDates(4,3)"><font color="blue">3 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(4,7)"><font color="blue">7 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(4,15)"><font color="blue">15 days</font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(4,30)"><font color="blue">30 days</font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(4,90)"><font color="blue">90 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:MoreDates(4)"><font color="blue">more..</font></a>
+                                                                            &nbsp; &nbsp; 
+														        <font face="verdana" color="black" size="2">[<b>Quick Date Range</b>]</font>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="height: 10px" colspan="4"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <span id="_ctl0_PageContent_lblShowRecTab4" class="NormalFont">Display Results:</span>
+                                                                            &nbsp;&nbsp;&nbsp;
+                                                                            <span style="vertical-align: top;">
+                                                                                <span id="_ctl0_PageContent_lblShowRecTab4A" class="NormalFont">Per Page:</span></span>
+                                                                            &nbsp;
+														                        <select name="_ctl0:PageContent:ddlShowRecTab4" id="_ctl0_PageContent_ddlShowRecTab4" class="TextField">
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+
+		</select>
+                                                                            &nbsp;&nbsp;
+														            <span style="vertical-align: top;">
+                                                                        <span id="_ctl0_PageContent_lblTotalRecTab4" class="NormalFont">Total Records:</span></span>
+                                                                            &nbsp;
+														                <select name="_ctl0:PageContent:ddlTotalRecTab4" id="_ctl0_PageContent_ddlTotalRecTab4" class="TextField">
+			<option value="100">100</option>
+			<option value="200">200</option>
+			<option value="500">500</option>
+			<option value="750">750</option>
+
+		</select>
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <input type="submit" name="_ctl0:PageContent:btnSearchTab4" value="Search" onclick="document.getElementById(&#39;hidDiv&#39;).value=&#39;NewSearch&#39;;" language="javascript" id="_ctl0_PageContent_btnSearchTab4" class="ButtonClass" />
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														        <input type="submit" name="_ctl0:PageContent:btnClearTab4" value="Clear" onclick="return cleartab4();" language="javascript" id="_ctl0_PageContent_btnClearTab4" class="ButtonClass" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            
+	</div>
+                                                        </div>
+
+
+
+
+
+
+                                                        <div id="tab1">
+                                                            <!--Originally Tab 1 -->
+                                                            <div id="_ctl0_PageContent_pnlTab1" language="javascript" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;_ctl0_PageContent_btnSearchTab1&#39;)">
+		
+                                                                <table height="275" width="100%" class="TabContentBackGround" border="0">
+                                                                    <tr>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                        <td style="height: 10px; width: 25%"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="text-align: right">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblLastNameTab1" class="NormalFont">Last Name:</span></td>
+                                                                        <td style="text-align: left">
+                                                                            <input name="_ctl0:PageContent:txtLastNameTab1" type="text" id="_ctl0_PageContent_txtLastNameTab1" class="TextField" style="width:150px;" /></td>
+                                                                        <td style="text-align: left; padding-left: 0px" colspan="2">
+                                                                            <span id="_ctl0_PageContent_lblFirstNameTab1" class="NormalFont">First Name:</span>
+                                                                        
+                                                                            <input name="_ctl0:PageContent:txtFirstNameTab1" type="text" id="_ctl0_PageContent_txtFirstNameTab1" class="TextField" style="width:150px;" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="height: 10px" colspan="4"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="right">
+                                                                            <span id="_ctl0_PageContent_lblDocumentTypeTab1" class="NormalFont">Document Type:</span></td>
+                                                                        <td align="left" colspan="3">
+                                                                            <select name="_ctl0:PageContent:ddlDocTypeTab1" id="_ctl0_PageContent_ddlDocTypeTab1" class="TextField" style="width:300px;">
+			<option value="">Select Document Type</option>
+			<option value="ACL">AMENDED CONSTRUCTION LIEN CLAIM</option>
+			<option value="ADC">AMENDED DISCHARGE OF CONSTUCTION LIEN</option>
+			<option value="ANU">AMENDED NOTICE UNPAID BALANCE/RIGHT TO FILE LIEN</option>
+			<option value="5">ASSIGNMENT OF MORTGAGE</option>
+			<option value="BTD">BOND TO DISCHARGE CLC/NUB</option>
+			<option value="4">CANCEL MORTGAGE</option>
+			<option value="CLC">CONSTRUCTION LIEN</option>
+			<option value="CLB">CONSTRUCTION LIEN BOND</option>
+			<option value="CTORDCN">COURT ORDER DISCHARGING A CLC/NUB</option>
+			<option value="23A">DEDICATION</option>
+			<option value="1">DEED</option>
+			<option value="DANU">DISCHARGE AMENDED NOTICE UNPAID BALANCE/RIGHT FILE</option>
+			<option value="DAC">DISCHARGE OF AMENDMENT OF CONSTRUCTION LIEN CLAIM</option>
+			<option value="DCL">DISCHARGE OF CONSTRUCTION LIEN</option>
+			<option value="DLB">DISCHARGE OF LIEN BOND</option>
+			<option value="21">DISCHARGE OF LISPENS</option>
+			<option value="6">DISCHARGE OF MORTGAGE</option>
+			<option value="DPL">DISCHARGE OF PHYSICIAN LIEN</option>
+			<option value="22">DISCLAIMER</option>
+			<option value="29">FILED MAP</option>
+			<option value="3">FINANCING STATEMENT</option>
+			<option value="28">FINANCING STATEMENT TERMINATION</option>
+			<option value="9">FORECLOSURE LIS PENDENS</option>
+			<option value="ITW">INHERITANCE TAX WAIVER</option>
+			<option value="JUDG">JUDGEMENT</option>
+			<option value="8">LIS PENDENS</option>
+			<option value="25">MISCELLANEOUS</option>
+			<option value="MISC">MISCELLANEOUS - CLERK</option>
+			<option value="2">MORTGAGE</option>
+			<option value="31">NOTICE OF SALE</option>
+			<option value="20">NOTICE OF SETTLEMENT</option>
+			<option value="20D">NOTICE OF SETTLEMENT - DISCHARGE</option>
+			<option value="NOD">NOTICE OF THE DELIVERY OF LABOR OR MATERIALS</option>
+			<option value="NUB">NOTICE OF UNPAID BALANCE</option>
+			<option value="PRCL">PARTIAL RELEASE OF CONSTRUCTION LIEN</option>
+			<option value="PHYREG">PHYSICIAN REGISTRATION</option>
+			<option value="PL">PHYSICIAN&#39;S LIEN</option>
+			<option value="1A">POWER OF ATTORNEY</option>
+			<option value="DNU">RELEASE NOTICE UNPAID BALANCE</option>
+			<option value="7">RELEASE OF MORTGAGE</option>
+			<option value="1B">RIGHT OF WAY</option>
+			<option value="23">STREET VACATION</option>
+			<option value="SCL">SUBORDINATION OF CLC/NUB</option>
+			<option value="2TAX">TAX SALE CERTIFICATE</option>
+			<option value="2TAXCANC">TAX SALE CERTIFICATE CANCELLATION</option>
+			<option value="WOL">WAIVER OF LIEN</option>
+			<option value="WFS">WARRANT FOR SATISFACTION</option>
+			<option value="WSJ">WARRANT FOR SATISFACTION - JUDGMENT</option>
+			<option value="12W">WITHDRAWL OF FILED FED TAX LIEN AFTER RELEASE</option>
+
+		</select></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="height: 10px" colspan="4"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="right">
+                                                                            
+                                                                            <span id="_ctl0_PageContent_lblFromTab1" class="NormalFont">From Date:</span>
+                                                                        </td>
+                                                                        <td align="left" colspan="1">
+                                                                            <input name="_ctl0:PageContent:txtFromTab1" type="text" id="_ctl0_PageContent_txtFromTab1" class="TextField" style="width:75px;" />
+                                                                            <a onmouseover="window.status='Date Picker';return true;"
+                                                                                onclick="DisplayCalendar('_ctl0_PageContent_txtFromTab1');"
+                                                                                onmouseout="window.status='';return true;" href="javascript:donothing()">
+                                                                                <img src="../App_Themes/Passaic/Images//calendar.gif" align="absMiddle" border="0">
+                                                                            </a>
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            <span id="_ctl0_PageContent_lblToTab1" class="NormalFont">To Date:</span>
+                                                                        </td>
+                                                                        <td style="text-align: left">
+                                                                            <input name="_ctl0:PageContent:txtToTab1" type="text" id="_ctl0_PageContent_txtToTab1" class="TextField" style="width:75px;" />
+                                                                            <a onmouseover="window.status='Date Picker';return true;"
+                                                                                onclick="DisplayCalendar('_ctl0_PageContent_txtToTab1');"
+                                                                                onmouseout="window.status='';return true;" href="javascript:donothing()">
+                                                                                <img src="../App_Themes/Passaic/Images//calendar.gif" align="absMiddle" border="0">
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4" style="height: 10px"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <a class="NormalFont" href="javascript:FillDates(1,3)"><font color="blue">3 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(1,7)"><font color="blue">7 days</font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(1,15)"><font color="blue">15 days</font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(1,30)"><font color="blue">30 days</font></a>/ 
+														                    <a class="NormalFont" href="javascript:FillDates(1,90)"><font color="blue">90 days </font></a>/ 
+														                    <a class="NormalFont" href="javascript:MoreDates(1)"><font color="blue">more..</font></a>
+                                                                            &nbsp;&nbsp;
+														                    <font face="verdana" color="black" size="2">[<b>Quick Date Range</b>]</font>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4" style="height: 10px"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="4" style="text-align: center">
+                                                                            <span id="_ctl0_PageContent_lblShowRecTab1" class="NormalFont">Display Results:</span>
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                            <span style="vertical-align: top;">
+                                                                                <span id="_ctl0_PageContent_lblShowRecTab1A" class="NormalFont">Per Page:</span></span>
+                                                                            &nbsp;
+														                    <select name="_ctl0:PageContent:ddlShowRecTab1" id="_ctl0_PageContent_ddlShowRecTab1" class="TextField">
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+
+		</select>
+                                                                            &nbsp;&nbsp;
+    														                <span style="vertical-align: top;">
+                                                                        <span id="_ctl0_PageContent_lblTotalRecTab1" class="NormalFont">Total Records:</span></span>
+                                                                                &nbsp;
+														                        <select name="_ctl0:PageContent:ddlTotalRecTab1" id="_ctl0_PageContent_ddlTotalRecTab1" class="TextField">
+			<option value="100">100</option>
+			<option value="200">200</option>
+			<option value="500">500</option>
+			<option value="750">750</option>
+
+		</select>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">&nbsp;</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4">
+                                                                            <input type="submit" name="_ctl0:PageContent:btnSearchTab1" value="Search" onclick="document.getElementById(&#39;hidDiv&#39;).value=&#39;NewSearch&#39;;" language="javascript" id="_ctl0_PageContent_btnSearchTab1" class="ButtonClass" />
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														        <input type="submit" name="_ctl0:PageContent:btnClearTab1" value="Clear" onclick="return cleartab1();" language="javascript" id="_ctl0_PageContent_btnClearTab1" class="ButtonClass" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            
+	</div>
+                                                        </div>
+
+
+
+
+
+
+                                                        <div id="tab3">
+                                                            <!--Originally Tab 3 -->
+                                                            <div id="_ctl0_PageContent_pnlTab3" language="javascript" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;_ctl0_PageContent_btnSearchTab3&#39;)">
+		
+                                                                <table width="100%" border="0" class="TabContentBackGround">
+                                                                    <tr>
+                                                                        <td width="25%" style="height: 10px"></td>
+                                                                        <td width="25%"></td>
+                                                                        <td width="25%"></td>
+                                                                        <td width="25%"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="right">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblInstrumentTab3" class="NormalFont">Instrument Number:</span></td>
+                                                                        <td align="left">
+                                                                            <input name="_ctl0:PageContent:txtInstrumentTab3" type="text" id="_ctl0_PageContent_txtInstrumentTab3" class="TextField" style="width:125px;" />
+                                                                            
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            </td>
+                                                                        <td align="left">
+                                                                            </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="NormalFont" align="center" colspan="4"><font color="red">[OR]</font></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="right">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblBookNumberTab3" class="NormalFont">Book Number:</span></td>
+                                                                        <td align="left">
+                                                                            <input name="_ctl0:PageContent:txtBookNumberTab3" type="text" id="_ctl0_PageContent_txtBookNumberTab3" class="TextField" style="width:75px;" /></td>
+                                                                        <td align="right">
+                                                                            <font color="red" size="2">*</font><span id="_ctl0_PageContent_lblPageNumberTab3" class="NormalFont">Page Number:</span></td>
+                                                                        <td align="left">
+                                                                            <input name="_ctl0:PageContent:txtPageNumberTab3" type="text" id="_ctl0_PageContent_txtPageNumberTab3" class="TextField" style="width:75px;" /></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td align="center" colspan="4" style="height: 10px"></td>                                                                    </tr>
+                                                                    
+                                                                    <tr>
+                                                                        <td align="center" width="100%" colspan="4">
+                                                                            <input type="submit" name="_ctl0:PageContent:btnSearchTab3" value="Search" onclick="document.getElementById(&#39;hidDiv&#39;).value=&#39;NewSearch&#39;;" language="javascript" id="_ctl0_PageContent_btnSearchTab3" class="ButtonClass" />
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														                    <input type="submit" name="_ctl0:PageContent:btnClearTab3" value="Clear" onclick="return cleartab3();" language="javascript" id="_ctl0_PageContent_btnClearTab3" class="ButtonClass" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            
+	</div>
+                                                        </div>
+
+
+
+
+                                                    </td>
+                                                    <td background="../App_Themes/Passaic/Images//Clerk/rightspread.jpg">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <img src="../App_Themes/Passaic/Images//Clerk/Corner5.jpg" width="13" height="19" /></td>
+                                                    <td background="../App_Themes/Passaic/Images//Clerk/Footerback.jpg"></td>
+                                                    <td>
+                                                        <img src="../App_Themes/Passaic/Images//Clerk/Corner6.jpg" width="13" height="19" /></td>
+                                                </tr>
+
+
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <!--Sim Search End-->
+        <tr>
+            <td style="vertical-align: top" valign="top">
+                
+            </td>
+        </tr>
+    </table>
+    <input id="hidDiv" type="hidden" name="hidDiv"> <input id="hidCurrTab" type="hidden" name="hidCurrTab">
+
+                                </div>
+                            </td>
+</tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <!--********-->
+        <!-- Footer -->
+        <!--********-->
+        <table id="tblFooter" class="FooterMaster" width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td>
+                    <table align="center" style="width: 70%" cellpadding="0" cellspacing="0" border="0">
+                        <tr height="20" id="rowFooter" class="FooterMaster">
+                            <td align="left" width="30%"><a href="javascript:popUpTermsofuse('/PRESS/TermsOfUse.aspx')">Terms of Use</a></td>
+                            <td align="center" width="40%">Developed by <a target="_blank" href="http://www.sunrisesys.com"><font color="white">Sunrise Systems Inc.</font></a></td>
+                            <td align="right" width="30%">© Copyright 2009 - 2026</td>
+                        </tr>
+                    </table>
+                </td>
+	</tr>
+</table>
+
+    </form>
+</body>
+</html>
