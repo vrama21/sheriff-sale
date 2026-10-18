@@ -20,7 +20,7 @@ const countyKey = (name: string) =>
     .replace(/[\s-]+/g, ' ');
 const countiesByKey = new Map(NJ_COUNTIES.map((county) => [countyKey(county), county]));
 
-const parseDate = (flag: string, value: string | undefined): DateTime => {
+const parseDate = (flag: string, value: string | undefined): DateTime<true> => {
   const date = value ? DateTime.fromFormat(value, 'yyyy-MM-dd', { zone: 'utc' }) : undefined;
 
   if (!date?.isValid) {

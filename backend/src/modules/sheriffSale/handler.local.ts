@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 import { newJerseySheriffSaleCountyParser } from './pipeline';
 
 async function local() {
-  config();
+  config({ quiet: true });
 
   try {
     await newJerseySheriffSaleCountyParser('Atlantic');

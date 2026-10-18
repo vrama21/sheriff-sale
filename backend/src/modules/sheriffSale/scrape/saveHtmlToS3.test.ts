@@ -1,11 +1,12 @@
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { getS3, saveS3 } from '../../../shared/s3';
 import { saveHtmlToS3 } from './saveHtmlToS3';
 
-jest.mock('../../../shared/s3', () => ({ getS3: jest.fn(), saveS3: jest.fn() }));
+vi.mock('../../../shared/s3', () => ({ getS3: vi.fn(), saveS3: vi.fn() }));
 
 beforeEach(() => {
-  jest.resetAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => undefined);
+  vi.resetAllMocks();
+  vi.spyOn(console, 'log').mockImplementation(() => undefined);
 });
 
 describe('saveHtmlToS3', () => {

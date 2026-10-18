@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vite-plus/test';
 import { parseCountyPropertyIds } from './parseCountyPropertyIds';
 import { readFixture } from '../__fixtures__/stubClientAdapter';
 

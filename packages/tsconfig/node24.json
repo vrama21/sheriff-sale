@@ -6,9 +6,11 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2023"],
-    "module": "ES6",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2023"
+    "target": "ES2023",
+    "types": ["node"]
   }
 }

@@ -1,17 +1,18 @@
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { db, listings, statusHistories } from '@sheriff-sale/database';
 import { buildListingSnapshot, ListingSnapshot } from './buildListingSnapshot';
 import { syncListing } from './syncListing';
 
-jest.mock('@sheriff-sale/database', () => ({
-  and: jest.fn(),
-  db: { transaction: jest.fn() },
-  drizzleSql: Object.assign(jest.fn(), { raw: jest.fn() }),
-  eq: jest.fn(),
+vi.mock('@sheriff-sale/database', () => ({
+  and: vi.fn(),
+  db: { transaction: vi.fn() },
+  drizzleSql: Object.assign(vi.fn(), { raw: vi.fn() }),
+  eq: vi.fn(),
   listings: { id: 'Listing.id', county: 'Listing.county', sheriffId: 'Listing.sheriffId' },
   statusHistories: { listingId: 'StatusHistory.listingId', status: 'StatusHistory.status', date: 'StatusHistory.date' },
 }));
 
-const transaction = jest.mocked(db).transaction as unknown as jest.Mock;
+const transaction = vi.mocked(db).transaction as unknown as Mock;
 
 type StoredListing = { id: string; contentHash: string | null; snapshotDate: string | null };
 type StoredStatus = { firstSeenOn: string; lastSeenOn: string };
@@ -21,9 +22,9 @@ type StatusValues = { listingId: string; status: string; date: string; firstSeen
 // callback resolves, so a rejected transaction stores nothing.
 let storedListings: Map<string, StoredListing>;
 let storedStatuses: Map<string, StoredStatus>;
-const statusInsert = jest.fn();
-const listingSelect = jest.fn();
-const conflictTargets = jest.fn();
+const statusInsert = vi.fn();
+const listingSelect = vi.fn();
+const conflictTargets = vi.fn();
 
 const fakeTransaction = async <T>(callback: (tx: unknown) => Promise<T>): Promise<T> => {
   const pendingListings = new Map(storedListings);
@@ -133,7 +134,7 @@ const snapshot = (
   }).snapshot;
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   storedListings = new Map();
   storedStatuses = new Map();
   statusInsert.mockResolvedValue(undefined);
