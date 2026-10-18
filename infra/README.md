@@ -13,6 +13,9 @@ single environment; all testing is local.
   - `-errors`: the function errored at least once in a day (the handler throws when any county fails)
   - `-dlq`: a message is in the dead-letter queue; it stays in `ALARM` until the queue is purged
   - `-no-runs`: the function wasn't invoked for a day
+- `new-jersey-clerk-records`: clerk records Lambda and its log group (the scraper's retention), invoked daily at
+  `cron(0 2 * * ? *)`. It runs as the scraper's role, shares its dead-letter queue, and archives result pages to
+  `nj-sheriff-sale` under `clerk-records/`. It has no alarms yet.
 - `sheriff-sale-tofu-state-590184139982`: the bucket holding this config's own state
   (`prevent_destroy`, versioned)
 

@@ -12,17 +12,23 @@ The handler is `src/modules/sheriffSale/handler.ts`. The Lambda and the rest of 
 
 ## Commands
 
-| Command                          | Description                                            |
-| -------------------------------- | ------------------------------------------------------ |
-| `npm run build`                  | Type-check, then bundle the handler to `dist/index.js` |
-| `npm run test`                   | Run the Jest tests                                     |
-| `npm run lint`                   | Lint `src/`                                            |
-| `npm run start:newJerseyScraper` | Run the scraper locally                                |
-| `npm run replay:archive`         | Replay archived pages into the database (see below)    |
+| Command                                          | Description                                                                              |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `npm run build`                                  | Type-check, then bundle the handlers to `dist/index.js` and `dist/clerkRecords/index.js` |
+| `npm run test`                                   | Run the Jest tests                                                                       |
+| `npm run lint`                                   | Lint `src/`                                                                              |
+| `npm run start:newJerseyScraper`                 | Run the scraper locally                                                                  |
+| `npm run replay:archive`                         | Replay archived pages into the database (see below)                                      |
+| `npm run start:clerkRecords -- [County] [limit]` | Run the clerk records lookups locally                                                    |
 
 `start:newJerseyScraper` and `replay:archive` read `DATABASE_URL` from the repo-root `.env` (see the root README's
 "Local database"). `start:newJerseyScraper` always writes to the same S3 bucket as the deployed Lambda, and to whichever
 database `.env` points at, so with a prod `DATABASE_URL` a local run changes real data.
+
+`start:clerkRecords` sends real requests to the county clerk portals (one at a time per portal, at least 1.5 s apart)
+and writes to the `DATABASE_URL` database. It saves result pages under `CLERK_RECORDS_ARCHIVE_DIR` (default
+`<tmpdir>/clerk-records`), never to S3. `src/modules/clerkRecords/ingest/ingest.db.test.ts` runs the ingest SQL against
+a migrated database only when `CLERK_RECORDS_TEST_DATABASE_URL` names one.
 
 ## Replaying the archive
 
