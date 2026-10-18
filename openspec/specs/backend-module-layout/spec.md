@@ -1,8 +1,11 @@
 # backend-module-layout Specification
 
 ## Purpose
+
 TBD - created by archiving change isolate-sheriff-sale-module. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Domain modules and shared code
 
 The backend's source SHALL live in two places under `backend/src/`: `modules/<module>/`, one folder per domain pipeline, and `shared/`, code that any module may use. No other top-level folder under `backend/src/` SHALL hold source files. The sheriff-sale pipeline SHALL be the module `modules/sheriffSale/`. `shared/` SHALL contain `nj/` (`NJ_COUNTIES`, `NJCounty`), `address/`, `http/` (`HttpClient`), `s3/` and `concurrency/` (`createConcurrencyLimiter`).
@@ -67,4 +70,3 @@ Code outside a module SHALL import from that module only through its `index.ts`.
 
 - **WHEN** a details page that was synced before this change is parsed into a snapshot again
 - **THEN** the snapshot's listing fields and `contentHash` equal the ones the old code produced, so the sync reports it `unchanged`
-

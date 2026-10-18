@@ -1,8 +1,11 @@
 # ci-pipeline Specification
 
 ## Purpose
+
 TBD - created by archiving change harden-ci-env-and-ops. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Separate build and test steps
 
 The CI `build` job SHALL run `npm run build` and `npm run test` as separate steps, so a test failure is reported as a test step failing.
@@ -57,4 +60,3 @@ CI SHALL pass the Vercel token to the CLI through the `VERCEL_TOKEN` environment
 
 - **WHEN** the workflow is searched for `--token`
 - **THEN** no matches are found
-

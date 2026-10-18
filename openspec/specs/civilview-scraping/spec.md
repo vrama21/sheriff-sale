@@ -3,7 +3,9 @@
 ## Purpose
 
 TBD - created by archiving change adapt-scraper-to-civilview. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Correct and complete county IDs
 
 The scraper SHALL scrape every New Jersey county that salesweb.civilview.com lists, each with the site's county ID: Atlantic 25, Bergen 7, Burlington 3, Camden 1, Cape May 52, Cumberland 6, Essex 2, Gloucester 19, Hudson 10, Hunterdon 32, Middlesex 73, Monmouth 8, Morris 9, Ocean 85, Passaic 17, Salem 20, Union 15. No two counties SHALL share an ID, and every scraped county SHALL have an ID.
@@ -140,4 +142,3 @@ When a parsed details page has a `parcel` longer than 300 characters and a `desc
 
 - **WHEN** a details page has a parcel longer than 300 characters and a description shorter than 1,800 characters
 - **THEN** the description and parcel are stored as shown
-

@@ -1,8 +1,11 @@
 # vite-plus-toolchain Specification
 
 ## Purpose
+
 TBD - created by archiving change migrate-lint-format-to-vite-plus. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Vite+ is the lint, format and library-pack toolchain
 
 The root `package.json` SHALL declare `vite-plus` as a dev dependency pinned to an exact version (no `^` or `~`). Lint, format and check configuration SHALL live in a single root `vite.config.ts` that exports a static `defineConfig` from `vite-plus`, with `lint` and `fmt` blocks. The only other `vite.config.ts` SHALL be `packages/database/vite.config.ts`, holding only a `pack` block. The repository SHALL NOT contain `.oxlintrc.json`, `.oxfmtrc.json`, `.eslintrc*`, `.eslintignore`, `.prettierrc*`, `.prettierignore` or `tsup.config.*` files outside `node_modules`. Workspace-specific lint differences SHALL be expressed as `lint.overrides` entries keyed by file glob.
@@ -91,4 +94,3 @@ Every `vp` command in scripts, CI and documentation SHALL run on Node `^22.18.0`
 
 - **WHEN** `mise exec -- node --version` runs in the repository
 - **THEN** it prints a 24.x version of at least 24.11.0, and `vp --version` runs without an engine error
-
