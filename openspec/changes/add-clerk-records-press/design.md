@@ -245,6 +245,9 @@ Foreign keys: party and link rows reference `ClerkDocument` with cascade delete,
   - an EventBridge rule at `cron(0 2 * * ? *)`, two hours after the sheriff-sale scraper, so that day's new listings exist
 - It reuses `new-jersey-sheriff-sale-scraper-role` and its DLQ. Raw pages go to `nj-sheriff-sale` under the `clerk-records/` prefix, which the existing `nj-sheriff-sale/*` policy already allows.
 - The handler runs a DB health check, then the four counties under `Promise.allSettled`. It throws if any county fails as a whole, the same as the scraper.
+- `tofu plan` (2026-10-18, run locally with `-lock=false`) creates the 6 clerk records resources and changes 2 existing ones:
+  - The CI role's `tofu-apply` policy gains the new function, rule and log group ARNs. As `infra/README.md` describes, that policy has to be applied locally (`tofu apply -target=aws_iam_role_policy.github_actions_tofu`) before CI's apply can create the function.
+  - The scraper function's `source_code_hash` changes, and nothing else on it. The scraper bundle contains no `modules/clerkRecords` code, but it bundles `@sheriff-sale/database`, whose schema now includes the clerk records tables. So the scraper-infrastructure scenario "Scraper unaffected" holds for the function's configuration, not for its code hash.
 
 _Alternative considered:_ running clerk lookups at the end of the existing handler. We rejected it because both jobs would share one 900 s budget and fail together, and a clerk portal outage would mark the sheriff-sale run failed.
 

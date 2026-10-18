@@ -55,8 +55,8 @@
 ## 8. Build and infrastructure
 
 - [x] 8.1 Change the `backend` `bundle` script to build `dist/index.js` and `dist/clerkRecords/index.js`. Check that both export `handler` and that the scraper bundle contains no `clerkRecords` paths
-- [ ] 8.2 Add `infra/clerkRecords.tf`: the archive data source for the new bundle, the `new-jersey-clerk-records` function (scraper role, DLQ, 0 retries, same env inputs), its log group with the scraper's retention, the `cron(0 2 * * ? *)` rule, its target and the invoke permission
-- [ ] 8.3 Update CI, if the `build` job's artifact upload or the infra job's bundle path needs the new file. Run `tofu plan` and confirm it creates only new resources and leaves the scraper function unchanged
+- [x] 8.2 Add `infra/clerkRecords.tf`: the archive data source for the new bundle, the `new-jersey-clerk-records` function (scraper role, DLQ, 0 retries, same env inputs), its log group with the scraper's retention, the `cron(0 2 * * ? *)` rule, its target and the invoke permission
+- [x] 8.3 Update CI, if the `build` job's artifact upload or the infra job's bundle path needs the new file. Run `tofu plan` and confirm it creates only new resources and leaves the scraper function unchanged
 
 ## 9. Verification
 
