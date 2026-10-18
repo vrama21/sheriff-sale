@@ -182,7 +182,7 @@ const bareTown = (town: string): string =>
 
 /**
  * The dropdown labels a listing city may appear as, best first (design D8): the county's alias map, then a label equal
- * to the city, then labels equal once `TWP`/`BORO`/`CITY`/`VILLAGE` are dropped, then the longest label the city text
+ * to the city, then (when neither exists) labels equal once `TWP`/`BORO`/`CITY`/`VILLAGE` are dropped, then the longest label the city text
  * ends with (`55 Tulip Lane Red Bank` → `RED BANK`). A parenthesised aside such as `Browns Mills (Pemberton Twp)` is
  * tried as a city too.
  */
@@ -201,9 +201,16 @@ export const resolveMunicipality = (config: PressCountyConfig, labels: string[],
   };
 
   for (const name of cities) {
-    (config.municipalityAliases[name] ?? []).forEach(add);
-    add(labels.find((label) => normalizeTown(label) === name));
-    labels.filter((label) => bareTown(label) === bareTown(name)).forEach(add);
+    const aliases = config.municipalityAliases[name] ?? [];
+    const exact = labels.find((label) => normalizeTown(label) === name);
+
+    aliases.forEach(add);
+    add(exact);
+
+    // Only a city with no alias or exact label falls back to dropping TWP/BORO/CITY, which can match several towns.
+    if (aliases.length === 0 && !exact) {
+      labels.filter((label) => bareTown(label) === bareTown(name)).forEach(add);
+    }
   }
 
   if (candidates.length === 0) {

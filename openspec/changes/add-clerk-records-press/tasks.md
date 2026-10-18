@@ -15,21 +15,21 @@
 ## 3. Module skeleton and shared pieces
 
 - [ ] 3.1 Create `backend/src/modules/clerkRecords/` with `scrape/`, `parse/`, `match/`, `ingest/`, `__fixtures__/`, `pipeline.ts`, `handler.ts`, `handler.local.ts` and `index.ts`. Add a `start:clerkRecords` script that runs `handler.local.ts` with `tsx`
-- [ ] 3.2 Define `scrape/types.ts`: the `ClerkPlatformClient` interface, the search input types, `DocCategory`, and the search result union (documents, `municipality_unresolved`, `blocked`)
-- [ ] 3.3 Implement `parse/normalizeName.ts` and `splitDefendants`, with tests covering every Party-name normalization scenario plus cases from real listing defendants and plaintiffs in the fixtures
-- [ ] 3.4 Implement `parse/extractParcel.ts` and block/lot comparison, with tests for every Block/lot extraction scenario. Run it over a prod export of upcoming listings' `parcel`/`description` and record the hit rate per county in the PR
-- [ ] 3.5 Implement docket-year parsing from `courtCase` (`F-012441-25`, `F00258326`, plus the formats seen in prod), with tests
+- [x] 3.2 Define `scrape/types.ts`: the `ClerkPlatformClient` interface, the search input types, `DocCategory`, and the search result union (documents, `municipality_unresolved`, `blocked`)
+- [x] 3.3 Implement `parse/normalizeName.ts` and `splitDefendants`, with tests covering every Party-name normalization scenario plus cases from real listing defendants and plaintiffs in the fixtures
+- [x] 3.4 Implement `parse/extractParcel.ts` and block/lot comparison, with tests for every Block/lot extraction scenario. Run it over a prod export of upcoming listings' `parcel`/`description` and record the hit rate per county in the PR
+- [x] 3.5 Implement docket-year parsing from `courtCase` (`F-012441-25`, `F00258326`, plus the formats seen in prod), with tests
 
 ## 4. PRESS adapter
 
-- [ ] 4.1 Write `scrape/platforms/press/counties.ts` with the four counties' configuration: URL, field prefix, max window, `NewSearch` flag, qualifier field, block/lot index start date, municipality alias map built from prod `city` values against the dropdown fixtures, doc-type description map from the dropdown fixtures, and an optional extra CA
-- [ ] 4.2 Implement `parse/docCategory.ts`: description → `DocCategory` for each county, and category → dropdown option values. Unmapped descriptions become `OTHER`. Add tests against the dropdown fixtures
-- [ ] 4.3 Implement `parse/platforms/press/parsePressResultGrid.ts`: read the grid, treat `N/A` as null, group rows into documents by instrument number or book/page, detect the no-records marker and fail on unexpected pages, and read the pager. Test it against every result fixture
-- [ ] 4.4 Implement the `clerkDocumentSchema.ts` zod validation of grouped documents. Reject rows with no instrument or book/page, or an unparseable date. Turn other bad fields into warnings
-- [ ] 4.5 Implement `scrape/platforms/press/pressClient.ts`: entry-page GET with the cookie jar, hidden-field collection, the tab-specific POST built from the county prefix, paging postbacks up to `MAX_RESULT_PAGES`, the largest rows-per-page option, date-window splitting, and live municipality checking. Unit-test it with the stub axios adapter and the fixtures, asserting the posted form bodies
-- [ ] 4.6 Add the per-host limiter (concurrency 1, at least 1.5 s apart), the 30 s timeout, one retry on network errors and 5xx, and the stop after 3 consecutive 403/429 responses. Test them with fake timers
+- [x] 4.1 Write `scrape/platforms/press/counties.ts` with the four counties' configuration: URL, field prefix, max window, `NewSearch` flag, qualifier field, block/lot index start date, municipality alias map built from prod `city` values against the dropdown fixtures, doc-type description map from the dropdown fixtures, and an optional extra CA
+- [x] 4.2 Implement `parse/docCategory.ts`: description → `DocCategory` for each county, and category → dropdown option values. Unmapped descriptions become `OTHER`. Add tests against the dropdown fixtures
+- [x] 4.3 Implement `parse/platforms/press/parsePressResultGrid.ts`: read the grid, treat `N/A` as null, group rows into documents by instrument number or book/page, detect the no-records marker and fail on unexpected pages, and read the pager. Test it against every result fixture
+- [x] 4.4 Implement the `clerkDocumentSchema.ts` zod validation of grouped documents. Reject rows with no instrument or book/page, or an unparseable date. Turn other bad fields into warnings
+- [x] 4.5 Implement `scrape/platforms/press/pressClient.ts`: entry-page GET with the cookie jar, hidden-field collection, the tab-specific POST built from the county prefix, paging postbacks up to `MAX_RESULT_PAGES`, the largest rows-per-page option, date-window splitting, and live municipality checking. Unit-test it with the stub axios adapter and the fixtures, asserting the posted form bodies
+- [x] 4.6 Add the per-host limiter (concurrency 1, at least 1.5 s apart), the 30 s timeout, one retry on network errors and 5xx, and the stop after 3 consecutive 403/429 responses. Test them with fake timers
 - [ ] 4.7 If the spike found a detail view, implement `getDetail` and `parsePressDetail.ts`: consideration, party roles, and cross-references into `ClerkDocumentLink` targets. Test against the detail fixtures
-- [ ] 4.8 Implement `saveResultPageToS3.ts` (best-effort, a single `PutObject`, the `clerk-records/…` key) and call it before each parse
+- [x] 4.8 Implement `saveResultPageToS3.ts` (best-effort, a single `PutObject`, the `clerk-records/…` key) and call it before each parse
 
 ## 5. Matching
 
