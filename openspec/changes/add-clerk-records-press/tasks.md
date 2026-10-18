@@ -33,17 +33,17 @@
 
 ## 5. Matching
 
-- [ ] 5.1 Implement candidate selection: supported counties, due by `nextCheckAt`, sale no more than 90 days past, capped at 40 per county, nearest sale first. Test it against the local DB or a mocked query
-- [ ] 5.2 Implement the lis pendens match in `match/matchListing.ts`: the search window from the docket year, the acceptance rules, and high/medium confidence. Test every Lis pendens match scenario with fixture-backed client stubs
-- [ ] 5.3 Implement the parcel sweep: block/lot from the lis pendens or the listing, role assignment, and the block/lot index start date. Test the deed-chain and sheriff's-deed scenarios
-- [ ] 5.4 Implement the foreclosed-mortgage match: cross-reference, then parcel, then name search, with low-confidence ambiguity. Test each path
-- [ ] 5.5 Implement the re-check schedule (`nextCheckAt` and the counters for each outcome), with a table-driven test covering design D10
+- [x] 5.1 Implement candidate selection: supported counties, due by `nextCheckAt`, sale no more than 90 days past, capped at 40 per county, nearest sale first. Test it against the local DB or a mocked query
+- [x] 5.2 Implement the lis pendens match in `match/matchListing.ts`: the search window from the docket year, the acceptance rules, and high/medium confidence. Test every Lis pendens match scenario with fixture-backed client stubs
+- [x] 5.3 Implement the parcel sweep: block/lot from the lis pendens or the listing, role assignment, and the block/lot index start date. Test the deed-chain and sheriff's-deed scenarios
+- [x] 5.4 Implement the foreclosed-mortgage match: cross-reference, then parcel, then name search, with low-confidence ambiguity. Test each path
+- [x] 5.5 Implement the re-check schedule (`nextCheckAt` and the counters for each outcome), with a table-driven test covering design D10
 
 ## 6. Ingest
 
-- [ ] 6.1 Implement `ingest/syncClerkDocuments.ts`: upsert documents on `(county, instrumentNumber)`, filling nulls without overwriting values with null; insert missing parties and links; resolve `toDocumentId` for links whose target exists
-- [ ] 6.2 Implement `ingest/syncListingMatches.ts` and `lookupState.ts`, and write each listing's whole result in one transaction. If the write fails, record the `error` outcome in a separate write
-- [ ] 6.3 Test it: an idempotent second write adds no rows, a sparser row doesn't erase data, a rollback partway through leaves nothing, and deleting a listing cascades. Use the existing DB mocking conventions, plus one test against the local database if the repo has an integration-test pattern
+- [x] 6.1 Implement `ingest/syncClerkDocuments.ts`: upsert documents on `(county, instrumentNumber)`, filling nulls without overwriting values with null; insert missing parties and links; resolve `toDocumentId` for links whose target exists
+- [x] 6.2 Implement `ingest/syncListingMatches.ts` and `lookupState.ts`, and write each listing's whole result in one transaction. If the write fails, record the `error` outcome in a separate write
+- [x] 6.3 Test it: an idempotent second write adds no rows, a sparser row doesn't erase data, a rollback partway through leaves nothing, and deleting a listing cascades. Use the existing DB mocking conventions, plus one test against the local database if the repo has an integration-test pattern
 
 ## 7. Pipeline and handler
 

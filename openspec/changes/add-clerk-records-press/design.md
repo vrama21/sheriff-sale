@@ -130,7 +130,7 @@ For each candidate listing:
 
 3. **Foreclosed mortgage.** The spike found no cross-reference in PRESS: Passaic's detail view repeats the grid row, and the others' "View" opens the document image. So the `cross_reference` path isn't implemented for PRESS. `getDetail` stays an optional interface method for later platforms. Pick the method in this order:
    - the latest mortgage from step 2 recorded before the lis pendens whose mortgagor matches a defendant (`parcel`/high)
-   - otherwise, the mortgages in step 1's name-search results that were recorded before the lis pendens and whose mortgagor matches a defendant. No extra request is needed. Pick by mortgagee similarity to the plaintiff, to the lis pendens plaintiff, or to an assignee of the parcel's or the name search's assignments (`mortgage_party`/medium). If more than one candidate is still plausible, store each at **low** confidence.
+   - otherwise, the mortgages in step 1's name-search results that were recorded before the lis pendens and whose mortgagor matches a defendant. No extra request is needed. Pick by mortgagee similarity to a foreclosing party (`mortgage_party`/medium). The foreclosing parties are the plaintiff, the lis pendens plaintiff, and the assignor of any assignment, in the parcel's or the name search's results, whose assignee is already a foreclosing party. So a mortgage to GMAC that GMAC assigned to the plaintiff is plausible. If more than one candidate is still plausible, store each at **low** confidence.
 
    Assignments in the name-search results that a defendant is a party to, recorded after the chosen mortgage, are matched `MORTGAGE_ASSIGNMENT` by `mortgage_party`/medium.
 
