@@ -13,7 +13,7 @@
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "plugins": [
       {
@@ -23,7 +23,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": false,
-    "target": "es5"
+    "target": "ES2017"
   },
   "exclude": ["node_modules"],
   "include": ["src", "next-env.d.ts"]
