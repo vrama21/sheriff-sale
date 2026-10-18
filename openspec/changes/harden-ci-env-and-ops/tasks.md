@@ -70,10 +70,10 @@
 
 ## 9. Manual steps (user, before merging; not done by the agent)
 
-- [ ] 9.1 **Vercel:** rename the project env var `NEXT_GOOGLE_MAPS_API_KEY` to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` for Production (and Preview/Development if set). If the variable doesn't exist, add it. Restrict the key by HTTP referrer in Google Cloud.
+- [x] 9.1 **Vercel:** rename the project env var `NEXT_GOOGLE_MAPS_API_KEY` to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` for Production (and Preview/Development if set). If the variable doesn't exist, add it. Restrict the key by HTTP referrer in Google Cloud.
 - [ ] 9.2 **AWS / OpenTofu (optional, recommended):** after `aws sso login`, run a read-only `tofu plan` from `infra/` and confirm 4 to add, 2 to change, 0 to destroy. No local apply is needed: the CI role policy is unchanged.
 - [ ] 9.3 **Follow-up change:** scope the scraper failure alarms (SNS topic, DLQ and Lambda-error alarms, recipients and channel) separately
-- [ ] 9.4 **GitHub:** delete the unused `prod` environment variable `ENV`
-- [ ] 9.5 **GitHub:** narrow the `prod` environment's deployment branch policy from `main` + `cicd*` to `main` only
-- [ ] 9.6 **Local:** move any values from `.env.local` into `.env` and delete `.env.local`. This worktree's `.env` (and probably the main checkout's) sets `DATABASE_URL` to the **prod** Railway database, so `db:migrate`, `db:push`, `start:newJerseyScraper` and `replay:archive` run locally all write to prod. Point it at the local container (see `.env.example`), and keep the prod URL only in `mise.local.toml` (`PROD_DATABASE_URL` / `TF_VAR_database_url`). If `docker compose up` reports incompatible data files, run `docker compose down -v`, then `docker compose up -d && npm run db:migrate`.
+- [x] 9.4 **GitHub:** delete the unused `prod` environment variable `ENV`
+- [x] 9.5 **GitHub:** narrow the `prod` environment's deployment branch policy from `main` + `cicd*` to `main` only
+- [x] 9.6 **Local:** move any values from `.env.local` into `.env` and delete `.env.local`. This worktree's `.env` (and probably the main checkout's) sets `DATABASE_URL` to the **prod** Railway database, so `db:migrate`, `db:push`, `start:newJerseyScraper` and `replay:archive` run locally all write to prod. Point it at the local container (see `.env.example`), and keep the prod URL only in `mise.local.toml` (`PROD_DATABASE_URL` / `TF_VAR_database_url`). If `docker compose up` reports incompatible data files, run `docker compose down -v`, then `docker compose up -d && npm run db:migrate`.
 - [ ] 9.7 **Follow-up for `upgrade-backend-dependencies`:** `@types/mocha` alongside `@types/jest`, and Jest `testEnvironment: 'jsdom'` for Lambda code
