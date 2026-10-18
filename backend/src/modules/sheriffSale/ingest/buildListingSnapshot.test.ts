@@ -68,8 +68,46 @@ describe('buildListingSnapshot', () => {
     ).toBeNull();
   });
 
-  it('throws when the page has no address', () => {
-    expect(() => build({ listing: { sheriffId: 'F-1' } })).toThrow('Listing has no address');
+  it('builds a page with no address with null address parts and an address warning', () => {
+    const { snapshot, warnings } = build({ listing: { sheriffId: 'F-1' } });
+
+    expect(snapshot.listing).toMatchObject({
+      sheriffId: 'F-1',
+      address: null,
+      street: null,
+      unit: null,
+      secondaryUnit: null,
+      city: null,
+      zipcode: null,
+      state: 'NJ',
+    });
+    expect(warnings).toContainEqual(expect.objectContaining({ field: 'address' }));
+  });
+
+  it('builds the archived Hunterdon page with a blank Address row, keeping its sheriff number and amounts', () => {
+    const page = parseListingSnapshot(readFixture('listingDetailsHunterdonBlankAddress.html'));
+
+    if (page.layout === 'unrecognised') {
+      throw new Error('listingDetailsHunterdonBlankAddress.html layout not recognised');
+    }
+
+    const { snapshot, warnings } = buildListingSnapshot({
+      page,
+      county: 'Hunterdon',
+      propertyId: 1736127112,
+      snapshotDate: '2025-10-26',
+    });
+
+    expect(snapshot.listing).toMatchObject({
+      sheriffId: 'F-4127',
+      address: null,
+      city: null,
+      state: 'NJ',
+      judgment: 1653036.41,
+      upsetAmount: 1668737.41,
+      saleDate: '2025-12-17',
+    });
+    expect(warnings).toEqual([{ field: 'address', value: '', reason: 'missing or blank' }]);
   });
 
   it('hashes the listing, the same for two snapshots that differ only in propertyId', () => {
@@ -115,6 +153,7 @@ describe('buildListingSnapshot', () => {
       street: '561 Inman Avenue',
       city: 'Cinnaminson',
       judgment: 157589.64,
+      upsetAmount: 174055.95,
       parcel: null,
       description: expect.stringMatching(/^APPROXIMATE GOOD FAITH .* Attorney \(s\): 555 555-0100$/),
     });

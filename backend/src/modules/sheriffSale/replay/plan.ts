@@ -19,8 +19,11 @@ export interface CountyDayPlan {
 
 export const countyPageKey = (date: string, slug: string) => `county-html-files/${date}/${slug}-county.html`;
 
+/** The prefix every detail page archived on `date` is under. */
+export const listingPagePrefix = (date: string) => `listing-html-files/${date}/`;
+
 export const listingPageKey = (date: string, propertyId: number) =>
-  `listing-html-files/${date}/property-id-${propertyId}.html`;
+  `${listingPagePrefix(date)}property-id-${propertyId}.html`;
 
 /** Which archived county pages hold the requested county's listings on `date` (YYYY-MM-DD). */
 export const planCountyDay = (date: string, county: NJCounty): CountyDayPlan => {

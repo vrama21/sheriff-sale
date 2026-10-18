@@ -67,7 +67,7 @@ export type BuildListingSnapshotArgs = {
 /**
  * Validates a parsed page with listingSchema and builds its snapshot: the address split by parseAddress, the sheriff
  * number and status rows normalized, rows that are the same once normalized dropped, and the fields hashed.
- * Throws when listingSchema rejects the page (no address); every other bad value is in `warnings`.
+ * Every bad value, a missing address included, is in `warnings`.
  */
 export const buildListingSnapshot = ({
   page,

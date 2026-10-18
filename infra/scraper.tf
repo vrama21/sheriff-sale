@@ -1,5 +1,5 @@
 # Daily New Jersey sheriff sale scraper: EventBridge schedule -> Lambda -> S3 archive, with an SQS
-# dead-letter queue for failed async invocations.
+# dead-letter queue for failed async invocations and CloudWatch alarms that email through SNS.
 
 resource "aws_cloudwatch_log_group" "scraper" {
   name              = "/aws/lambda/${local.scraper_name}"
@@ -121,4 +121,66 @@ resource "aws_lambda_permission" "scraper_schedule" {
   function_name = aws_lambda_function.scraper.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.scraper_schedule.arn
+}
+
+# Alarms: email on a failed run, on a message in the DLQ, and on a day with no run at all.
+# The email subscription only delivers once its recipient confirms it from the email SNS sends.
+
+resource "aws_sns_topic" "scraper_alarms" {
+  name = "${local.scraper_name}-alarms"
+}
+
+resource "aws_sns_topic_subscription" "scraper_alarms_email" {
+  topic_arn = aws_sns_topic.scraper_alarms.arn
+  protocol  = "email"
+  endpoint  = var.alert_email
+}
+
+# The handler throws when any county fails, so one failed county is one error.
+resource "aws_cloudwatch_metric_alarm" "scraper_errors" {
+  alarm_name          = "${local.scraper_name}-errors"
+  alarm_description   = "The scraper threw: at least one county failed. See its log group."
+  namespace           = "AWS/Lambda"
+  metric_name         = "Errors"
+  dimensions          = { FunctionName = aws_lambda_function.scraper.function_name }
+  statistic           = "Sum"
+  period              = 86400
+  evaluation_periods  = 1
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 1
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.scraper_alarms.arn]
+}
+
+# Overlaps the errors alarm for a failed run, and also catches async invocations dropped without an Errors
+# datapoint. It stays in ALARM until the queue is drained.
+resource "aws_cloudwatch_metric_alarm" "scraper_dlq" {
+  alarm_name          = "${local.scraper_name}-dlq"
+  alarm_description   = "A failed scraper invocation is in the dead-letter queue. Triage it, then purge the queue."
+  namespace           = "AWS/SQS"
+  metric_name         = "ApproximateNumberOfMessagesVisible"
+  dimensions          = { QueueName = aws_sqs_queue.scraper_dlq.name }
+  statistic           = "Maximum"
+  period              = 300
+  evaluation_periods  = 1
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 1
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.scraper_alarms.arn]
+}
+
+# No datapoint is no invocation, so missing data breaches.
+resource "aws_cloudwatch_metric_alarm" "scraper_no_runs" {
+  alarm_name          = "${local.scraper_name}-no-runs"
+  alarm_description   = "The scraper wasn't invoked for a day: check its EventBridge schedule."
+  namespace           = "AWS/Lambda"
+  metric_name         = "Invocations"
+  dimensions          = { FunctionName = aws_lambda_function.scraper.function_name }
+  statistic           = "Sum"
+  period              = 86400
+  evaluation_periods  = 1
+  comparison_operator = "LessThanThreshold"
+  threshold           = 1
+  treat_missing_data  = "breaching"
+  alarm_actions       = [aws_sns_topic.scraper_alarms.arn]
 }

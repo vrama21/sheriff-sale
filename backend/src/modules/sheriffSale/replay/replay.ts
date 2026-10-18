@@ -5,7 +5,7 @@ import type { ListingSyncResult } from '../ingest/syncListing';
 import { parseCountyPropertyIds } from '../parse/parseCountyPropertyIds';
 import { parseListingSnapshot } from '../parse/parseListingSnapshot';
 import { ReplayArgs } from './args';
-import { listingPageKey, planCountyDay } from './plan';
+import { listingPageKey, listingPagePrefix, planCountyDay } from './plan';
 
 // Only this module's imports load for a dry run, so none of them may reach @sheriff-sale/database: importing it
 // creates the client from DATABASE_URL. syncListing is passed in by index.ts instead.
@@ -15,6 +15,8 @@ export const DETAIL_PAGE_CONCURRENCY = 8;
 export interface ReplayDeps {
   /** An archived page's text, or undefined when its key doesn't exist. */
   readText: (key: string) => Promise<string | undefined>;
+  /** Every archived key under a prefix. */
+  listKeys: (prefix: string) => Promise<Set<string>>;
   /** Not called on a dry run. */
   syncListing?: (snapshot: ListingSnapshot) => Promise<ListingSyncResult>;
 }
@@ -48,7 +50,9 @@ export interface ReplayCounts {
 export interface ReplaySummary {
   byCounty: Map<NJCounty, ReplayCounts>;
   total: ReplayCounts;
-  /** A read or a sync failed, so the command exits non-zero. */
+  /** Days whose detail pages couldn't be listed, so each was read key by key. */
+  dayListingsFailed: number;
+  /** A read, a listing or a sync failed, so the command exits non-zero. */
   failed: boolean;
 }
 
@@ -80,11 +84,28 @@ type DetailPageContext = {
   counts: ReplayCounts;
   deps: ReplayDeps;
   dryRun: boolean;
+  /** The day's archived detail-page keys; undefined when listing them failed, so every page is read. */
+  archivedKeys: Set<string> | undefined;
 };
 
 /** Reads, parses and (unless a dry run) syncs one detail page. Never rejects: every outcome is counted. */
-const replayDetailPage = async ({ date, county, propertyId, counts, deps, dryRun }: DetailPageContext) => {
+const replayDetailPage = async ({
+  date,
+  county,
+  propertyId,
+  counts,
+  deps,
+  dryRun,
+  archivedKeys,
+}: DetailPageContext) => {
   const key = listingPageKey(date, propertyId);
+
+  // Most listed pages were never archived; skipping them saves a read that would only miss.
+  if (archivedKeys && !archivedKeys.has(key)) {
+    counts.detailPagesMissing++;
+
+    return;
+  }
 
   let html: string | undefined;
 
@@ -159,6 +180,7 @@ const replayCountyDay = async (
   deps: ReplayDeps,
   dryRun: boolean,
   limit: ConcurrencyLimiter,
+  archivedKeys: Set<string> | undefined,
 ) => {
   const plan = planCountyDay(date, county);
 
@@ -201,14 +223,28 @@ const replayCountyDay = async (
 
   await Promise.all(
     [...propertyIds].map((propertyId) =>
-      limit(() => replayDetailPage({ date, county: plan.syncAs, propertyId, counts, deps, dryRun })),
+      limit(() => replayDetailPage({ date, county: plan.syncAs, propertyId, counts, deps, dryRun, archivedKeys })),
     ),
   );
 };
 
+/** The detail-page keys archived on `date`, or undefined (logged) when listing them fails. */
+const listArchivedDetailPages = async (date: string, deps: ReplayDeps): Promise<Set<string> | undefined> => {
+  const prefix = listingPagePrefix(date);
+
+  try {
+    return await deps.listKeys(prefix);
+  } catch (error) {
+    console.error(`Failed to list ${prefix}; reading its detail pages key by key`, error);
+
+    return undefined;
+  }
+};
+
 /**
  * Replays each requested county's archived pages for each date, earliest first: the county page lists the day's
- * property IDs, and each one's detail page is parsed and synced as that county's snapshot for that date.
+ * property IDs, and each one's detail page is parsed and synced as that county's snapshot for that date. Each day's
+ * detail pages are listed once, so a page that was never archived is counted missing without a read.
  * One page's failure never stops the run.
  */
 export const replayArchive = async (
@@ -217,10 +253,17 @@ export const replayArchive = async (
 ): Promise<ReplaySummary> => {
   const byCounty = new Map(counties.map((county) => [county, emptyCounts()]));
   const limit = createConcurrencyLimiter(DETAIL_PAGE_CONCURRENCY);
+  let dayListingsFailed = 0;
 
   for (const date of dates) {
+    const archivedKeys = await listArchivedDetailPages(date, deps);
+
+    if (!archivedKeys) {
+      dayListingsFailed++;
+    }
+
     for (const [county, counts] of byCounty) {
-      await replayCountyDay(date, county, counts, deps, dryRun, limit);
+      await replayCountyDay(date, county, counts, deps, dryRun, limit, archivedKeys);
     }
   }
 
@@ -235,7 +278,8 @@ export const replayArchive = async (
   return {
     byCounty,
     total,
-    failed: total.countyPagesFailed + total.detailPagesFailed + total.syncFailures > 0,
+    dayListingsFailed,
+    failed: dayListingsFailed + total.countyPagesFailed + total.detailPagesFailed + total.syncFailures > 0,
   };
 };
 
@@ -260,4 +304,7 @@ export const formatReplaySummary = (summary: ReplaySummary, dryRun: boolean): st
   ]),
   'Total:',
   ...formatCounts(summary.total, dryRun).map((line) => `  ${line}`),
+  ...(summary.dayListingsFailed > 0
+    ? [`  ${summary.dayListingsFailed} days' detail pages failed to list, so they were read key by key`]
+    : []),
 ];

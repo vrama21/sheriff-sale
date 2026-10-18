@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { DateTime } from 'luxon';
 import { parseAddress } from '../../../shared/address';
+import { joinNoticeOverflow } from './joinNoticeOverflow';
 import { validateListingDetails, validateStatusHistory } from './listingSchema';
 import { parseListingDetails } from './parseListingDetails';
 import { parseStatusHistory } from './parseStatusHistory';
@@ -52,10 +53,13 @@ describe('validateListingDetails', () => {
 
   describe('address', () => {
     it.each([
-      ['missing', {}],
-      ['whitespace-only', { address: '\r  \n   ' }],
-    ])('throws when the address is %s', (_case, raw) => {
-      expect(() => validateListingDetails(raw)).toThrow('Listing has no address');
+      ['missing', { sheriffId: 'F-4127' }, ''],
+      ['whitespace-only', { sheriffId: 'F-4127', address: '\r  \n   ' }, '\r  \n   '],
+    ])('stores a %s address as null with a warning, and keeps the other fields', (_case, raw, value) => {
+      expect(validateListingDetails(raw)).toMatchObject({
+        details: { address: null, sheriffId: 'F-4127' },
+        warnings: [{ field: 'address', value, reason: 'missing or blank' }],
+      });
     });
 
     it('keeps the street / city line break for parseAddress, and parseAddress stores the address on one line', () => {
@@ -90,10 +94,98 @@ describe('validateListingDetails', () => {
       expect(validate({ upsetAmount: value })).toMatchObject({ details: { upsetAmount: null }, warnings: [] });
     });
 
-    it.each(['TBD', '$1,585.955', '-$5.00', '$1.585,95'])('stores %j as null with a warning', (value) => {
+    it.each([
+      'TBD',
+      '$1,585.955',
+      '-$5.00',
+      '$1.585,95',
+      '2024 TAXES $5,000.00',
+      'ESTIMATED UPSET BID AMOUNT: $224,000.00',
+    ])('stores %j as null with a warning', (value) => {
       expect(validate({ upsetAmount: value })).toMatchObject({
         details: { upsetAmount: null },
         warnings: [{ field: 'upsetAmount', value, reason: 'not a dollar amount' }],
+      });
+    });
+
+    it.each([
+      ['$384,211.73 GOOD THROUGH JULY 19, 2024, AND ANY ADDITIONAL SUMS AS ORDERED BY THE COURT.', 384211.73],
+      ['$786,559.65.', 786559.65],
+      ['$784,000.00 LOT:3 FKA 10.A BLOCK: 13301 FKA 1837.5', 784000],
+      ['$195,000.00, PLUS ANY ADDITIONAL SUMS AS ORDERED BY THE COURT.', 195000],
+      ['1,668,737.41 TOGETHER WITH COST OF THE SALE', 1668737.41],
+    ])('keeps the leading amount of %j, %j, with a warning naming the full value', (value, expected) => {
+      expect(validate({ upsetAmount: value, judgment: value })).toMatchObject({
+        details: { upsetAmount: expected, judgment: expected },
+        warnings: [
+          { field: 'judgment', value, reason: expect.stringContaining('followed by other text') },
+          { field: 'upsetAmount', value, reason: expect.stringContaining('followed by other text') },
+        ],
+      });
+    });
+  });
+
+  describe('upset amount from free text', () => {
+    const validateFixture = (fixture: string) =>
+      validateListingDetails(joinNoticeOverflow(parseListingDetails(readFixture(fixture))));
+
+    it.each([
+      ['Hunterdon', 'listingDetailsHunterdon.html', 201700, 'Property Details, without a $'],
+      ['Burlington', 'listingDetailsBurlington.html', 143198, 'Description'],
+      ['Gloucester', 'listingDetailsGloucesterUpset.html', 251897.98, 'Property Note, before Description'],
+      ['Middlesex', 'listingDetailsMiddlesex.html', 377000, 'Property Note, with a blank Minimum Bid'],
+    ])('takes a %s page’s upset amount from %s (%s)', (_county, fixture, upsetAmount) => {
+      const { details, warnings } = validateFixture(fixture);
+
+      expect(details.upsetAmount).toBe(upsetAmount);
+      expect(warnings.map(({ field }) => field)).not.toContain('upsetAmount');
+      expect(warnings.map(({ field }) => field)).not.toContain('propertyDetails');
+    });
+
+    it('takes Cape May’s Minimum Bid over the upset price in its Description', () => {
+      expect(validateFixture('listingDetailsCapeMay.html').details).toMatchObject({
+        address: '15 OSPREY Drive\nNorth Cape May NJ 08204',
+        upsetAmount: 380000,
+        judgment: 341563.55,
+      });
+    });
+
+    it('reads Property Details first', () => {
+      expect(
+        validate({
+          propertyDetails: 'APPROX. UPSET: $1,108,438.48',
+          propertyNote: 'UPSET PRICE: $2.00',
+          description: 'UPSET PRICE: $3.00',
+        }),
+      ).toEqual(
+        expect.objectContaining({ details: expect.objectContaining({ upsetAmount: 1108438.48 }), warnings: [] }),
+      );
+    });
+
+    it('keeps the upset row over an upset price in the Description', () => {
+      expect(
+        validate({ upsetAmount: '$41,000.00', description: 'The approximate upset price is $45,000.00.' }).details
+          .upsetAmount,
+      ).toBe(41000);
+    });
+
+    it('reads the free text when the upset row is blank', () => {
+      expect(validate({ upsetAmount: ' \r ', description: 'UPSET PRICE: $45,000.00' }).details.upsetAmount).toBe(45000);
+    });
+
+    it('leaves the upset amount null, and the judgment as it was, when the only figure follows a judgment phrase', () => {
+      expect(
+        validate({
+          judgment: '$250,000.00',
+          description: 'The approximate amount of the judgment to be satisfied by the sale is $250,000.00.',
+        }),
+      ).toMatchObject({ details: { upsetAmount: null, judgment: 250000 }, warnings: [] });
+    });
+
+    it('leaves the upset amount null without a warning when the free text is blank', () => {
+      expect(validate({ propertyDetails: '', propertyNote: '', description: '' })).toMatchObject({
+        details: { upsetAmount: null },
+        warnings: [],
       });
     });
   });
@@ -194,12 +286,15 @@ describe('validateListingDetails', () => {
       expect(warnings).toEqual([{ field: 'township', value: 'Totowa', reason: 'not a listing field' }]);
     });
 
-    it('drops Property Note, which is on every page, without a warning', () => {
-      const { details, warnings } = validate({ propertyNote: 'Some note' });
+    it.each(['propertyNote', 'propertyDetails'])(
+      'drops %s, read only for an upset amount, without a warning',
+      (key) => {
+        const { details, warnings } = validate({ [key]: 'Some note' });
 
-      expect(details).not.toHaveProperty('propertyNote');
-      expect(warnings).toEqual([]);
-    });
+        expect(details).not.toHaveProperty(key);
+        expect(warnings).toEqual([]);
+      },
+    );
   });
 
   it('collects a warning per bad field and still returns the listing', () => {

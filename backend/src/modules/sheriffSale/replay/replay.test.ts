@@ -3,7 +3,7 @@ import { readFixture } from '../__fixtures__/stubClientAdapter';
 import { ListingSnapshot } from '../ingest/buildListingSnapshot';
 import type { ListingSyncResult } from '../ingest/syncListing';
 import { ReplayArgs } from './args';
-import { countyPageKey, listingPageKey } from './plan';
+import { countyPageKey, listingPageKey, listingPagePrefix } from './plan';
 import { formatReplaySummary, replayArchive, ReplayCounts } from './replay';
 
 // A dry run must not load the database client, which connects to DATABASE_URL; replay.ts must never import it.
@@ -37,6 +37,9 @@ const readText = vi.fn(async (key: string) => {
 
   return page;
 });
+
+// The archive's keys under a prefix, as ListObjectsV2 sees them: a key whose read fails is still listed.
+const listKeys = vi.fn(async (prefix: string) => new Set([...archive.keys()].filter((key) => key.startsWith(prefix))));
 
 // A fake database keyed like the real one: a snapshot already stored with the same hash is "unchanged", and a
 // status row already seen on that date neither inserts nor extends.
@@ -106,7 +109,7 @@ beforeEach(() => {
 
 describe('replayArchive', () => {
   it('syncs current and legacy pages, and counts the home page and a missing detail page', async () => {
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.byCounty.get('Salem')).toEqual(
       counts({
@@ -133,12 +136,55 @@ describe('replayArchive', () => {
     expect(syncListing.mock.calls.every(([snapshot]) => snapshot.snapshotDate === '2024-07-02')).toBe(true);
   });
 
+  it('lists each day once, and counts a detail page that was never archived as missing without reading it', async () => {
+    archive.set(countyPageKey('2024-07-03', 'salem'), countyPage(5, 6));
+    archive.set(listingPageKey('2024-07-03', 5), LEGACY);
+
+    const summary = await replayArchive(args({ dates: ['2024-07-02', '2024-07-03'] }), {
+      readText,
+      listKeys,
+      syncListing,
+    });
+
+    expect(listKeys.mock.calls).toEqual([[listingPagePrefix('2024-07-02')], [listingPagePrefix('2024-07-03')]]);
+    expect(summary.total).toMatchObject({ detailPagesFound: 6, detailPagesMissing: 2, parsed: 3 });
+    expect(readText).not.toHaveBeenCalledWith(listingPageKey('2024-07-02', 4));
+    expect(readText).not.toHaveBeenCalledWith(listingPageKey('2024-07-03', 6));
+    expect(summary.dayListingsFailed).toBe(0);
+  });
+
+  it("reads a day's detail pages key by key when listing them fails, with the same counts, and fails the run", async () => {
+    const listed = await replayArchive(args(), { readText, listKeys, syncListing });
+    readText.mockClear();
+    stored.clear();
+    seenStatusRows.clear();
+    listKeys.mockRejectedValueOnce(new Error('AccessDenied'));
+
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
+
+    expect(summary.total).toEqual(listed.total);
+    expect(summary.dayListingsFailed).toBe(1);
+    expect(summary.failed).toBe(true);
+    expect(readText).toHaveBeenCalledWith(listingPageKey('2024-07-02', 4));
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to list listing-html-files/2024-07-02/; reading its detail pages key by key',
+      expect.objectContaining({ message: 'AccessDenied' }),
+    );
+    expect(formatReplaySummary(summary, false)).toContain(
+      "  1 days' detail pages failed to list, so they were read key by key",
+    );
+  });
+
   it('counts a missing county page and carries on with the next day', async () => {
     archive.set(countyPageKey('2024-07-03', 'salem'), countyPage(5));
     archive.set(listingPageKey('2024-07-03', 5), LEGACY);
     archive.delete(countyPageKey('2024-07-02', 'salem'));
 
-    const summary = await replayArchive(args({ dates: ['2024-07-02', '2024-07-03'] }), { readText, syncListing });
+    const summary = await replayArchive(args({ dates: ['2024-07-02', '2024-07-03'] }), {
+      readText,
+      listKeys,
+      syncListing,
+    });
 
     expect(summary.total).toMatchObject({
       countyPagesRead: 1,
@@ -159,6 +205,7 @@ describe('replayArchive', () => {
 
     const summary = await replayArchive(args({ counties: ['Gloucester', 'Passaic'], dates: ['2025-05-01'] }), {
       readText,
+      listKeys,
       syncListing,
     });
 
@@ -173,7 +220,7 @@ describe('replayArchive', () => {
     archive.set(listingPageKey('2024-07-02', 1), CURRENT.replace('F-23001318', ''));
     archive.set(listingPageKey('2024-07-02', 2), '<div class="sale-detail-item"></div>');
 
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.total).toMatchObject({ noSheriffId: 1, parseFailures: 1, parsed: 0 });
     expect(syncListing).not.toHaveBeenCalled();
@@ -187,7 +234,7 @@ describe('replayArchive', () => {
   it('counts and logs field warnings, and still syncs the page', async () => {
     archive.set(listingPageKey('2024-07-02', 2), LEGACY.replace('$275,983.46', 'TBD'));
 
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.total).toMatchObject({ fieldWarnings: 1, parsed: 2, inserted: 2 });
     expect(summary.failed).toBe(false);
@@ -199,7 +246,7 @@ describe('replayArchive', () => {
   it('counts failed reads, keeps going, and fails the run', async () => {
     archive.set(listingPageKey('2024-07-02', 2), new Error('AccessDenied'));
 
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.total).toMatchObject({ detailPagesFailed: 1, inserted: 1 });
     expect(summary.failed).toBe(true);
@@ -212,7 +259,7 @@ describe('replayArchive', () => {
   it('fails the run when a county page cannot be read', async () => {
     archive.set(countyPageKey('2024-07-02', 'salem'), new Error('socket hang up'));
 
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.total).toMatchObject({ countyPagesFailed: 1, detailPagesFound: 0 });
     expect(summary.failed).toBe(true);
@@ -221,7 +268,7 @@ describe('replayArchive', () => {
   it('logs and counts a failed sync, syncs the other listings, and fails the run', async () => {
     syncListing.mockRejectedValueOnce(new Error('connection refused'));
 
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.total).toMatchObject({ syncFailures: 1, inserted: 1, parsed: 2 });
     expect(summary.failed).toBe(true);
@@ -232,10 +279,10 @@ describe('replayArchive', () => {
   });
 
   it('reads and parses on a dry run, with the same page counts, and never syncs', async () => {
-    const real = await replayArchive(args(), { readText, syncListing });
+    const real = await replayArchive(args(), { readText, listKeys, syncListing });
     syncListing.mockClear();
 
-    const dry = await replayArchive(args({ dryRun: true }), { readText, syncListing });
+    const dry = await replayArchive(args({ dryRun: true }), { readText, listKeys, syncListing });
 
     expect(syncListing).not.toHaveBeenCalled();
     expect(dry.total).toEqual({ ...real.total, inserted: 0, statusInserted: 0 });
@@ -247,8 +294,8 @@ describe('replayArchive', () => {
     archive.set(listingPageKey('2024-07-03', 5), LEGACY);
     const range = args({ dates: ['2024-07-02', '2024-07-03'] });
 
-    await replayArchive(range, { readText, syncListing });
-    const rerun = await replayArchive(range, { readText, syncListing });
+    await replayArchive(range, { readText, listKeys, syncListing });
+    const rerun = await replayArchive(range, { readText, listKeys, syncListing });
 
     expect(rerun.total).toMatchObject({ inserted: 0, updated: 0, unchanged: 3, statusInserted: 0, statusExtended: 0 });
     expect(rerun.failed).toBe(false);
@@ -257,6 +304,7 @@ describe('replayArchive', () => {
   it('caps detail pages in flight', async () => {
     const ids = Array.from({ length: 30 }, (_, i) => 100 + i);
     archive.set(countyPageKey('2024-07-02', 'salem'), countyPage(...ids));
+    ids.forEach((id) => archive.set(listingPageKey('2024-07-02', id), HOME));
     let active = 0;
     let maxActive = 0;
     readText.mockImplementation(async (key: string) => {
@@ -268,7 +316,7 @@ describe('replayArchive', () => {
       return key.startsWith('county') ? (archive.get(key) as string) : HOME;
     });
 
-    const summary = await replayArchive(args(), { readText, syncListing });
+    const summary = await replayArchive(args(), { readText, listKeys, syncListing });
 
     expect(summary.total.unrecognised).toBe(30);
     expect(maxActive).toBe(8);

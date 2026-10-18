@@ -48,20 +48,25 @@ const splitAddress = (address: string): { street: string; city: string; zipcode:
 
 /** An address split into the parts every module stores, whatever shape its raw data came in. */
 export type Address = {
-  address: string;
-  street: string;
-  unit: string;
-  secondaryUnit: string;
-  city: string;
+  address: string | null;
+  street: string | null;
+  unit: string | null;
+  secondaryUnit: string | null;
+  city: string | null;
   state: string;
-  zipcode: string;
+  zipcode: string | null;
 };
 
 /**
  * Splits a listing address, usually "<street>\n<City> NJ <zip>", into its parts.
- * `address` is always the whole value on one line, even when the parts can't be found.
+ * `address` is always the whole value on one line, even when the parts can't be found. A null address, for a listing
+ * that didn't publish one, gives null parts; `state` is still NJ.
  */
-export const parseAddress = (address: string): Address => {
+export const parseAddress = (address: string | null): Address => {
+  if (address === null) {
+    return { address: null, city: null, state: 'NJ', street: null, zipcode: null, unit: null, secondaryUnit: null };
+  }
+
   const oneLineAddress = collapseSpaces(address);
   const parts = splitAddress(address);
 
