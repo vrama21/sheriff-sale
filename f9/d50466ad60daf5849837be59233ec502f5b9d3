@@ -1,0 +1,36 @@
+backend/src/shared/http/httpClient.ts
+  s_b0856a28849aaa::t_b34d09cfee6a0f 52
+packages/tsconfig/lambda.json
+  s_b0856a28849aaa::t_95c470fcfd5cdf 7,10
+backend/src/shared/s3/getS3Text.ts
+  s_b0856a28849aaa::t_f9ba35f3537c8d 18
+backend/src/modules/sheriffSale/replay/index.ts
+  s_b0856a28849aaa::t_0f974b58b16c26 22
+backend/src/modules/sheriffSale/ingest/contentHash.ts
+  s_b0856a28849aaa::t_dab0caaf612570 14
+backend/src/modules/sheriffSale/parse/parseCountyPropertyIds.test.ts
+  s_b0856a28849aaa::t_a2b6f640f567da 11-28
+backend/src/modules/sheriffSale/parse/parseCountyPropertyIds.ts
+  s_b0856a28849aaa::t_b706c95b0e5c00 1,6-11,16,18,27
+  s_b0856a28849aaa::t_45613a4c237f25 15
+backend/src/modules/sheriffSale/replay/replay.ts
+  s_b0856a28849aaa::t_6f001dac172ca0 222-223
+backend/src/shared/http/httpClient.test.ts
+  s_b0856a28849aaa::t_fa66a7730f5d59 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f9d50466ad60daf5849837be59233ec502f5b9d3",
+  "prompts": {},
+  "sessions": {
+    "s_b0856a28849aaa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b0965940-304e-4036-b1f4-9881421ba76c",
+        "model": "unknown"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
