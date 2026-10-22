@@ -15,7 +15,7 @@ The handler is `src/modules/sheriffSale/handler.ts`. The Lambda and the rest of 
 | Command                                          | Description                                                                              |
 | ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
 | `npm run build`                                  | Type-check, then bundle the handlers to `dist/index.js` and `dist/clerkRecords/index.js` |
-| `npm run test`                                   | Run the Jest tests                                                                       |
+| `npm run test`                                   | Run the tests (`vp test`)                                                                |
 | `npm run lint`                                   | Lint `src/`                                                                              |
 | `npm run start:newJerseyScraper`                 | Run the scraper locally                                                                  |
 | `npm run replay:archive`                         | Replay archived pages into the database (see below)                                      |
