@@ -92,6 +92,13 @@
       "when": 1792352006529,
       "tag": "0012_steep_rumiko_fujikawa",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792821971185,
+      "tag": "0013_drop_listing_address_not_null",
+      "breakpoints": true
     }
   ]
 }

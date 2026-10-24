@@ -18,6 +18,7 @@
 - [ ] 3.5 Check that `ListingTable`, `ListingDetails` and `ListingMap` in `frontend/` render a NULL address without errors
 - [x] 3.6 Add `attorneyFile` to `IGNORED_KEYS`: the full-range dry run's 225 `attorneyFile` warnings are all blank values
 - [x] 3.7 When the upset row has text that money coercion rejects, run `extractUpsetAmount` on the row before the free text, keeping its warning; test with the Hudson fixtures `listingDetailsHudsonUpsetText.html` (2025-03-29 `property-id-1535606338`, 224000) and `listingDetailsHudsonUpsetNotNeeded.html` (2026-10-18 `property-id-2196805809`, NULL)
+- [x] 3.8 Drop the Prisma-era NOT NULL on `Listing.address` in a custom migration (`0013_drop_listing_address_not_null.sql`): prod rejected every listing that 3.3 stores with a NULL address
 
 ## 4. Pipeline failure threshold
 

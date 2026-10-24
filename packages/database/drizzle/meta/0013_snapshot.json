@@ -1,0 +1,1015 @@
+{
+  "id": "d401ae44-7245-4325-b9e0-5c7df72bc4da",
+  "prevId": "e84abee8-452a-4864-a8a7-37db4ea3f8f7",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.Listing": {
+      "name": "Listing",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attorney": {
+          "name": "attorney",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attorneyPhone": {
+          "name": "attorneyPhone",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contentHash": {
+          "name": "contentHash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "county": {
+          "name": "county",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "courtCase": {
+          "name": "courtCase",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deed": {
+          "name": "deed",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deedAddress": {
+          "name": "deedAddress",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "defendant": {
+          "name": "defendant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "judgment": {
+          "name": "judgment",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latitude": {
+          "name": "latitude",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "longitude": {
+          "name": "longitude",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mapsUrl": {
+          "name": "mapsUrl",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parcel": {
+          "name": "parcel",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plaintiff": {
+          "name": "plaintiff",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "propertyId": {
+          "name": "propertyId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "priors": {
+          "name": "priors",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "saleDate": {
+          "name": "saleDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "secondaryUnit": {
+          "name": "secondaryUnit",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sheriffId": {
+          "name": "sheriffId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "snapshotDate": {
+          "name": "snapshotDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "street": {
+          "name": "street",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit": {
+          "name": "unit",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "upsetAmount": {
+          "name": "upsetAmount",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zipcode": {
+          "name": "zipcode",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "Listing_county_sheriffId_key": {
+          "name": "Listing_county_sheriffId_key",
+          "columns": [
+            {
+              "expression": "county",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sheriffId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.StatusHistory": {
+      "name": "StatusHistory",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "listingId": {
+          "name": "listingId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "date": {
+          "name": "date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "firstSeenOn": {
+          "name": "firstSeenOn",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastSeenOn": {
+          "name": "lastSeenOn",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "StatusHistory_listingId_status_date_key": {
+          "name": "StatusHistory_listingId_status_date_key",
+          "columns": [
+            {
+              "expression": "listingId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ClerkDocumentLink": {
+      "name": "ClerkDocumentLink",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "fromDocumentId": {
+          "name": "fromDocumentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "toInstrumentNumber": {
+          "name": "toInstrumentNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "toBook": {
+          "name": "toBook",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "toPage": {
+          "name": "toPage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "toDocumentId": {
+          "name": "toDocumentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ClerkDocumentLink_fromDocumentId_ClerkDocument_id_fk": {
+          "name": "ClerkDocumentLink_fromDocumentId_ClerkDocument_id_fk",
+          "tableFrom": "ClerkDocumentLink",
+          "columnsFrom": [
+            "fromDocumentId"
+          ],
+          "tableTo": "ClerkDocument",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        },
+        "ClerkDocumentLink_toDocumentId_ClerkDocument_id_fk": {
+          "name": "ClerkDocumentLink_toDocumentId_ClerkDocument_id_fk",
+          "tableFrom": "ClerkDocumentLink",
+          "columnsFrom": [
+            "toDocumentId"
+          ],
+          "tableTo": "ClerkDocument",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "set null"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "ClerkDocumentLink_from_target_key": {
+          "name": "ClerkDocumentLink_from_target_key",
+          "columns": [
+            "fromDocumentId",
+            "toInstrumentNumber",
+            "toBook",
+            "toPage"
+          ],
+          "nullsNotDistinct": true
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ClerkDocumentParty": {
+      "name": "ClerkDocumentParty",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "documentId": {
+          "name": "documentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "side": {
+          "name": "side",
+          "type": "ClerkPartySide",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalizedName": {
+          "name": "normalizedName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "ClerkDocumentParty_documentId_side_name_key": {
+          "name": "ClerkDocumentParty_documentId_side_name_key",
+          "columns": [
+            {
+              "expression": "documentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "side",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ClerkDocumentParty_normalizedName_idx": {
+          "name": "ClerkDocumentParty_normalizedName_idx",
+          "columns": [
+            {
+              "expression": "normalizedName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ClerkDocumentParty_documentId_ClerkDocument_id_fk": {
+          "name": "ClerkDocumentParty_documentId_ClerkDocument_id_fk",
+          "tableFrom": "ClerkDocumentParty",
+          "columnsFrom": [
+            "documentId"
+          ],
+          "tableTo": "ClerkDocument",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ClerkDocument": {
+      "name": "ClerkDocument",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "county": {
+          "name": "county",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instrumentNumber": {
+          "name": "instrumentNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "platform": {
+          "name": "platform",
+          "type": "ClerkPlatform",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "docCategory": {
+          "name": "docCategory",
+          "type": "ClerkDocCategory",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "docTypeRaw": {
+          "name": "docTypeRaw",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recordedDate": {
+          "name": "recordedDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bookType": {
+          "name": "bookType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "book": {
+          "name": "book",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "page": {
+          "name": "page",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "municipality": {
+          "name": "municipality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "block": {
+          "name": "block",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lot": {
+          "name": "lot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "qualifier": {
+          "name": "qualifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consideration": {
+          "name": "consideration",
+          "type": "numeric(14, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "detail": {
+          "name": "detail",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "firstSeenAt": {
+          "name": "firstSeenAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "lastSeenAt": {
+          "name": "lastSeenAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ClerkDocument_county_instrumentNumber_key": {
+          "name": "ClerkDocument_county_instrumentNumber_key",
+          "columns": [
+            {
+              "expression": "county",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "instrumentNumber",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ClerkDocument_county_block_lot_idx": {
+          "name": "ClerkDocument_county_block_lot_idx",
+          "columns": [
+            {
+              "expression": "county",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "block",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "lot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ListingClerkDocument": {
+      "name": "ListingClerkDocument",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "listingId": {
+          "name": "listingId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documentId": {
+          "name": "documentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "ListingClerkRole",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "matchedBy": {
+          "name": "matchedBy",
+          "type": "ListingClerkMatchedBy",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "ListingClerkConfidence",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "firstMatchedAt": {
+          "name": "firstMatchedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "lastConfirmedAt": {
+          "name": "lastConfirmedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ListingClerkDocument_listingId_documentId_key": {
+          "name": "ListingClerkDocument_listingId_documentId_key",
+          "columns": [
+            {
+              "expression": "listingId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "documentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ListingClerkDocument_documentId_idx": {
+          "name": "ListingClerkDocument_documentId_idx",
+          "columns": [
+            {
+              "expression": "documentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ListingClerkDocument_listingId_Listing_id_fk": {
+          "name": "ListingClerkDocument_listingId_Listing_id_fk",
+          "tableFrom": "ListingClerkDocument",
+          "columnsFrom": [
+            "listingId"
+          ],
+          "tableTo": "Listing",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        },
+        "ListingClerkDocument_documentId_ClerkDocument_id_fk": {
+          "name": "ListingClerkDocument_documentId_ClerkDocument_id_fk",
+          "tableFrom": "ListingClerkDocument",
+          "columnsFrom": [
+            "documentId"
+          ],
+          "tableTo": "ClerkDocument",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ListingClerkLookup": {
+      "name": "ListingClerkLookup",
+      "schema": "",
+      "columns": {
+        "listingId": {
+          "name": "listingId",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "platform": {
+          "name": "platform",
+          "type": "ClerkPlatform",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastCheckedAt": {
+          "name": "lastCheckedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nextCheckAt": {
+          "name": "nextCheckAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastOutcome": {
+          "name": "lastOutcome",
+          "type": "ListingClerkOutcome",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consecutiveMisses": {
+          "name": "consecutiveMisses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "consecutiveErrors": {
+          "name": "consecutiveErrors",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "lastError": {
+          "name": "lastError",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ListingClerkLookup_nextCheckAt_idx": {
+          "name": "ListingClerkLookup_nextCheckAt_idx",
+          "columns": [
+            {
+              "expression": "nextCheckAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ListingClerkLookup_listingId_Listing_id_fk": {
+          "name": "ListingClerkLookup_listingId_Listing_id_fk",
+          "tableFrom": "ListingClerkLookup",
+          "columnsFrom": [
+            "listingId"
+          ],
+          "tableTo": "Listing",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.ClerkDocCategory": {
+      "name": "ClerkDocCategory",
+      "schema": "public",
+      "values": [
+        "DEED",
+        "SHERIFF_DEED",
+        "MORTGAGE",
+        "MORTGAGE_ASSIGNMENT",
+        "MORTGAGE_DISCHARGE",
+        "MORTGAGE_MODIFICATION",
+        "LIS_PENDENS",
+        "LIS_PENDENS_DISCHARGE",
+        "FINAL_JUDGMENT",
+        "NOTICE_OF_SETTLEMENT",
+        "TAX_SALE_CERTIFICATE",
+        "LIEN",
+        "OTHER"
+      ]
+    },
+    "public.ClerkPartySide": {
+      "name": "ClerkPartySide",
+      "schema": "public",
+      "values": [
+        "direct",
+        "indirect"
+      ]
+    },
+    "public.ClerkPlatform": {
+      "name": "ClerkPlatform",
+      "schema": "public",
+      "values": [
+        "press"
+      ]
+    },
+    "public.ListingClerkConfidence": {
+      "name": "ListingClerkConfidence",
+      "schema": "public",
+      "values": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "public.ListingClerkMatchedBy": {
+      "name": "ListingClerkMatchedBy",
+      "schema": "public",
+      "values": [
+        "lis_pendens_party",
+        "parcel",
+        "cross_reference",
+        "mortgage_party"
+      ]
+    },
+    "public.ListingClerkOutcome": {
+      "name": "ListingClerkOutcome",
+      "schema": "public",
+      "values": [
+        "matched",
+        "no_lis_pendens",
+        "unsupported",
+        "error",
+        "complete"
+      ]
+    },
+    "public.ListingClerkRole": {
+      "name": "ListingClerkRole",
+      "schema": "public",
+      "values": [
+        "FORECLOSED_LIS_PENDENS",
+        "FORECLOSED_MORTGAGE",
+        "MORTGAGE_ASSIGNMENT",
+        "PRIOR_DEED",
+        "SHERIFF_DEED",
+        "RELATED"
+      ]
+    }
+  },
+  "schemas": {},
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

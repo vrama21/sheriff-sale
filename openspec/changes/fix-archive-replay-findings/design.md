@@ -94,7 +94,7 @@ A new `shared/s3/listS3Keys(bucket, prefix)` pages through `ListObjectsV2`. `rep
 ## Risks / Trade-offs
 
 - [Upset phrase matches a figure that isn't the upset] → The tests cover every variant seen in the archive. After the full-range dry run, compare each extracted upset with `judgment` and sample 20 per county for review.
-- [A NULL address breaks a reader] → `Listing.address` is already nullable. The frontend's `ListingTable` renders it as an empty cell; check `ListingDetails` and the map before shipping.
+- [A NULL address breaks a reader] → The Drizzle schema declares `Listing.address` nullable, but prod kept a Prisma-era NOT NULL on it, so `0013_drop_listing_address_not_null.sql` drops it. The frontend's `ListingTable` renders it as an empty cell; check `ListingDetails` and the map before shipping.
 - [The half-parsed rule makes daily runs fail on noise] → The parsed listings are still written, and the email names the county and counts, so a false alarm costs a look, not data.
 - [The SNS subscription is never confirmed] → Alarms change state but no email arrives. The migration plan includes confirming it and a test notification.
 - [The backfill updates listings with older snapshots] → `syncListing` only applies a snapshot at least as new as the stored one, so a listing whose latest stored snapshot is 2026-10-18 keeps its fields, and only its status rows widen.
