@@ -116,4 +116,4 @@ A detail-table key that doesn't map to a known listing field SHALL NOT be passed
 
 **Reason**: A blank address row dropped 229 archived pages whose sheriff number and amounts were good, including every Middlesex and Cape May page before the `Property Address` mapping. The address isn't part of the listing's identity, which is county and sheriff number.
 
-**Migration**: Replaced by "A missing address does not reject a listing". `Listing.address` and the split address columns are already nullable; readers of a listing must handle a NULL address.
+**Migration**: Replaced by "A missing address does not reject a listing". The split address columns are already nullable; `Listing.address` kept a Prisma-era NOT NULL in prod, which `0013_drop_listing_address_not_null.sql` drops; readers of a listing must handle a NULL address.
