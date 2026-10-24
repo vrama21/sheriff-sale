@@ -1,0 +1,26 @@
+packages/database/src/client.ts
+  s_fb28188b071808::t_27034123d3be8b 13
+infra/scraper.tf
+  s_fb28188b071808::t_dc8053e5c690f9 88-90
+backend/README.md
+  s_fb28188b071808::t_4002849e825875 45
+openspec/specs/scraper-infrastructure/spec.md
+  s_fb28188b071808::t_9b7d0a0bba28ef 63
+  s_fb28188b071808::t_4002849e825875 68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "97722e51543e5d635346a98ea37f7440ef0d6ee7",
+  "prompts": {},
+  "sessions": {
+    "s_fb28188b071808": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69b4d299-59a1-4f60-ae9b-9b386ca7778e",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
