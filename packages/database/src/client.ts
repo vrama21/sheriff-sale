@@ -10,7 +10,7 @@ if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');
 }
 
-// One connection unless set: the scraper Lambda never sets it. The archive replay sets it to run its syncs in parallel.
+// One connection unless set. The scraper Lambda and the archive replay set it to run their syncs in parallel.
 if (DATABASE_POOL_MAX !== undefined && !/^[1-9]\d*$/.test(DATABASE_POOL_MAX)) {
   throw new Error(`DATABASE_POOL_MAX must be a positive integer, got ${JSON.stringify(DATABASE_POOL_MAX)}`);
 }

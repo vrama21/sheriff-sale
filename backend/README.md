@@ -42,7 +42,7 @@ each day's detail pages are listed once, and only archived ones are read. `--dry
 connects to the database.
 
 A real run opens `DATABASE_POOL_MAX` database connections, default 8 (one per detail page in flight), so its syncs run
-in parallel. The Lambda leaves `DATABASE_POOL_MAX` unset and keeps one connection. The replay loads
+in parallel. The Lambda sets `DATABASE_POOL_MAX` to 8 in `infra/scraper.tf`. The replay loads
 `@sheriff-sale/database` from its build, so run `npm run build` at the root after changing that package.
 
 ## Deploying
