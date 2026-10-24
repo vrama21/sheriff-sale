@@ -85,6 +85,9 @@ resource "aws_lambda_function" "scraper" {
   environment {
     variables = {
       DATABASE_URL = var.database_url
+      # Every listing's sync is issued at once and queues on the pool. Over one connection, at ~0.7 s a write to
+      # Railway, ~1,500 listings outrun the 900-second timeout.
+      DATABASE_POOL_MAX = "8"
     }
   }
 

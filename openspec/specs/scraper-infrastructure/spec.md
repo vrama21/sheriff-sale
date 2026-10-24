@@ -60,12 +60,12 @@ The scraper SHALL write scraped HTML to `nj-sheriff-sale`, a name fixed in code 
 
 ### Requirement: Scraper Lambda function
 
-OpenTofu SHALL manage a Lambda function named `new-jersey-sheriff-sale-scraper`. It SHALL use runtime `nodejs24.x`, handler `index.handler`, 512 MB memory, a 900-second timeout, and the x86_64 architecture. Its code SHALL be the esbuild bundle of `backend/src/modules/sheriffSale/handler.ts`. Its environment SHALL contain exactly `DATABASE_URL`, which SHALL come from a `sensitive` input variable.
+OpenTofu SHALL manage a Lambda function named `new-jersey-sheriff-sale-scraper`. It SHALL use runtime `nodejs24.x`, handler `index.handler`, 512 MB memory, a 900-second timeout, and the x86_64 architecture. Its code SHALL be the esbuild bundle of `backend/src/modules/sheriffSale/handler.ts`. Its environment SHALL contain exactly two keys: `DATABASE_URL`, which SHALL come from a `sensitive` input variable, and `DATABASE_POOL_MAX`, set to `8` so the run's listing syncs share eight database connections instead of queuing on one.
 
 #### Scenario: Function configuration after apply
 
 - **WHEN** `aws lambda get-function-configuration` is run against `new-jersey-sheriff-sale-scraper` after apply
-- **THEN** it reports runtime `nodejs24.x`, handler `index.handler`, memory 512, timeout 900, and environment key `DATABASE_URL` only
+- **THEN** it reports runtime `nodejs24.x`, handler `index.handler`, memory 512, timeout 900, and environment keys `DATABASE_URL` and `DATABASE_POOL_MAX` (`8`) only
 
 #### Scenario: Manual invocation
 
