@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { namesMatch, normalizeName, primaryDefendant, searchTermFor, splitDefendants } from './normalizeName';
+import {
+  isEntityName,
+  namesMatch,
+  normalizeName,
+  primaryDefendant,
+  searchTermFor,
+  splitDefendants,
+} from './normalizeName';
 
 describe('normalizeName', () => {
   it.each([
@@ -105,6 +112,29 @@ describe('splitDefendants', () => {
       'Barker Circle Partnership, LLC',
       'Fort Monmouth Economic Revitalization Authority',
     ]);
+  });
+
+  // Invented: no fixture has these shapes yet.
+  it('gives a couple sharing a surname that surname on both names', () => {
+    expect(names('JOHN AND MARY SMITH')).toEqual(['JOHN SMITH', 'MARY SMITH']);
+    expect(names('John & Mary A. Smith Jr., et al')).toEqual(['John Smith', 'Mary A. Smith Jr']);
+    expect(names('JOHN SMITH AND MARY JONES')).toEqual(['JOHN SMITH', 'MARY JONES']);
+    expect(names('SMITH, JOHN AND MARY')).toEqual(['SMITH, JOHN', 'MARY']);
+    expect(names('JOHN AND WELLS FARGO BANK')).toEqual(['JOHN', 'WELLS FARGO BANK']);
+    expect(primaryDefendant(splitDefendants('John and Mary Smith'))?.name).toBe('John Smith');
+  });
+
+  it('treats an estate as the decedent', () => {
+    expect(splitDefendants('ESTATE OF JOHN SMITH; JANE SMITH')).toEqual([
+      { name: 'ESTATE OF JOHN SMITH', isEntity: false },
+      { name: 'JANE SMITH', isEntity: false },
+    ]);
+    expect(searchTermFor({ name: 'The Estate of John A. Smith', isEntity: false })).toEqual({
+      lastName: 'SMITH',
+      firstName: 'JOHN',
+    });
+    expect(namesMatch('Estate of John Smith', 'SMITH JOHN')).toBe(true);
+    expect(isEntityName('Hanning Family Real Estate LLC')).toBe(true);
   });
 
   it('drops the State and the United States', () => {

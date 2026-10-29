@@ -32,15 +32,30 @@ const QUALIFIER = /\b(?:QUAL(?:IFIER)?\.?(?:\s+NO\.?)?\s*:?\s*([A-Z0-9.]+)|(C\.?
 const BOUNDARY_CONTEXT =
   /\b(?:LINE|LINES|ALONG|BETWEEN|ADJOINING|CORNER|DIVIDING|DIVISION|BOUNDED|THENCE)\b[^.;]{0,30}$/i;
 
+// A wider range is more likely a typo than a parcel, so only its ends are kept.
+const MAX_LOT_RANGE = 20;
+
+/** `3-6` → 3, 4, 5, 6. */
+const expandLotRange = (from: string, to: string): string[] => {
+  const start = Number(from);
+  const end = Number(to);
+
+  if (end <= start || end - start >= MAX_LOT_RANGE) {
+    return [from, to];
+  }
+
+  return Array.from({ length: end - start + 1 }, (_, offset) => String(start + offset));
+};
+
 const splitLots = (lots: string): string[] =>
   lots
     .replace(/ADDITIONAL\s+LOTS?/gi, ',')
     .split(/\s*(?:,|&|\bAND\b)\s*/i)
     .flatMap((lot) => {
-      // `3-4` is a range of two lots; `18-B` is one lot.
+      // `3-4` and `1 TO 3` are ranges of lots; `18-B` is one lot.
       const range = /^(\d+)\s*(?:-|TO)\s*(\d+)$/i.exec(lot);
 
-      return range ? [range[1], range[2]] : [lot];
+      return range ? expandLotRange(range[1], range[2]) : [lot];
     })
     .map((lot) => lot.trim().toUpperCase())
     .filter(Boolean);

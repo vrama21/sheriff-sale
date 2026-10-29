@@ -1,6 +1,7 @@
 import { NJCounty } from '../../../shared/nj';
 
-// Kept in step with ClerkDocCategory in packages/database/src/schema/clerkRecords.ts (checked at compile time in ingest/syncClerkDocuments.ts).
+// This file's unions are kept in step with the enums in packages/database/src/schema/clerkRecords.ts (checked at
+// compile time in ingest/syncClerkDocuments.ts).
 export const DOC_CATEGORIES = [
   'DEED',
   'SHERIFF_DEED',

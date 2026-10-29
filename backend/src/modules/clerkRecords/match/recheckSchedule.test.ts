@@ -62,6 +62,15 @@ describe('scheduleNextLookup', () => {
       { consecutiveMisses: 6, consecutiveErrors: 0 },
     ],
     [
+      'seventh miss, sale in 5 days: the sale date',
+      'no_lis_pendens',
+      { consecutiveMisses: 6, consecutiveErrors: 0 },
+      '2026-10-06',
+      '2026-10-01T12:00:00Z',
+      '2026-10-06T00:00:00.000Z',
+      { consecutiveMisses: 7, consecutiveErrors: 0 },
+    ],
+    [
       'after the sale, no sheriff deed: sale + 30',
       'matched',
       fresh,

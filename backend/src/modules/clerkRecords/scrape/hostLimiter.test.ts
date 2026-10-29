@@ -92,13 +92,18 @@ describe('createHostLimiter', () => {
     const limiter = createHostLimiter('press.essexregister.com');
     const request = vi.fn().mockRejectedValue(httpError(429));
 
-    for (let attempt = 0; attempt < 3; attempt++) {
+    for (let attempt = 0; attempt < 2; attempt++) {
       const result = limiter.run(request);
       const assertion = expect(result).rejects.toMatchObject({ response: { status: 429 } });
       await vi.runAllTimersAsync();
       await assertion;
     }
 
+    // The third refusal is the block itself, so the listing that drew it isn't recorded as an error.
+    const third = limiter.run(request);
+    const thirdAssertion = expect(third).rejects.toBeInstanceOf(HostBlockedError);
+    await vi.runAllTimersAsync();
+    await thirdAssertion;
     expect(limiter.blocked).toBe(true);
 
     const blocked = limiter.run(request);

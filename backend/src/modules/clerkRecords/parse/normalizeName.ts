@@ -8,6 +8,8 @@ export const ENTITY_MATCH_THRESHOLD = 0.8;
 const ROLE_TAIL =
   /\b(?:AS\s+(?:OWNER\s+|INDENTURE\s+|SUCCESSOR\s+|CO\s+)*(?:TRUSTEE|EXECUT(?:OR|RIX)|ADMINISTRAT(?:OR|RIX)|NOMINEE|SERVICER|ATTORNEY|AGENT|CUSTODIAN|HEIR|BENEFICIARY|PERSONAL\s+REPRESENTATIVE|SUCCESSOR)|NOT\s+IN\s+ITS\s+INDIVIDUAL|SOLELY\s+AS|INDIVIDUALLY|SUCCESSOR\s+(?:BY|IN|TO)|F\s*K\s*A|A\s*K\s*A|D\s*B\s*A|FORMERLY\s+KNOWN)\b.*$/;
 const ET_AL = /\bET\s+(?:ALS?|UX|VIR)\b.*$/;
+// A decedent's estate is named for the decedent, so it compares as that person rather than as an organisation.
+const ESTATE_OF = /^(?:THE\s+)?ESTATE\s+OF\s+(?:THE\s+LATE\s+)?/;
 const SPOUSE_PHRASES = /\b(?:H\s*W|HIS\s+WIFE|HER\s+HUSBAND|HUSBAND\s+AND\s+WIFE|WIFE\s+AND\s+HUSBAND|DECEASED)\b/g;
 const MERS_NOMINEE =
   /^.*\bMORTGAGE\s+ELEC(?:TRONIC)?\s+REGISTRATION\s+SYS(?:TEMS?)?\b(?:\s+INC)?\s+AS\s+NOMINEE\s+FOR\s+/;
@@ -71,14 +73,14 @@ const joinLeadingInitials = (name: string): string => {
   return run >= 2 ? [tokens.slice(0, run).join(''), ...tokens.slice(run)].join(' ') : name;
 };
 
-export const isEntityName = (name: string): boolean => ENTITY_WORDS.test(cleanText(name));
+export const isEntityName = (name: string): boolean => ENTITY_WORDS.test(cleanText(name).replace(ESTATE_OF, ''));
 
 /**
  * The comparable form of a party name: uppercased, punctuation and capacity phrases removed, abbreviations expanded,
  * entity suffixes removed. A MERS-as-nominee phrase becomes the nominee. Stored on every ClerkDocumentParty row.
  */
 export const normalizeName = (name: string): string => {
-  let text = cleanText(name);
+  let text = cleanText(name).replace(ESTATE_OF, '');
 
   if (MERS_NOMINEE.test(text)) {
     text = text.replace(MERS_NOMINEE, '');
@@ -181,8 +183,35 @@ const stripDefendantRoles = (part: string): string =>
     .trim();
 
 /**
+ * Gives a lone given name the surname of the last name in its ` AND ` list: `John and Mary Smith` names John Smith
+ * and Mary Smith. A surname-first last name (`SMITH, MARY`) is left alone.
+ */
+const shareSurname = (people: string[]): string[] => {
+  const last = people[people.length - 1];
+
+  // An entity's last word (`WESSON CORP`) is no one's surname.
+  if (people.length < 2 || last.includes(',') || isEntityName(last)) {
+    return people;
+  }
+
+  const surname = last
+    .split(/\s+/)
+    .filter((token) => !GENERATIONAL.has(cleanText(token)))
+    .at(-1);
+  const isLoneGivenName = (person: string) => /^[A-Za-z.]+$/.test(person.trim()) && !isEntityName(person);
+
+  if (!surname || last.trim().split(/\s+/).length < 2) {
+    return people;
+  }
+
+  return people.map((person, index) =>
+    index < people.length - 1 && isLoneGivenName(person) ? `${person.trim()} ${surname}` : person,
+  );
+};
+
+/**
  * Splits a listing's `defendant` text into its defendants. Splits on `;` and `:`, then on ` AND ` and ` & ` between
- * people, then on `, ` when every piece is a full name — so `SMITH, JOHN` stays one name. Drops parties named only so
+ * people (a couple sharing a surname gets it on both names), then on `, ` when every piece is a full name — so `SMITH, JOHN` stays one name. Drops parties named only so
  * the judgment binds them: spouses of, unknown heirs, the State and the United States.
  */
 export const splitDefendants = (defendant: string | null): Defendant[] => {
@@ -194,7 +223,9 @@ export const splitDefendants = (defendant: string | null): Defendant[] => {
     .replace(/,(?=\S)/g, ', ')
     .split(/[;:]/)
     .map(stripDefendantRoles)
-    .flatMap((part) => (isEntityName(part) && !/\s&\s|\sand\s/i.test(part) ? [part] : part.split(/\s+(?:and|&)\s+/i)))
+    .flatMap((part) =>
+      isEntityName(part) && !/\s&\s|\sand\s/i.test(part) ? [part] : shareSurname(part.split(/\s+(?:and|&)\s+/i)),
+    )
     .map(stripDefendantRoles)
     .flatMap((part) => {
       const pieces = part.split(/,\s+/).map((piece) => piece.trim());

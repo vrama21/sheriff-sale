@@ -36,7 +36,7 @@ export const SNAPSHOT_FIELDS = [
   'unit',
   'upsetAmount',
   'zipcode',
-] as const;
+] as const satisfies readonly (keyof SnapshotListing)[];
 
 export type SnapshotField = (typeof SNAPSHOT_FIELDS)[number];
 

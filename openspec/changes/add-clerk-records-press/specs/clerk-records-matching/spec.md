@@ -24,7 +24,7 @@ Each run SHALL select candidate listings from the supported counties whose looku
 After each lookup, the listing's `nextCheckAt` SHALL be set from the outcome:
 
 - lis pendens matched and sale upcoming: 14 days later, capped at the sale date
-- no lis pendens found: 7 days later, or 30 days later after 6 consecutive misses
+- no lis pendens found: 7 days later, or 30 days later after 6 consecutive misses, capped at the sale date
 - sale date passed without a sheriff's deed: the next of sale + 30, + 60 and + 90 days, then no further checks
 - sheriff's deed matched: no further checks
 - error: 1 day later, or 7 days later after 5 consecutive errors

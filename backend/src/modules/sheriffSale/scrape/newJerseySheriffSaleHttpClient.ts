@@ -7,7 +7,7 @@ import { HttpClient } from '../../../shared/http';
  * the county search sets the session cookie, and the client sends it on that county's details requests.
  */
 export class NewJerseySheriffSaleHttpClient extends HttpClient {
-  public aspSessionId: string;
+  public aspSessionId: string | undefined;
 
   public constructor() {
     super({

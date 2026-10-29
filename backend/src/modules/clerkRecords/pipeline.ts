@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { NJCounty } from '../../shared/nj';
+import { NJ_COUNTIES, NJCounty } from '../../shared/nj';
 import {
   MAX_LISTINGS_PER_COUNTY_PER_RUN,
   recordLookupError,
@@ -17,7 +17,7 @@ import { ClerkParseError, ClerkPlatformClient } from './scrape/types';
 export const RUN_DEADLINE_MS = 780_000;
 
 /** The counties with a clerk platform client. */
-export const SUPPORTED_COUNTIES = Object.keys(PRESS_COUNTIES) as NJCounty[];
+export const SUPPORTED_COUNTIES: NJCounty[] = NJ_COUNTIES.filter((county) => county in PRESS_COUNTIES);
 
 export type CountyLookupSummary = {
   county: NJCounty;

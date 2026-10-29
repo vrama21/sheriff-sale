@@ -18,4 +18,19 @@ describe('HttpClient', () => {
     expect(rejection).toBe(thrown);
     expect(thrown?.config?.headers['Authorization']).toBeUndefined();
   });
+
+  it('sends no Authorization header without a token', async () => {
+    const client = new HttpClient({});
+    let sent: unknown = 'not sent';
+
+    client['axiosInstance'].defaults.adapter = async (config) => {
+      sent = config.headers['Authorization'];
+
+      return { data: '', status: 200, statusText: 'OK', headers: {}, config };
+    };
+
+    await client.get('/listings');
+
+    expect(sent).toBeUndefined();
+  });
 });

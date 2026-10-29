@@ -57,17 +57,14 @@ export const scheduleNextLookup = (
         return { nextCheckAt: next ? at(next) : null, consecutiveMisses, consecutiveErrors: 0 };
       }
 
-      if (outcome === 'matched') {
-        return {
-          nextCheckAt: at(DateTime.min(now.plus({ days: MATCHED_RECHECK_DAYS }), sale)),
-          consecutiveMisses,
-          consecutiveErrors: 0,
-        };
+      let days = MATCHED_RECHECK_DAYS;
+
+      if (outcome === 'no_lis_pendens') {
+        days = consecutiveMisses >= MISSES_BEFORE_SLOWDOWN ? SLOW_MISS_RECHECK_DAYS : MISS_RECHECK_DAYS;
       }
 
-      const days = consecutiveMisses >= MISSES_BEFORE_SLOWDOWN ? SLOW_MISS_RECHECK_DAYS : MISS_RECHECK_DAYS;
-
-      return { nextCheckAt: at(now.plus({ days })), consecutiveMisses, consecutiveErrors: 0 };
+      // Never past the sale date, so the last check before the sale isn't skipped (design D10).
+      return { nextCheckAt: at(DateTime.min(now.plus({ days }), sale)), consecutiveMisses, consecutiveErrors: 0 };
     }
   }
 };

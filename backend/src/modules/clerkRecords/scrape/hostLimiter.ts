@@ -10,9 +10,13 @@ export const BLOCKED_AFTER_CONSECUTIVE = 3;
 
 /** The host refused three requests in a row with 403 or 429; nothing more goes to it this run. */
 export class HostBlockedError extends Error {
-  public constructor(public readonly host: string) {
+  public constructor(
+    public readonly host: string,
+    options?: ErrorOptions,
+  ) {
     super(
       `${host} answered ${BLOCKED_AFTER_CONSECUTIVE} requests in a row with 403/429; stopped requesting it this run`,
+      options,
     );
     this.name = 'HostBlockedError';
   }
@@ -79,8 +83,10 @@ export const createHostLimiter = (host: string, { sleep = defaultSleep, now = Da
       if (status === 403 || status === 429) {
         refusals++;
 
+        // The refusal that blocks the host belongs to the run, not to the listing whose request drew it.
         if (refusals >= BLOCKED_AFTER_CONSECUTIVE) {
           blocked = true;
+          throw new HostBlockedError(host, { cause: error });
         }
       } else {
         refusals = 0;

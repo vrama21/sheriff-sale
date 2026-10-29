@@ -46,7 +46,12 @@ describe('buildListingSnapshot', () => {
   it('sets every snapshot field, null when the page did not have it', () => {
     const { listing } = build().snapshot;
 
-    SNAPSHOT_FIELDS.forEach((field) => expect(listing).toHaveProperty(field));
+    // Exactly these, so a field added to the listing but not to SNAPSHOT_FIELDS is caught: it would never be updated.
+    expect(
+      Object.keys(listing)
+        .filter((key) => key !== 'propertyId')
+        .sort(),
+    ).toEqual([...SNAPSHOT_FIELDS].sort());
     expect(listing.judgment).toBeNull();
     expect(listing.plaintiff).toBeNull();
   });
