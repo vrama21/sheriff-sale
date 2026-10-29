@@ -3,22 +3,34 @@ import {
   clerkDocumentLinks,
   clerkDocumentParties,
   clerkDocuments,
+  clerkPartySideEnum,
+  clerkPlatformEnum,
   db,
+  ListingClerkConfidence,
+  ListingClerkMatchedBy,
+  ListingClerkOutcome,
+  ListingClerkRole,
   drizzleSql as sql,
 } from '@sheriff-sale/database';
+import { Confidence, MatchedBy, MatchRole } from '../match/matchListing';
+import { ScheduledOutcome } from '../match/recheckSchedule';
 import { normalizeName } from '../parse/normalizeName';
-import { ClerkDocumentRecord, DocCategory } from '../scrape/types';
+import { ClerkDocumentRecord, ClerkPlatform, DocCategory, PartySide } from '../scrape/types';
 
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-// The module's categories and the database enum must be the same list.
-type SameCategories = [DocCategory] extends [ClerkDocCategory]
-  ? [ClerkDocCategory] extends [DocCategory]
-    ? true
-    : never
-  : never;
-const sameCategories: SameCategories = true;
-void sameCategories;
+// The module's unions and the database enums must be the same lists, so a value added to one side fails to compile.
+type SameValues<A, B> = [A] extends [B] ? ([B] extends [A] ? true : never) : never;
+const sameEnums: [
+  SameValues<DocCategory, ClerkDocCategory>,
+  SameValues<MatchRole, ListingClerkRole>,
+  SameValues<MatchedBy, ListingClerkMatchedBy>,
+  SameValues<Confidence, ListingClerkConfidence>,
+  SameValues<ScheduledOutcome, ListingClerkOutcome>,
+  SameValues<ClerkPlatform, (typeof clerkPlatformEnum.enumValues)[number]>,
+  SameValues<PartySide, (typeof clerkPartySideEnum.enumValues)[number]>,
+] = [true, true, true, true, true, true, true];
+void sameEnums;
 
 // Columns a later sighting may fill when they're null, and never blank (clerk-records-storage "Non-destructive
 // document upsert").
@@ -85,9 +97,19 @@ export const syncClerkDocuments = async (
 
   rows.forEach(({ id, instrumentNumber }) => ids.set(instrumentNumber, id));
 
+  const storedId = (instrumentNumber: string): string => {
+    const id = ids.get(instrumentNumber);
+
+    if (!id) {
+      throw new Error(`Clerk document ${instrumentNumber} was upserted but no id came back`);
+    }
+
+    return id;
+  };
+
   const parties = documents.flatMap((document) =>
     document.parties.map((party) => ({
-      documentId: ids.get(document.instrumentNumber) as string,
+      documentId: storedId(document.instrumentNumber),
       side: party.side,
       name: party.name,
       normalizedName: normalizeName(party.name),
@@ -100,7 +122,7 @@ export const syncClerkDocuments = async (
 
   const links = documents.flatMap((document) =>
     document.links.map((link) => ({
-      fromDocumentId: ids.get(document.instrumentNumber) as string,
+      fromDocumentId: storedId(document.instrumentNumber),
       toInstrumentNumber: link.instrumentNumber,
       toBook: link.book,
       toPage: link.page,

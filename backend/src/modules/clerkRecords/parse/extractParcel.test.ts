@@ -38,6 +38,9 @@ describe('extractParcel', () => {
     ['Tax Lot No. 1 in Block No. 2187.01', { block: '2187.01', lot: '1' }],
     ['Tax Lot No. 22 fka 28.A Block 2107 fka C0309', { block: '2107', lot: '22' }],
     ['Tax lot(s) 3-4 in Block 3613', { block: '3613', lot: '3', extraLots: ['4'] }],
+    // Invented: no fixture has a range wider than two lots.
+    ['BLOCK 5, LOTS 1 TO 3', { block: '5', lot: '1', extraLots: ['2', '3'] }],
+    ['BLOCK 5, LOTS 1-40', { block: '5', lot: '1', extraLots: ['40'] }],
     ['Lot 6 fka 00006, Block 44 fka 00044', { block: '44', lot: '6' }],
     ['Lot and Block: Lot 7, Block 76 Tax Map of Borough of Union Beach', { block: '76', lot: '7' }],
     [

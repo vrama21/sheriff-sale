@@ -1,4 +1,4 @@
-import { and, db, drizzleSql as sql, eq, listings, statusHistories } from '@sheriff-sale/database';
+import { and, db, drizzleSql as sql, eq, ListingInsert, listings, statusHistories } from '@sheriff-sale/database';
 import { ListingSnapshot, SNAPSHOT_FIELDS } from './buildListingSnapshot';
 
 export type ListingSyncOutcome = 'inserted' | 'updated' | 'unchanged';
@@ -11,11 +11,13 @@ export type ListingSyncResult = {
   statusExtended: number;
 };
 
-const excluded = (column: string) => sql.raw(`excluded."${column}"`);
+// Typed by column so a snapshot field that isn't a Listing column fails to compile rather than every update.
+const excluded = (column: keyof ListingInsert) => sql.raw(`excluded."${column}"`);
 
 // Every field the snapshot owns takes the snapshot's value; latitude, longitude and mapsUrl are left alone.
+const UPDATED_COLUMNS = [...SNAPSHOT_FIELDS, 'propertyId', 'contentHash', 'snapshotDate'] as const;
 const listingUpdateSet = {
-  ...Object.fromEntries([...SNAPSHOT_FIELDS, 'propertyId', 'contentHash', 'snapshotDate'].map((f) => [f, excluded(f)])),
+  ...Object.fromEntries(UPDATED_COLUMNS.map((column) => [column, excluded(column)])),
   updatedAt: sql`now()`,
 };
 

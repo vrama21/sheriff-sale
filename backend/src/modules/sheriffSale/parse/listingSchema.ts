@@ -255,7 +255,7 @@ export const validateStatusHistory = (rows: RawStatusRow[]): { rows: StatusHisto
     }
 
     const [issue] = result.error.issues;
-    const key = issue.path[0] as keyof RawStatusRow;
+    const key: keyof RawStatusRow = issue.path[0] === 'status' ? 'status' : 'date';
 
     warnings.push({ field: `statusHistory.${key}`, value: row[key], reason: issue.message });
   });

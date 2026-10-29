@@ -19,7 +19,7 @@ export interface CreateHttpClientConfig extends CreateAxiosDefaults {
 export class HttpClient {
   protected axiosInstance: AxiosInstance;
 
-  private token: string;
+  private token: string | undefined;
 
   /**
    * Creates an instance of HttpClient.
@@ -28,12 +28,15 @@ export class HttpClient {
   public constructor(config: CreateHttpClientConfig) {
     this.axiosInstance = axios.create(config);
 
-    this.token = config.authToken || '';
+    this.token = config.authToken || undefined;
 
     this.axiosInstance.interceptors.request.use(
       (req) => {
-        if (req.headers) {
-          req.headers['Authorization'] = `Bearer ${this.getToken()}`;
+        const token = this.getToken();
+
+        // Without a token, an empty `Bearer ` header would go to every host.
+        if (req.headers && token) {
+          req.headers['Authorization'] = `Bearer ${token}`;
         }
 
         return req;
@@ -59,10 +62,10 @@ export class HttpClient {
   /**
    * Gets Authorization Token.
    *
-   * @returns {string} authorization token
+   * @returns {string | undefined} authorization token, if one is set
    * @memberof HttpClient
    */
-  public getToken(): string {
+  public getToken(): string | undefined {
     return this.token;
   }
 
