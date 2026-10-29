@@ -1,0 +1,89 @@
+openspec/changes/add-njparcels-lookup/proposal.md
+  ai_agent 1-60
+openspec/changes/add-njparcels-lookup/specs/scraper-infrastructure/spec.md
+  ai_agent 1-48
+openspec/changes/add-njparcels-lookup/specs/nj-geography/spec.md
+  ai_agent 1-105
+openspec/changes/add-ocean-pdf-listings/design.md
+  s_fb28188b071808::t_397e179db53d71 7,9,23-30,34-36
+  s_fb28188b071808::t_af38c67b6bd380 139-147,160
+  s_fb28188b071808::t_1fb487b7870f3f 99,107-110,115-116,129,131,133,135,137,149,151-152,162-166,171,175
+  s_fb28188b071808::t_10ffc6cd636c85 78,123-124
+  s_fb28188b071808::t_a86006abd20897 3,11,32,37,39-40,42-43,45-49,57,65,82,86,88-91,95-97,105-106,112,114,119-122,127-128,167,169-170,172,177,180-181,183,187,189,191-194,196-202,204,208,210,212-215,217,221,223-225,227-232,240-245,247,251-253,256-257,265-274,280
+  s_fb28188b071808::t_7a5c95efc013e1 1-2,4-6,8,10,12-22,31,33,38,41,44,50-56,58-64,66-77,79-81,83-85,87,92-94,98,100-102,104,111,113,118,125-126,130,132,134,136,138,148,150,168,173-174,176,178-179,182,184,188,190,205-207,209,211,216,218-220,222,226,233-234,236-239,246,248-250,254-255,258-262,264,275-279
+  s_fb28188b071808::t_251f01f1d7ce28 103
+  s_fb28188b071808::t_741ef1e11a43aa 117,153-159,161
+  s_fb28188b071808::t_7f66a2d957f77e 185-186,195,203,235,263
+openspec/changes/add-ocean-pdf-listings/specs/ocean-pdf-scraping/spec.md
+  s_fb28188b071808::t_7f85b942563eb0 1-4,6-11,17-18,21-23,25-27,30,36-41,48,50-53,55-67,93,95,98-105,107-112,114-115,117-120,122-127,133-134,136-138,141,149,152-154,161,172-176,178,180,182-183,185-194,200-204
+  s_fb28188b071808::t_e9413d5e53cc42 5,12-16,19-20,28-29,42,44,46,49,68-76,80,89-92,94,96-97,106,121,128-132,135,139-140,142,144-146,150-151,155-160,162-169,171,177,179,181,184,195-199
+  s_fb28188b071808::t_741ef1e11a43aa 143
+  s_fb28188b071808::t_1adcca00fd711e 24,31-35,43,45,47,54,78-79,81-88,113,116,147-148,170
+  s_fb28188b071808::t_c6d6dc27297c4d 77
+openspec/changes/add-ocean-pdf-listings/specs/scraper-pipeline/spec.md
+  s_fb28188b071808::t_54b1acafec7b4d 1-4,6-20
+  s_fb28188b071808::t_3968495f905450 5
+openspec/changes/add-ocean-pdf-listings/tasks.md
+  s_fb28188b071808::t_606e48d8c7fe07 1-2,13-15,24-26,38,57-58,64,68-70,89,96-99,102-105,110
+  s_fb28188b071808::t_c6d6dc27297c4d 3,6-7,10,23,27,29-36,39,44,46,52,60,62-63,71,73-74,76,94
+  s_fb28188b071808::t_741ef1e11a43aa 8,45
+  s_fb28188b071808::t_970dc67b6cb383 4-5,9,12,16-22,28,40-43,47-51,53-56,59,61,65,67,72,75,77-84,86-88,90-93,95,100-101,106-109,111
+  s_fb28188b071808::t_f3502d49a5cf0e 11,37,66,85
+openspec/changes/add-njparcels-lookup/specs/civilview-scraping/spec.md
+  ai_agent 1-30
+openspec/changes/add-njparcels-lookup/specs/infra-delivery/spec.md
+  ai_agent 1-26
+openspec/changes/add-njparcels-lookup/specs/listing-parcel/spec.md
+  ai_agent 1-78
+openspec/changes/add-njparcels-lookup/tasks.md
+  s_e15180d1ad686b::t_67d63176f5eb50 1-54
+openspec/changes/add-njparcels-lookup/specs/listing-sync/spec.md
+  ai_agent 1-35
+openspec/changes/add-ocean-pdf-listings/.openspec.yaml
+  s_fb28188b071808::t_3c9d4fa2de1447 1-2
+openspec/changes/add-njparcels-lookup/specs/backend-module-layout/spec.md
+  ai_agent 1-30
+openspec/changes/add-ocean-pdf-listings/specs/listing-storage/spec.md
+  s_fb28188b071808::t_741ef1e11a43aa 5
+  s_fb28188b071808::t_29c77ee72ba2e1 1-4,6-46
+  s_fb28188b071808::t_7f66a2d957f77e 47
+openspec/changes/add-ocean-pdf-listings/specs/civilview-scraping/spec.md
+  s_fb28188b071808::t_55d1acccc708ce 1-20
+openspec/changes/add-ocean-pdf-listings/specs/listing-sync/spec.md
+  s_fb28188b071808::t_81e20e7aa2d9b5 1-15
+openspec/changes/add-njparcels-lookup/design.md
+  s_e15180d1ad686b::t_67d63176f5eb50 1-229
+openspec/changes/add-ocean-pdf-listings/proposal.md
+  s_fb28188b071808::t_9c352da26f6242 1-10,12-13,15-16,18-20,22,24-26,28-31,33-44,46-48,50,52-53,55
+  s_fb28188b071808::t_10ffc6cd636c85 27
+  s_fb28188b071808::t_8e855591d11489 11,17,21,23,32,45,49,51,54
+  s_fb28188b071808::t_31bd98da988c72 14
+openspec/changes/add-njparcels-lookup/.openspec.yaml
+  ai_agent 1-2
+openspec/changes/add-njparcels-lookup/specs/njparcels-lookup/spec.md
+  ai_agent 1-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "06f1399369b3624922d0043207aefe54a1a8a07b",
+  "prompts": {},
+  "sessions": {
+    "s_e15180d1ad686b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fc92dcc3-165c-4361-92ae-e96affc456da",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    },
+    "s_fb28188b071808": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "69b4d299-59a1-4f60-ae9b-9b386ca7778e",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
