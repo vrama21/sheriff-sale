@@ -189,7 +189,8 @@ const stripDefendantRoles = (part: string): string =>
 const shareSurname = (people: string[]): string[] => {
   const last = people[people.length - 1];
 
-  if (people.length < 2 || last.includes(',')) {
+  // An entity's last word (`WESSON CORP`) is no one's surname.
+  if (people.length < 2 || last.includes(',') || isEntityName(last)) {
     return people;
   }
 

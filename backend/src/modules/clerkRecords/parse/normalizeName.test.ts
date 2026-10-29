@@ -120,6 +120,7 @@ describe('splitDefendants', () => {
     expect(names('John & Mary A. Smith Jr., et al')).toEqual(['John Smith', 'Mary A. Smith Jr']);
     expect(names('JOHN SMITH AND MARY JONES')).toEqual(['JOHN SMITH', 'MARY JONES']);
     expect(names('SMITH, JOHN AND MARY')).toEqual(['SMITH, JOHN', 'MARY']);
+    expect(names('JOHN AND WELLS FARGO BANK')).toEqual(['JOHN', 'WELLS FARGO BANK']);
     expect(primaryDefendant(splitDefendants('John and Mary Smith'))?.name).toBe('John Smith');
   });
 
