@@ -1,0 +1,21 @@
+backend/src/modules/clerkRecords/parse/normalizeName.test.ts
+  s_e15180d1ad686b::t_8a8f3da5845180 123
+backend/src/modules/clerkRecords/parse/normalizeName.ts
+  s_e15180d1ad686b::t_563fb039d8f617 192-193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "093599ea0b108a9c0c463e4e007f1737cc1629ec",
+  "prompts": {},
+  "sessions": {
+    "s_e15180d1ad686b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fc92dcc3-165c-4361-92ae-e96affc456da",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Valon Rama <vrama21@gmail.com>"
+    }
+  }
+}
